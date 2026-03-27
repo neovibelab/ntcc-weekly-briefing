@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엔터문화연구소 — 글로벌 주간 브리핑 2026.03.28</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lime: #C8FF00;
+  --lime-dim: #a8d600;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gray-200: #e8e8e8;
+  --gray-300: #d0d0d0;
+  --gray-400: #999999;
+  --gray-500: #666666;
+  --gray-600: #444444;
+  --us: #0055FF;
+  --cn: #FF2D20;
+  --jp: #7C3AED;
+  --global: #E67700;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: 'Syne', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--white); font-family: var(--font-body); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+.masthead { background: var(--lime); color: var(--black); padding: 40px 48px 36px; }
+.masthead-date { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 24px; }
+.masthead-title { font-family: var(--font-heading); font-size: clamp(42px, 6vw, 72px); font-weight: 800; line-height: 0.95; letter-spacing: -2px; margin-bottom: 20px; }
+.masthead-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; }
+
+.content { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+.tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; margin-bottom: 12px; }
+.tag-us { background: var(--us); color: #fff; }
+.tag-cn { background: var(--cn); color: #fff; }
+.tag-jp { background: var(--jp); color: #fff; }
+.tag-global { background: var(--global); color: #fff; }
+.tag-cat { font-family: var(--font-mono); font-size: 10px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-400); margin-left: 8px; }
+
+.hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); padding: 48px 0; }
+.hero-main { padding-right: 48px; border-right: 1px solid var(--gray-600); }
+.hero-main .article-title { font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px); font-weight: 400; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 20px; color: var(--white); }
+.hero-main .article-lead { font-family: var(--font-display); font-size: 17px; font-style: italic; line-height: 1.55; color: var(--gray-300); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--gray-600); }
+.article-body { font-size: 14px; line-height: 1.75; color: var(--gray-300); font-weight: 300; }
+.article-body p { margin-bottom: 12px; }
+
+.pull-quote { margin: 24px 0; padding: 20px 24px; background: var(--lime); color: var(--black); border-radius: 2px; }
+.pull-quote p { font-family: var(--font-heading); font-size: 16px; font-weight: 600; line-height: 1.45; margin-bottom: 0 !important; }
+.pull-quote cite { display: block; font-family: var(--font-mono); font-style: normal; font-size: 10px; margin-top: 10px; opacity: 0.5; letter-spacing: 0.5px; }
+
+.hero-sidebar { padding-left: 40px; display: flex; flex-direction: column; }
+.sidebar-card { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.sidebar-card:first-child { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+.sidebar-card .article-title { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.2; margin-bottom: 14px; color: var(--white); }
+.sidebar-card .article-body { font-size: 13px; }
+
+.amount { font-family: var(--font-mono); font-size: 0.88em; font-weight: 700; color: var(--lime); white-space: nowrap; }
+
+.source { display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--gray-500); letter-spacing: 0.3px; }
+.source a { color: var(--gray-400); text-decoration: none; border-bottom: 1px solid var(--gray-600); transition: all 0.2s; }
+.source a:hover { color: var(--lime); border-color: var(--lime); }
+
+.col-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); }
+.col { padding: 40px 0; }
+.col:not(:last-child) { padding-right: 36px; margin-right: 36px; border-right: 1px solid var(--gray-600); }
+.col-header { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--gray-500); padding-bottom: 14px; margin-bottom: 28px; border-bottom: 1px solid var(--gray-600); }
+.col-article { margin-bottom: 32px; }
+.col-article:last-child { margin-bottom: 0; }
+.col-article .article-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; color: var(--white); }
+.col-article .article-body { font-size: 13px; }
+
+.analysis { padding: 48px 0; }
+.analysis-header { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--lime); padding-bottom: 14px; margin-bottom: 36px; border-bottom: 1px solid var(--gray-600); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+.analysis-num { font-family: var(--font-display); font-size: 56px; font-style: italic; color: var(--gray-600); line-height: 1; margin-bottom: 12px; }
+.analysis-item h3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.25; margin-bottom: 14px; color: var(--white); }
+.analysis-item p { font-size: 13.5px; line-height: 1.7; color: var(--gray-300); font-weight: 300; }
+
+.footer { background: var(--lime); color: var(--black); padding: 32px 48px; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
+.footer-brand { font-family: var(--font-heading); font-size: 14px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; }
+.footer-legal { font-family: var(--font-mono); font-size: 10px; line-height: 1.8; opacity: 0.5; max-width: 560px; }
+.footer-tags { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; opacity: 0.4; text-align: right; }
+.footer-fx { font-family: var(--font-mono); font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+.nav-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 48px; background: var(--black); border-bottom: 1px solid var(--gray-600); }
+.nav-top a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-top a:hover { color: var(--lime); }
+.nav-vol { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); letter-spacing: 0.5px; }
+
+.nav-bottom { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; border-top: 1px solid var(--gray-600); background: var(--black); }
+.nav-bottom a { font-family: var(--font-mono); font-size: 12px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-bottom a:hover { color: var(--lime); }
+.nav-bottom .nav-disabled { font-family: var(--font-mono); font-size: 12px; color: var(--gray-600); pointer-events: none; }
+.nav-bottom .nav-center { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.nav-bottom .nav-center a { color: var(--gray-400); }
+.nav-bottom .nav-center a:hover { color: var(--lime); }
+
+@media (max-width: 900px) {
+  .masthead { padding: 28px 20px 24px; }
+  .masthead-title { letter-spacing: -1px; }
+  .content { padding: 0 20px; }
+  .hero { grid-template-columns: 1fr; padding: 32px 0; }
+  .hero-main { padding-right: 0; border-right: none; padding-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+  .hero-sidebar { padding-left: 0; padding-top: 32px; }
+  .col-section { grid-template-columns: 1fr; }
+  .col:not(:last-child) { border-right: none; padding-right: 0; margin-right: 0; padding-bottom: 32px; margin-bottom: 0; border-bottom: 1px solid var(--gray-600); }
+  .analysis-grid { grid-template-columns: 1fr; gap: 36px; }
+  .footer { padding: 24px 20px; flex-direction: column; }
+  .footer-tags { text-align: left; }
+  .nav-top { padding: 12px 20px; }
+  .nav-bottom { padding: 16px 20px; }
+}
+@media print {
+  body { background: #fff; color: #000; }
+  .masthead, .footer { background: #f0f0f0; color: #000; }
+  .amount { color: #000; font-weight: 700; }
+  .pull-quote { background: #f0f0f0; color: #000; }
+  .article-title { color: #000 !important; }
+  a { color: #000 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV TOP -->
+<nav class="nav-top">
+  <a href="index.html">&larr; Archive</a>
+  <span class="nav-vol">Vol. 03</span>
+</nav>
+
+<header class="masthead">
+  <div class="masthead-date">2026년 3월 28일 토요일 (3.23&ndash;27)</div>
+  <h1 class="masthead-title">엔터문화연구소<br>글로벌 주간 브리핑</h1>
+  <div class="masthead-sub">Weekly Business Briefing: US &middot; China &middot; Japan</div>
+</header>
+
+<div class="content">
+
+<!-- HERO -->
+<section class="hero">
+  <article class="hero-main">
+    <span class="tag tag-us">US</span><span class="tag-cat">Tech &middot; AI</span>
+    <h2 class="article-title">OpenAI, Sora 비디오 앱 6개월 만에 종료 &mdash; Disney <span class="amount">$10억(&#8361;1.50조)</span> 투자·캐릭터 라이선싱 딜 전면 파기</h2>
+    <p class="article-lead">3월 24일, OpenAI가 AI 비디오 생성 앱 Sora의 서비스 종료를 발표했다. 출시 6개월 만이다. Disney가 지난 12월 체결한 $10억 지분 투자와 200개 이상 캐릭터 라이선싱 계약이 단 한 푼의 자금 이전 없이 파기됐다.</p>
+    <div class="article-body">
+      <p>문제는 경제성이었다. Sora의 6개월 누적 수익은 약 <span class="amount">$140만(&#8361;21억)</span>에 그쳤다. 같은 기간 ChatGPT는 <span class="amount">$19억(&#8361;2.85조)</span>을 벌어들였다. 비디오 생성에 필요한 컴퓨팅 비용이 텍스트 대비 압도적으로 높은데, 수익화 경로는 불분명했다. 저작권 리스크와 안전성 이슈도 해결되지 않았다.</p>
+      <p>Disney와의 딜은 Sora의 생명줄이 될 수 있었다. 3년 라이선싱 계약에 따라 Mickey Mouse, Iron Man, Yoda 등 200개 이상 캐릭터가 Sora에서 팬 제작 숏폼 비디오에 활용되고, 결과물이 Disney+에서 스트리밍될 예정이었다. Disney는 <span class="amount">$10억(&#8361;1.50조)</span>을 OpenAI 지분에 투자하고 API 기반 사내 도구도 구축할 계획이었다. 하지만 자금이 실제로 이동하기 전에 Sora가 종료됐다.</p>
+      <div class="pull-quote">
+        <p>&ldquo;The future is human &mdash; 미래는 인간에게 있다.&rdquo;</p>
+        <cite>&mdash; Disney 내부 커뮤니케이션 (The Cool Down, Mar 26)</cite>
+      </div>
+      <p>OpenAI는 로보틱스와 자율 시스템으로 전략 전환을 예고했다. 비디오 생성 기술은 ChatGPT 등 핵심 모델에 통합될 것이라고 밝혔지만, 독립 앱으로서의 Sora는 역사 속으로 사라진다. 할리우드가 AI에 거는 기대와 현실 사이의 간극을 보여주는 사건이다.</p>
+    </div>
+    <span class="source">출처: <a href="https://www.bloomberg.com/news/articles/2026-03-24/openai-plans-to-discontinue-support-for-sora-ai-video-generator" target="_blank">Bloomberg</a> &middot; <a href="https://variety.com/2026/digital/news/openai-shutting-down-sora-video-disney-1236698277/" target="_blank">Variety</a> &middot; <a href="https://deadline.com/2026/03/sora-shut-down-disney-investment-1236764689/" target="_blank">Deadline</a> (Mar 24&ndash;26)</span>
+  </article>
+
+  <div class="hero-sidebar">
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">M&amp;A &middot; Regulation</span>
+      <h2 class="article-title">Paramount-WBD <span class="amount">$1,110억(&#8361;166조)</span> 합병, 4/23 주주 표결 확정 &mdash; Zaslav $5.5억+ 보상에 비판 집중</h2>
+      <div class="article-body">
+        <p>WBD가 3월 26일 Paramount Skydance와의 합병안을 4월 23일 주주총회에서 표결한다고 공시했다. 주당 $31, WBD의 영향 전 주가 $12.54 대비 147% 프리미엄이다. 합병이 9월 30일까지 완료되지 않으면 Paramount가 분기당 주당 $0.25의 &lsquo;틱킹 수수료&rsquo;를 지불한다.</p>
+        <p>논란의 핵심은 David Zaslav CEO의 보상 패키지다. 위임장에 공개된 금액은 현금 <span class="amount">$3,422만(&#8361;513억)</span>, 주식 <span class="amount">$5.17억(&#8361;7,750억)</span> 등 최소 <span class="amount">$5.5억(&#8361;8,245억)</span>이다. 세금 보전까지 포함 시 최대 <span class="amount">$8.87억(&#8361;1.33조)</span>에 달할 수 있다. LA County는 3월 25일 합병이 할리우드 고용에 미치는 영향 분석에 착수했다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.prnewswire.com/news-releases/warner-bros-discovery-sets-shareholder-meeting-date-of-april-23-2026-to-approve-transaction-with-paramount-skydance-302726244.html" target="_blank">PRNewswire</a> &middot; <a href="https://variety.com/2026/biz/news/david-zaslav-pay-warner-bros-paramount-merger-1236690521/" target="_blank">Variety</a> &middot; <a href="https://deadline.com/2026/03/david-zaslav-pay-package-wbd-paramount-merger-1236757050/" target="_blank">Deadline</a> (Mar 25&ndash;26)</span>
+    </article>
+
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">Personnel &middot; Corporate</span>
+      <h2 class="article-title">Six Flags, 투자자 압력 속 집행 의장 교체 &mdash; 매각 논의 수면 위로</h2>
+      <div class="article-body">
+        <p>Six Flags Entertainment가 3월 24일 Richard Haddrill을 신임 집행 의장(Executive Chair)으로 선임했다. Scientific Games(현 Light &amp; Wonder) 전 부회장 출신이며, 3년 계약에 연봉 <span class="amount">$50만(&#8361;7.5억)</span>과 대규모 주식 보상이 포함됐다.</p>
+        <p>배경은 투자자들의 매각 압력이다. 2024년 Cedar Fair와 합병 후 주가 부진이 이어지면서, 행동주의 투자자들이 전략적 대안을 요구해왔다. Crain&rsquo;s Cleveland는 &ldquo;Six Flags takes the hint&rdquo;라고 평했다. 수익성 개선이 없으면 매각이 본격화될 수 있다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.businesswire.com/news/home/20260318127598/en/Six-Flags-Entertainment-Appoints-Richard-Haddrill-as-Executive-Chairman-of-the-Board-of-Directors" target="_blank">BusinessWire</a> &middot; <a href="https://www.crainscleveland.com/arts-entertainment/ccl-six-flags-board-chair-20260325/" target="_blank">Crain&rsquo;s Cleveland</a> (Mar 18&ndash;25)</span>
+    </article>
+  </div>
+</section>
+
+<!-- 3-COL -->
+<section class="col-section">
+
+  <div class="col">
+    <div class="col-header">China</div>
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">Tech &middot; Content</span>
+      <h3 class="article-title">AI가 뒤집는 중국 숏드라마 &mdash; &lsquo;풍수천사&rsquo; 12시간 1억 뷰, 회당 제작비 수백 위안으로 추락</h3>
+      <div class="article-body">
+        <p>AI로 제작된 만화풍 숏드라마 &lsquo;풍수천사(风水天师)&rsquo;가 도우인(Douyin)에서 공개 12시간 만에 1억 뷰를 돌파했다. 2025년 AI 만화풍 숏드라마 시장 규모는 <span class="amount">168억 위안($23.2억/&#8361;3.48조)</span>이며, 2026년 들어 매월 1만 편 이상이 제작되고 있다.</p>
+        <p>핵심은 비용 혁명이다. 전통 숏드라마의 회당 제작비가 수만 위안이었던 것이 AI 도입 후 수백 위안으로 떨어졌다. 제작 주기는 수 주에서 수 시간으로 단축됐고, 1인 제작팀도 가능해졌다. ByteDance가 2월 공개한 Seedance 2.0은 간단한 프롬프트로 60초 내 멀티숏 영상을 생성하며, 생성 영상의 실용 가능률이 90%를 넘는다.</p>
+      </div>
+      <span class="source">출처: <a href="https://english.news.cn/20260325/f5029e1769fe41908bb3f3a3f33a986e/c.html" target="_blank">Xinhua</a> &middot; <a href="https://www.globaltimes.cn/page/202603/1356138.shtml" target="_blank">Global Times</a> (Mar 25)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">Market Data</span>
+      <h3 class="article-title">猫眼(Maoyan) 2025 실적 &mdash; 영업이익 270% 급증, 중국 극장 시장 518억 위안 시대</h3>
+      <div class="article-body">
+        <p>중국 최대 영화 플랫폼 猫眼이 3월 27일 2025년 연간 실적을 발표했다. 매출 <span class="amount">46.3억 위안($6.4억/&#8361;9,573억)</span>(+13.5%), 영업이익 <span class="amount">7.24억 위안($1.0억/&#8361;1,498억)</span>(+269.8%). 투자 수익과 비용 효율화가 수익성 급증의 주 동력이다.</p>
+        <p>중국 전국 박스오피스는 2025년 <span class="amount">518.3억 위안($71.5억/&#8361;10.7조)</span>(+21.95%)을 기록했다. 2026년에도 3월 24일 기준 누적 116억 위안을 돌파했다. 춘절 시즌 猫眼이 주 배급을 맡은 PEGASUS 3이 <span class="amount">43.1억 위안($5.9억/&#8361;8,921억)</span>으로 시즌 흥행 1위를 차지했다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.prnewswire.com/news-releases/maoyan-entertainment-announces-2025-annual-results-302727092.html" target="_blank">PRNewswire</a> &middot; <a href="https://www.morningstar.com/news/pr-newswire/20260327cn20912/maoyan-entertainment-announces-2025-annual-results" target="_blank">Morningstar</a> (Mar 27)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Japan</div>
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">M&amp;A &middot; Corporate</span>
+      <h3 class="article-title">Bandai Namco, 4월 1일 대규모 조직 개편 발효 &mdash; Sony 지분 투자·Nintendo 스튜디오 인수까지</h3>
+      <div class="article-body">
+        <p>Bandai Namco Holdings가 4월 1일자로 전사적 조직 개편을 단행한다. 디지털 엔터테인먼트, 완구, 영상·음악, 어뮤즈먼트 등 모든 사업부에서 경영진 교체와 부문명 변경이 이뤄진다. Tekken·Pac-Man의 본산이 40년 역사상 가장 큰 구조 변화를 맞는다.</p>
+        <p>개편의 배경에는 두 건의 전략적 제휴가 있다. Sony Group이 지난해 7월 <span class="amount">680억 엔($4.65억/&#8361;6,962억)</span>을 투자해 Bandai Namco 주식 2.5%를 취득했다. 별도로 Nintendo는 Bandai Namco Studios Singapore(BNSS) 지분 80%를 4월 1일 인수한다. Sony 진영과 Nintendo 진영이 동일한 파트너를 두고 공존하는 이례적 구도가 형성됐다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.animenewsnetwork.com/news/2026-03-01/bandai-namco-announces-company-restructuring-personnel-changes/.234580" target="_blank">Anime News Network</a> &middot; <a href="https://www.ingamenews.com/2026/03/bandai-namco-announces-major.html" target="_blank">InGameNews</a> (Mar 1&ndash;3)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">Content &middot; IP</span>
+      <h3 class="article-title">AnimeJapan 2026 오늘 개막 &mdash; 역대 최대 120+ 전시사, 인디 게임&rarr;애니 전환 프로그램 신설</h3>
+      <div class="article-body">
+        <p>세계 최대 애니메이션 행사 AnimeJapan 2026이 3월 28일 도쿄 빅사이트에서 개막했다. 공개일(28~29일)과 비즈니스데이(30~31일) 4일간 진행되며, 120개 이상 전시사, 200개 이상 스테이지, 500명 이상 출연진이 참가하는 역대 최대 규모다.</p>
+        <p>올해 주목할 신규 프로그램은 인디 게임을 팬 투표로 선정해 애니메이션화하는 프로젝트와, 학생 단편 공모전 &lsquo;New Creator Awards&rsquo;다. Aniplex, KADOKAWA, TOHO animation, Bandai Namco Filmworks, Toei Animation이 총출동한 가운데, 일본 정부가 콘텐츠 수출 목표를 2033년까지 <span class="amount">&#165;20조($1,333억/&#8361;200조)</span>로 설정한 이후 첫 대규모 산업 행사이기도 하다.</p>
+      </div>
+      <span class="source">출처: <a href="https://otakukart.com/animejapan-2026-set-to-be-the-largest-yet-with-120-exhibitors-and-200-stage-events/" target="_blank">OtakuKart</a> &middot; <a href="https://finalweapon.net/2026/03/27/animejapan-2026-schedule-anime-lineup-and-livestreams/" target="_blank">FinalWeapon</a> (Mar 27&ndash;28)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Global</div>
+    <article class="col-article">
+      <span class="tag tag-global">Global</span><span class="tag-cat">Market Data</span>
+      <h3 class="article-title">IFPI 보고서 &mdash; 글로벌 음반 수익 <span class="amount">$317억(&#8361;47.5조)</span> 사상 최고, 유료 구독 8.37억 명 돌파</h3>
+      <div class="article-body">
+        <p>IFPI가 발간한 &lsquo;글로벌 음악 보고서 2026&rsquo;에 따르면, 2025년 글로벌 음반 수익은 <span class="amount">$317억(&#8361;47.5조)</span>으로 전년 대비 6.4% 성장했다. 11년 연속 성장이며, 2014년 저점 <span class="amount">$131억(&#8361;19.6조)</span>의 2.4배다. 유료 스트리밍 구독 계정은 8.37억 개로 전년 7.52억에서 크게 늘었다.</p>
+        <p>스트리밍이 전체 수익의 69.6%(<span class="amount">$220억/&#8361;33.0조</span>)를 차지하며 성장을 이끌었다. 피지컬(LP·CD) 매출도 8.0% 성장했고, 바이닐은 19년 연속 성장(+13.7%)을 기록했다. 지역별로는 중남미(+17.1%), 중동·아프리카(+15.2%), 아시아(+10.9%)가 두 자릿수 성장을, 북미(+3.5%)와 유럽(+5.6%)은 완만한 증가세를 보였다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.ifpi.org/global-music-report-2026-global-recorded-music-revenues-grow-6-4-as-record-companies-drive-innovation/" target="_blank">IFPI</a> &middot; <a href="https://www.billboard.com/pro/ifpi-report-2026-global-music-revenues-30-billion/" target="_blank">Billboard</a> &middot; <a href="https://www.musicbusinessworldwide.com/global-recorded-music-revenues-hit-31-7bn-in-2025-up-6-4-yoy-users-of-paid-music-subscriptions-reach-837m/" target="_blank">MBW</a> (Mar 18)</span>
+    </article>
+  </div>
+
+</section>
+
+<!-- ANALYSIS -->
+<section class="analysis">
+  <div class="analysis-header">Analysis</div>
+  <div class="analysis-grid">
+    <div class="analysis-item">
+      <div class="analysis-num">01</div>
+      <h3>AI 비디오의 교훈 &mdash; 도구를 파느냐, 콘텐츠를 만드느냐</h3>
+      <p>Sora의 실패와 중국 AI 숏드라마의 부상은 같은 기술의 정반대 적용이다. OpenAI는 범용 AI 비디오 &lsquo;도구&rsquo;를 팔려 했고, $140만을 벌었다. 중국 AI 숏드라마 산업은 같은 기술로 &lsquo;콘텐츠&rsquo;를 만들어, 168억 위안 시장을 형성했다. 차이의 핵심은 기술의 위치다. 도구로 팔면 사용자가 가치를 만들어야 하지만, 콘텐츠에 녹이면 기술이 가치 사슬 안에서 즉시 비용을 줄인다. 할리우드가 AI를 바라보는 방식 &mdash; &lsquo;크리에이티브 도구&rsquo;라는 프레이밍 &mdash; 이 근본적으로 바뀌어야 할 수 있다. AI는 붓이 아니라 공장이다.</p>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">02</div>
+      <h3>$5.5억의 주소 &mdash; 미디어 합병의 인센티브 지도</h3>
+      <p>Zaslav의 $5.5억+ 보상은 미디어 합병의 인센티브 구조를 날것으로 보여준다. WBD 주주는 147% 프리미엄을 받고, CEO는 $5.5억을 받고, 재무 자문사들은 9자릿수 수수료를 받는다. 그러나 합병 후 반드시 따라오는 구조조정 &mdash; 중복 부서 통합, 인력 감축, 콘텐츠 라이브러리 정리 &mdash; 의 비용은 정산서에 등장하지 않는다. Vol.01에서 다룬 Paramount-WBD 합병의 전략적 논리는 여전히 유효하다. 하지만 $1,110억 딜의 가치가 스튜디오 현장까지 도달하는 데 걸리는 시간과, 경영진 보상이 지급되는 시간 사이의 격차가 이번 위임장에서 숫자로 드러났다.</p>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">03</div>
+      <h3>아시아 콘텐츠 산업의 두 가지 국가 전략</h3>
+      <p>일본은 2033년까지 콘텐츠 수출 &#165;20조를 목표로, 정부 보조금을 대폭 확대하면서 &ldquo;크리에이티브에 간섭하지 않겠다&rdquo;고 선언했다. 기존 IP &mdash; 애니, 게임, 만화 &mdash; 의 글로벌 유통을 돕되, 만드는 방식에는 손대지 않는다. 중국은 정반대 경로를 택했다. AI 기술로 제작 비용을 100분의 1로 낮추고, 새로운 포맷으로 글로벌 시장을 공략한다. 충칭(重慶)을 &lsquo;수직형 헝뎬&rsquo;으로 키우고, ByteDance의 Seedance가 생성 엔진을 제공한다. 일본 모델은 IP의 깊이, 중국 모델은 기술의 속도에 베팅한다. 공통점은 국가가 콘텐츠 산업을 수출 인프라로 취급하기 시작했다는 것이다.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- NAV BOTTOM -->
+<nav class="nav-bottom">
+  <a href="NEWSPAPER_0321.html">&larr; 이전 호</a>
+  <span class="nav-center"><a href="index.html">목록</a></span>
+  <span class="nav-disabled">다음 호 &rarr;</span>
+</nav>
+
+<footer class="footer">
+  <div>
+    <div class="footer-brand">엔터문화연구소 주간 브리핑</div>
+    <div class="footer-legal">
+      본 뉴스레터는 AI 기반 큐레이션으로 제작되었으며, 인용된 모든 기사의 저작권은 원 매체에 귀속됩니다.<br>
+      모든 금액은 2026년 3월 27일 기준 환율($1 = &#8361;1,499)을 적용했습니다. 실제 환율과 차이가 있을 수 있습니다.
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <div class="footer-fx">$1 = &#8361;1,499</div>
+    <div class="footer-tags">OpenAI &middot; Disney &middot; Paramount &middot; WBD &middot; Six Flags &middot; Maoyan &middot; Bandai Namco &middot; IFPI</div>
+  </div>
+</footer>
+
+</body>
+</html>
