@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엔터문화연구소 — 글로벌 주간 브리핑 2026.04.04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lime: #C8FF00;
+  --lime-dim: #a8d600;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gray-200: #e8e8e8;
+  --gray-300: #d0d0d0;
+  --gray-400: #999999;
+  --gray-500: #666666;
+  --gray-600: #444444;
+  --us: #0055FF;
+  --cn: #FF2D20;
+  --jp: #7C3AED;
+  --global: #E67700;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: 'Syne', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--white); font-family: var(--font-body); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+.masthead { background: var(--lime); color: var(--black); padding: 40px 48px 36px; }
+.masthead-date { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 24px; }
+.masthead-title { font-family: var(--font-heading); font-size: clamp(42px, 6vw, 72px); font-weight: 800; line-height: 0.95; letter-spacing: -2px; margin-bottom: 20px; }
+.masthead-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; }
+
+.content { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+.tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; margin-bottom: 12px; }
+.tag-us { background: var(--us); color: #fff; }
+.tag-cn { background: var(--cn); color: #fff; }
+.tag-jp { background: var(--jp); color: #fff; }
+.tag-global { background: var(--global); color: #fff; }
+.tag-cat { font-family: var(--font-mono); font-size: 10px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-400); margin-left: 8px; }
+
+.hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); padding: 48px 0; }
+.hero-main { padding-right: 48px; border-right: 1px solid var(--gray-600); }
+.hero-main .article-title { font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px); font-weight: 400; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 20px; color: var(--white); }
+.hero-main .article-lead { font-family: var(--font-display); font-size: 17px; font-style: italic; line-height: 1.55; color: var(--gray-300); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--gray-600); }
+.article-body { font-size: 14px; line-height: 1.75; color: var(--gray-300); font-weight: 300; }
+.article-body p { margin-bottom: 12px; }
+
+.pull-quote { margin: 24px 0; padding: 20px 24px; background: var(--lime); color: var(--black); border-radius: 2px; }
+.pull-quote p { font-family: var(--font-heading); font-size: 16px; font-weight: 600; line-height: 1.45; margin-bottom: 0 !important; }
+.pull-quote cite { display: block; font-family: var(--font-mono); font-style: normal; font-size: 10px; margin-top: 10px; opacity: 0.5; letter-spacing: 0.5px; }
+
+.hero-sidebar { padding-left: 40px; display: flex; flex-direction: column; }
+.sidebar-card { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.sidebar-card:first-child { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+.sidebar-card .article-title { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.2; margin-bottom: 14px; color: var(--white); }
+.sidebar-card .article-body { font-size: 13px; }
+
+.amount { font-family: var(--font-mono); font-size: 0.88em; font-weight: 700; color: var(--lime); white-space: nowrap; }
+
+.source { display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--gray-500); letter-spacing: 0.3px; }
+.source a { color: var(--gray-400); text-decoration: none; border-bottom: 1px solid var(--gray-600); transition: all 0.2s; }
+.source a:hover { color: var(--lime); border-color: var(--lime); }
+
+.col-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); }
+.col { padding: 40px 0; }
+.col:not(:last-child) { padding-right: 36px; margin-right: 36px; border-right: 1px solid var(--gray-600); }
+.col-header { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--gray-500); padding-bottom: 14px; margin-bottom: 28px; border-bottom: 1px solid var(--gray-600); }
+.col-article { margin-bottom: 32px; }
+.col-article:last-child { margin-bottom: 0; }
+.col-article .article-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; color: var(--white); }
+.col-article .article-body { font-size: 13px; }
+
+.analysis { padding: 48px 0; }
+.analysis-header { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--lime); padding-bottom: 14px; margin-bottom: 36px; border-bottom: 1px solid var(--gray-600); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+.analysis-num { font-family: var(--font-display); font-size: 56px; font-style: italic; color: var(--gray-600); line-height: 1; margin-bottom: 12px; }
+.analysis-item h3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.25; margin-bottom: 14px; color: var(--white); }
+.analysis-item p { font-size: 13.5px; line-height: 1.7; color: var(--gray-300); font-weight: 300; }
+
+.footer { background: var(--lime); color: var(--black); padding: 32px 48px; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
+.footer-brand { font-family: var(--font-heading); font-size: 14px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; }
+.footer-legal { font-family: var(--font-mono); font-size: 10px; line-height: 1.8; opacity: 0.5; max-width: 560px; }
+.footer-tags { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; opacity: 0.4; text-align: right; }
+.footer-fx { font-family: var(--font-mono); font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+.nav-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 48px; background: var(--black); border-bottom: 1px solid var(--gray-600); }
+.nav-top a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-top a:hover { color: var(--lime); }
+.nav-vol { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); letter-spacing: 0.5px; }
+
+.nav-bottom { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; border-top: 1px solid var(--gray-600); background: var(--black); }
+.nav-bottom a { font-family: var(--font-mono); font-size: 12px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-bottom a:hover { color: var(--lime); }
+.nav-bottom .nav-disabled { font-family: var(--font-mono); font-size: 12px; color: var(--gray-600); pointer-events: none; }
+.nav-bottom .nav-center { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.nav-bottom .nav-center a { color: var(--gray-400); }
+.nav-bottom .nav-center a:hover { color: var(--lime); }
+
+@media (max-width: 900px) {
+  .masthead { padding: 28px 20px 24px; }
+  .masthead-title { letter-spacing: -1px; }
+  .content { padding: 0 20px; }
+  .hero { grid-template-columns: 1fr; padding: 32px 0; }
+  .hero-main { padding-right: 0; border-right: none; padding-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+  .hero-sidebar { padding-left: 0; padding-top: 32px; }
+  .col-section { grid-template-columns: 1fr; }
+  .col:not(:last-child) { border-right: none; padding-right: 0; margin-right: 0; padding-bottom: 32px; margin-bottom: 0; border-bottom: 1px solid var(--gray-600); }
+  .analysis-grid { grid-template-columns: 1fr; gap: 36px; }
+  .footer { padding: 24px 20px; flex-direction: column; }
+  .footer-tags { text-align: left; }
+  .nav-top { padding: 12px 20px; }
+  .nav-bottom { padding: 16px 20px; }
+}
+@media print {
+  body { background: #fff; color: #000; }
+  .masthead, .footer { background: #f0f0f0; color: #000; }
+  .amount { color: #000; font-weight: 700; }
+  .pull-quote { background: #f0f0f0; color: #000; }
+  .article-title { color: #000 !important; }
+  a { color: #000 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV TOP -->
+<nav class="nav-top">
+  <a href="index.html">&larr; Archive</a>
+  <span class="nav-vol">Vol. 04</span>
+</nav>
+
+<header class="masthead">
+  <div class="masthead-date">2026년 4월 4일 토요일 (3.29&ndash;4.3)</div>
+  <h1 class="masthead-title">엔터문화연구소<br>글로벌 주간 브리핑</h1>
+  <div class="masthead-sub">Weekly Business Briefing: US &middot; China &middot; Japan</div>
+</header>
+
+<div class="content">
+
+<!-- HERO -->
+<section class="hero">
+  <article class="hero-main">
+    <span class="tag tag-us">US</span><span class="tag-cat">Tech &middot; AI</span>
+    <h2 class="article-title">Netflix, 벤 애플렉의 AI 스타트업 InterPositive 최대 <span class="amount">$6억(&#8361;9,060억)</span> 인수 &mdash; "스토리텔러를 대체하는 것이 아니라 역량을 강화"</h2>
+    <p class="article-lead">3월 초, Netflix가 베테랑 배우 겸 감독 벤 애플렉(Ben Affleck)이 공동 창업한 AI 영화제작 스타트업 InterPositive를 최대 <span class="amount">$6억(&#8361;9,060억)</span>에 인수했다. 인수 조건이 공개된 3월 11일 기준 이 딜은 Netflix 역사상 최대 규모의 기술 기업 인수 중 하나다.</p>
+    <div class="article-body">
+      <p>InterPositive의 핵심 기술은 &lsquo;감독 맞춤형 AI&rsquo;다. 영화감독이 이미 촬영한 자신의 영상 데이터를 기반으로 전용 AI 모델을 구축하고, 이를 통해 스턴트 와이어 제거, 샷 리프레이밍, 조명 재조정, 배경 강화 등 후반 작업을 자동화할 수 있다. 엔지니어·연구원·크리에이터 16명으로 구성된 전원 팀이 Netflix에 합류하며, 애플렉은 시니어 어드바이저로 활동한다.</p>
+      <p>Netflix는 이 기술을 외부에 상업 판매하지 않겠다고 명확히 했다. 자사 콘텐츠 파트너들(감독, 독립 제작사 등)에게만 제공해 제작 품질을 높이는 방향으로 활용할 계획이다. 4월 초 Deadline 보도에 따르면, InterPositive는 인수 협상 이전 영화 1편당 제작비를 20~30% 절감하는 것을 내부 목표로 설정했다.</p>
+      <div class="pull-quote">
+        <p>&ldquo;Innovation should empower storytellers, not replace them.&rdquo;</p>
+        <cite>&mdash; Elizabeth Stone, Netflix 최고제품&middot;기술책임자 (Mar 2026)</cite>
+      </div>
+      <p>이번 인수는 할리우드 AI 논쟁의 한 축을 선명하게 보여준다. SAG-AFTRA와 WGA가 AI의 인간 대체를 경계하는 가운데, Netflix는 &lsquo;크리에이터가 소유한 AI&rsquo; 모델을 선택했다. 범용 AI 도구를 구매하는 것이 아니라, 감독 개인의 미학과 과거 작업물에 기반한 맞춤형 모델을 내부에서 구축하는 방식이다.</p>
+    </div>
+    <span class="source">출처: <a href="https://variety.com/2026/film/news/netflix-acquires-ben-affleck-ai-filmmaking-startup-interpositive-1236679498/" target="_blank">Variety</a> &middot; <a href="https://www.bloomberg.com/news/articles/2026-03-11/netflix-to-pay-as-much-as-600-million-for-ben-affleck-s-ai-firm" target="_blank">Bloomberg</a> &middot; <a href="https://deadline.com/2026/04/netflix-ben-affleck-ai-firm-interpositive-film-production-savings-1236770381/" target="_blank">Deadline</a> (Mar&ndash;Apr 2026)</span>
+  </article>
+
+  <div class="hero-sidebar">
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">M&amp;A &middot; Gaming</span>
+      <h2 class="article-title">EA <span class="amount">$550억(&#8361;83조)</span> 민영화, 6월 완료 임박 &mdash; PIF·Silver Lake, 역사상 최대 LBO 규제 최종 승인</h2>
+      <div class="article-body">
+        <p>작년 9월 발표된 사우디 국부펀드(PIF)·Silver Lake·Affinity Partners의 Electronic Arts 인수가 6월 완료를 목전에 두고 있다. 3월 초 영국 CMA와 중국 SAMR의 최종 규제 승인이 완료됐다. 주주 총회도 압도적 찬성으로 통과한 상태다.</p>
+        <p>거래 규모는 기업가치 <span class="amount">$550억(&#8361;83조)</span>(주당 <span class="amount">$210</span>, 무조정 주가 대비 25% 프리미엄), 에퀴티 <span class="amount">$360억(&#8361;54.3조)</span>과 부채 <span class="amount">$200억(&#8361;30.2조)</span>을 결합한 사상 최대 LBO다. 인수 후에도 CEO Andrew Wilson이 유임하고 본사 Redwood City를 유지한다. EA는 올 6월 비상장사로 전환된다.</p>
+      </div>
+      <span class="source">출처: <a href="https://ir.ea.com/press-releases/press-release-details/2025/EA-Announces-Agreement-to-be-Acquired-by-PIF-Silver-Lake-and-Affinity-Partners-for-55-Billion/default.aspx" target="_blank">EA IR</a> &middot; <a href="https://variety.com/2025/gaming/global/electronic-arts-goes-private-55-billion-deal-1236533827/" target="_blank">Variety</a> &middot; <a href="https://markets.financialcontent.com/stocks/article/marketminute-2026-3-18-the-55-billion-final-boss-electronic-arts-and-the-dawn-of-the-mega-lbo-era" target="_blank">FinancialContent</a> (Sep 2025&ndash;Mar 2026)</span>
+    </article>
+
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">IP &middot; Theme Park</span>
+      <h2 class="article-title">Disney Adventure World, 파리에서 막 올라 &mdash; 24년 된 Walt Disney Studios 전면 개편, 세계 최초 수중&middot;공중 드론 스펙터클</h2>
+      <div class="article-body">
+        <p>3월 29일, 디즈니랜드 파리의 두 번째 테마파크 Walt Disney Studios Park이 &lsquo;Disney Adventure World&rsquo;로 전면 개편해 재개장했다. 2002년 개장 이후 시설의 90% 이상이 교체된 10년 넘는 대역사다.</p>
+        <p>주요 신설 구역은 &lsquo;World of Frozen&rsquo;(아렌델 왕국 테마, 보트 어드벤처·공연), Marvel Avengers Campus, Worlds of Pixar, 라푼젤(Tangled) 어트랙션이다. 야간 스펙터클 &lsquo;Disney Cascade of Lights&rsquo;는 세계 최초 수중 드론과 공중 드론을 결합한 레이크 쇼로 화제를 모았다. 3월 18일 Disney CEO로 취임한 Josh D&rsquo;Amaro 전 파크 부문장에게도 첫 대형 이벤트가 됐다.</p>
+      </div>
+      <span class="source">출처: <a href="https://thewaltdisneycompany.com/news/disneyland-paris-adventure-world-opening/" target="_blank">The Walt Disney Company</a> &middot; <a href="https://disneyparksblog.com/dlp/world-of-frozen-open-at-disney-adventure-world/" target="_blank">Disney Parks Blog</a> (Mar 29)</span>
+    </article>
+  </div>
+</section>
+
+<!-- 3-COL -->
+<section class="col-section">
+
+  <div class="col">
+    <div class="col-header">China</div>
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">Market Data</span>
+      <h3 class="article-title">Tencent Music Q4 2025 &mdash; 분기 매출 <span class="amount">RMB 86.4억($12.4억/&#8361;1.87조)</span> +15.9%, 연간 순이익 +66.4% 급증</h3>
+      <div class="article-body">
+        <p>텐센트 뮤직 엔터테인먼트(TME)가 3월 17일 발표한 2025년 4분기 실적에서 총매출 <span class="amount">RMB 86.4억($12.4억/&#8361;1.87조)</span>을 기록했다(+15.9% YoY). 온라인 음악 서비스 매출이 <span class="amount">RMB 71.0억($10.2억/&#8361;1.53조)</span>(+21.7%)으로 견인했으며, 음악 구독 외 서비스가 +40.8%로 뛰었다. 2025년 연간 매출은 <span class="amount">RMB 329.0억($47.1억/&#8361;7.11조)</span>(+15.8%), 순이익 <span class="amount">RMB 110.6억($15.8억/&#8361;2.39조)</span>(+66.4%)이다.</p>
+        <p>QQ Music·Kugou·Kuwo를 운영하는 TME는 중국 음악 스트리밍 시장 1위로, 구독 수익 안정화와 비구독 서비스(라이브 공연 중계·굿즈·팬 커뮤니티 등) 다변화가 수익성을 견인했다. 다만 경영진은 2026년 전망에 대해 &ldquo;구독 수익은 경쟁 심화로 단기 압박을 받을 수 있다&rdquo;고 시인했다.</p>
+      </div>
+      <span class="source">출처: <a href="https://ir.tencentmusic.com/2026-03-17-Tencent-Music-Entertainment-Group-Announces-Fourth-Quarter-and-Full-Year-2025-Unaudited-Financial-Results" target="_blank">TME IR</a> &middot; <a href="https://www.gurufocus.com/news/8724012/tencent-music-entertainment-group-tme-q4-2025-earnings-call-highlights-strong-revenue-growth-amidst-competitive-pressures" target="_blank">GuruFocus</a> (Mar 17)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">Tech &middot; Corporate</span>
+      <h3 class="article-title">iQiyi, AI 제작 자동화 스위트 &lsquo;Nadou Pro&rsquo; 공개 &mdash; 드라마 제작주기 30% 단축, 홍콩 상장 신청도</h3>
+      <div class="article-body">
+        <p>3월 30일 iQiyi가 공개한 2026년 AI 전략의 핵심은 &lsquo;Nadou Pro&rsquo;다. 스크립트 분해, 버추얼 세트 디자인, 프리비주얼라이제이션을 자동화하는 이 시스템은 드라마 제작주기를 약 30% 단축한다고 회사 측은 주장한다. AI 캐릭터와 유저가 실시간 상호작용하는 &lsquo;Taodou World&rsquo;도 공개했다.</p>
+        <p>재무적으로는 2025년 연간 매출 <span class="amount">$39억(&#8361;5.89조)</span>(-7% YoY), 4분기는 +3%로 반등했다. 3년 연속 흑자 달성(Non-GAAP 기준)으로 안정화 신호를 보냈다. 이와 별개로 <span class="amount">$1억(&#8361;1,510억)</span> 규모의 자사주 매입 계획을 발표하고, 홍콩 증권거래소에 2차 상장을 신청했다. 미국 상장폐지(ADR delisting) 리스크를 분산하고 본토 투자자 유입을 위한 포석이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://markets.financialcontent.com/stocks/article/finterra-2026-3-30-iqiyi-iq-the-ai-driven-evolution-of-chinas-streaming-giant" target="_blank">FinancialContent</a> &middot; <a href="https://ir.iqiyi.com/financial-information/quarterly-results/" target="_blank">iQiyi IR</a> (Mar 30)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Japan</div>
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">M&amp;A &middot; Corporate</span>
+      <h3 class="article-title">Sony·TCL, TV·오디오 합작사 &lsquo;BRAVIA Inc.&rsquo; 설립 합의 &mdash; ¥754억(<span class="amount">$4.75억/&#8361;7,173억</span>)에 51% 지분 매각</h3>
+      <div class="article-body">
+        <p>Sony와 중국 TCL이 3월 31일 가전 합작법인 &lsquo;BRAVIA Inc.&rsquo; 설립에 최종 합의했다. TCL은 Sony 홈엔터테인먼트 사업(BRAVIA TV·프로젝터·홈오디오 전 라인업)의 51% 지분을 <span class="amount">¥754억($4.75억/&#8361;7,173억)</span>에 취득한다. 관련 사업 전체의 합산 기업가치는 약 <span class="amount">¥1,028억($6.5억/&#8361;9,815억)</span>이다. Sony는 49% 지분을 유지하며, 말레이시아 제조 법인(Sony EMCS Malaysia)은 TCL로 완전 이전된다.</p>
+        <p>BRAVIA Inc.는 2027년 4월 본격 가동 예정이며 본사는 도쿄에 둔다. 제품은 Sony·BRAVIA 브랜드를 계속 사용한다. Sony는 이번 매각으로 TV 하드웨어 제조 부담에서 벗어나 PlayStation·음악·영상 콘텐츠 사업에 자원을 집중할 수 있게 됐다. TCL 입장에서는 Sony의 화질·음향 기술과 자사의 제조 규모를 결합해 삼성·LG에 맞서는 프리미엄 TV 연합을 구축한 것이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.bloomberg.com/news/articles/2026-03-31/china-s-tcl-to-buy-majority-stake-in-sony-s-home-entertainment" target="_blank">Bloomberg</a> &middot; <a href="https://www.sony.co.jp/en/news-release/202603/26-0331E/" target="_blank">Sony IR</a> &middot; <a href="https://www.flatpanelshd.com/news.php?subaction=showfull&id=1774951256" target="_blank">FlatpanelsHD</a> (Mar 31)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">Content &middot; IP</span>
+      <h3 class="article-title">Netflix Japan, MAPPA·Toho와 2026년 애니메이션 공세 &mdash; 아시아태평양 10주년 최대 슬레이트</h3>
+      <div class="article-body">
+        <p>Netflix가 올 1월 공개한 일본 2026년 슬레이트는 역대 최대 규모다. &lsquo;주술회전&rsquo; &lsquo;체인소맨&rsquo;으로 알려진 애니메이션 스튜디오 MAPPA와 전략적 파트너십을 체결했고, 일본 최대 영화·방송 그룹 Toho와는 공동제작 계약을 맺었다. 실사 드라마·애니·논픽션 전 장르를 포괄하는 슬레이트로, Netflix의 아시아태평양 진출 10주년을 기념한다.</p>
+        <p>이번 제휴는 글로벌 스트리밍 플랫폼이 일본 IP를 직접 프로듀스하는 방향으로 전환하고 있다는 신호다. 과거에는 완성된 일본 애니메이션의 해외 배급권을 사는 방식이 주를 이뤘다면, 이제는 기획 단계부터 글로벌 배급을 염두에 두고 제작에 참여한다. 일본 정부가 2033년까지 콘텐츠 수출 목표를 <span class="amount">&#165;20조($1,333억/&#8361;201조)</span>로 설정한 직후 나온 행보이기도 하다.</p>
+      </div>
+      <span class="source">출처: <a href="https://variety.com/2026/tv/news/netflix-japan-2026-slate-1236641086/" target="_blank">Variety</a> (Jan 2026)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Global</div>
+    <article class="col-article">
+      <span class="tag tag-global">Global</span><span class="tag-cat">Market Data</span>
+      <h3 class="article-title">2026 글로벌 박스오피스, <span class="amount">$350억(&#8361;52.8조)</span> 사상 최고 전망 &mdash; Disney 이미 <span class="amount">$10억(&#8361;1.51조)</span> 돌파, &lt;Zootopia 2&gt; 18.2억불</h3>
+      <div class="article-body">
+        <p>2026년 글로벌 극장 수익이 사상 최고인 <span class="amount">$350억(&#8361;52.8조)</span>에 달할 것이라는 전망이 나왔다. Disney는 이미 주요 스튜디오 중 최초로 연간 누적 <span class="amount">$10억(&#8361;1.51조)</span> 달성을 알렸다. &lt;Zootopia 2&gt;는 12주차 주말에도 전 세계에서 관객을 동원하며 글로벌 누적 <span class="amount">$18.2억(&#8361;2.75조)</span>을 기록했고, &lt;Avatar: Fire and Ash&gt;도 <span class="amount">$10억(&#8361;1.51조)</span>을 넘겼다.</p>
+        <p>이번 주(4월 3일)에는 &lt;Super Mario Galaxy Movie&gt;가 북미 개봉했으며 4월 24일에는 Michael Jackson 바이오픽 &lt;Michael&gt;이 예정돼 있다. 중국은 2026년 들어 누적 박스오피스에서 이미 한때 북미를 앞질렀고, 코로나 이후 극장 산업 회복이 전 지역으로 확산되는 양상이다. OTT와의 경쟁에도 불구하고 이벤트형 블록버스터 중심의 극장 모델이 건재함을 증명하고 있다.</p>
+      </div>
+      <span class="source">출처: <a href="https://screenrant.com/2026-global-box-office-projections-record/" target="_blank">Screen Rant</a> &middot; <a href="https://www.laughingplace.com/disney-entertainment/disney-billion-box-office-2026/" target="_blank">Laughing Place</a> &middot; <a href="https://www.the-numbers.com/daily-box-office-chart" target="_blank">The Numbers</a> (Mar&ndash;Apr 2026)</span>
+    </article>
+  </div>
+
+</section>
+
+<!-- ANALYSIS -->
+<section class="analysis">
+  <div class="analysis-header">Analysis</div>
+  <div class="analysis-grid">
+    <div class="analysis-item">
+      <div class="analysis-num">01</div>
+      <h3>AI 도구의 철학 &mdash; Netflix의 &lsquo;장인의 AI&rsquo; vs iQiyi의 &lsquo;공장의 AI&rsquo;</h3>
+      <p>Netflix가 InterPositive를 인수하며 밝힌 원칙은 &ldquo;스토리텔러 역량 강화&rdquo;다. 감독이 자신의 촬영물로 만든 전용 모델이 도구가 된다. 개인의 미학이 AI에 각인되는 구조다. iQiyi의 Nadou Pro는 반대 방향이다. 스크립트 분해·세트 디자인·프리비주얼라이제이션을 자동화해 제작주기를 30% 줄이는 &lsquo;산업화된 AI&rsquo;다. 두 전략 모두 비용을 낮추지만, 전자는 창작자의 개성을 AI에 주입하고, 후자는 AI가 창작 프로세스를 표준화한다. 어느 쪽이 더 많은 시장을 가져가느냐가 향후 5년 OTT 콘텐츠 경쟁의 핵심 변수다.</p>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">02</div>
+      <h3>EA 민영화가 게임 산업 지형에 미치는 세 가지 파장</h3>
+      <p>첫째, 밸류에이션 기준점이 바뀐다. $550억 LBO는 &ldquo;게임 IP는 영화·드라마 IP보다 열등하다&rdquo;는 통념을 깼다. FIFA·Madden 같은 반복 과금 프랜차이즈의 현금 흐름이 사모펀드 매력도를 증명했다. 둘째, 비상장화로 단기 실적 압박이 사라진다. EA는 분기마다 주가 방어를 위해 내린 결정들을 재검토할 수 있다. 셋째, PIF가 최대 주주가 된다는 점이다. 사우디 정부 자금이 EA의 IP 전략·인사 결정에 간접적으로 관여하게 된다. 이는 Activision의 Microsoft 편입, Nintendo의 독립 유지와 함께, 글로벌 게임 산업이 &lsquo;누가 IP를 소유하느냐&rsquo;의 전쟁으로 재편되고 있음을 보여준다.</p>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">03</div>
+      <h3>Sony TV 사업 매각 &mdash; 하드웨어 탈출과 소프트파워 집중 전략</h3>
+      <p>Sony가 BRAVIA 사업의 51%를 TCL에 넘긴 것은 단순한 TV 사업 정리가 아니다. Sony는 지난 5년간 PlayStation·음악·영화·애니메이션·반도체 이미지센서 중심으로 포트폴리오를 재편해왔다. BRAVIA는 기술력이 있었지만 삼성·LG·TCL과 박리다매 경쟁을 피할 수 없는 하드웨어 영역이었다. TCL 입장에서는 Sony 브랜드와 화질 기술을 자사의 제조 규모에 결합한다. 결과적으로 중국 기업이 일본 프리미엄 브랜드를 제조·유통하고, 일본 기업은 그 브랜드의 기술적 정체성을 설계한다. 소니가 &lsquo;콘텐츠·IP·반도체 회사&rsquo;로 완전히 탈바꿈하는 행보에서 이번 딜은 중요한 이정표다.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- NAV BOTTOM -->
+<nav class="nav-bottom">
+  <a href="NEWSPAPER_0328.html">&larr; 이전 호</a>
+  <span class="nav-center"><a href="index.html">목록</a></span>
+  <span class="nav-disabled">다음 호 &rarr;</span>
+</nav>
+
+<footer class="footer">
+  <div>
+    <div class="footer-brand">엔터문화연구소 주간 브리핑</div>
+    <div class="footer-legal">
+      본 뉴스레터는 AI 기반 큐레이션으로 제작되었으며, 인용된 모든 기사의 저작권은 원 매체에 귀속됩니다.<br>
+      모든 금액은 2026년 4월 3일 기준 환율($1 = &#8361;1,510)을 적용했습니다. 실제 환율과 차이가 있을 수 있습니다.
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <div class="footer-fx">$1 = &#8361;1,510</div>
+    <div class="footer-tags">Netflix &middot; InterPositive &middot; EA &middot; Disney &middot; Tencent Music &middot; iQiyi &middot; Sony &middot; TCL</div>
+  </div>
+</footer>
+
+</body>
+</html>
