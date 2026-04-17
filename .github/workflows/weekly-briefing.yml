@@ -1,0 +1,49 @@
+name: 주간 브리핑 자동 발행
+
+on:
+  schedule:
+    - cron: '0 12 * * 5'  # 금요일 21:00 KST (12:00 UTC)
+  workflow_dispatch:       # GitHub UI에서 수동 실행 가능
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Configure Git
+        run: |
+          git config user.name "neovibelab"
+          git config user.email "tmifmdj@gmail.com"
+
+      - name: Generate weekly briefing
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "CLAUDE.md의 주간 제작 워크플로우 STEP 1~7을 지금 실행해줘. \
+            git commit과 push(STEP 8~9)는 생략할 것 — GitHub Actions가 처리한다." \
+            --dangerously-skip-permissions
+
+      - name: Commit and push
+        run: |
+          git add NEWSPAPER_*.html SPECIAL_*.html index.html
+          if git diff --staged --quiet; then
+            echo "::error::변경된 파일 없음 — 브리핑 생성 실패 가능성"
+            exit 1
+          fi
+          git commit -m "feat: 주간 브리핑 자동 발행 — $(date +'%Y.%m.%d')"
+          git push
