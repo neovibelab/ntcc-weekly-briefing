@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엔터문화연구소 — 글로벌 주간 브리핑 2026.04.19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lime: #C8FF00;
+  --lime-dim: #a8d600;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gray-200: #e8e8e8;
+  --gray-300: #d0d0d0;
+  --gray-400: #999999;
+  --gray-500: #666666;
+  --gray-600: #444444;
+  --us: #0055FF;
+  --cn: #FF2D20;
+  --jp: #7C3AED;
+  --global: #E67700;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: 'Syne', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--white); font-family: var(--font-body); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+.masthead { background: var(--lime); color: var(--black); padding: 40px 48px 36px; }
+.masthead-date { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 24px; }
+.masthead-title { font-family: var(--font-heading); font-size: clamp(42px, 6vw, 72px); font-weight: 800; line-height: 0.95; letter-spacing: -2px; margin-bottom: 20px; }
+.masthead-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; }
+
+.content { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+.tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; margin-bottom: 12px; }
+.tag-us { background: var(--us); color: #fff; }
+.tag-cn { background: var(--cn); color: #fff; }
+.tag-jp { background: var(--jp); color: #fff; }
+.tag-global { background: var(--global); color: #fff; }
+.tag-cat { font-family: var(--font-mono); font-size: 10px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-400); margin-left: 8px; }
+.tag-cat a { color: inherit; text-decoration: none; cursor: pointer; border-bottom: 1px dotted var(--gray-600); transition: all 0.15s; }
+.tag-cat a:hover { color: var(--lime); border-color: var(--lime); }
+
+.hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); padding: 48px 0; }
+.hero-main { padding-right: 48px; border-right: 1px solid var(--gray-600); }
+.hero-main .article-title { font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px); font-weight: 400; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 20px; color: var(--white); }
+.hero-main .article-lead { font-family: var(--font-display); font-size: 17px; font-style: italic; line-height: 1.55; color: var(--gray-300); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--gray-600); }
+.article-body { font-size: 14px; line-height: 1.75; color: var(--gray-300); font-weight: 300; }
+.article-body p { margin-bottom: 12px; }
+
+.pull-quote { margin: 24px 0; padding: 20px 24px; background: var(--lime); color: var(--black); border-radius: 2px; }
+.pull-quote p { font-family: var(--font-heading); font-size: 16px; font-weight: 600; line-height: 1.45; margin-bottom: 0 !important; }
+.pull-quote cite { display: block; font-family: var(--font-mono); font-style: normal; font-size: 10px; margin-top: 10px; opacity: 0.5; letter-spacing: 0.5px; }
+
+.hero-sidebar { padding-left: 40px; display: flex; flex-direction: column; }
+.sidebar-card { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.sidebar-card:first-child { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+.sidebar-card .article-title { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.2; margin-bottom: 14px; color: var(--white); }
+.sidebar-card .article-body { font-size: 13px; }
+
+.amount { font-family: var(--font-mono); font-size: 0.88em; font-weight: 700; color: var(--lime); white-space: nowrap; }
+
+.source { display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--gray-500); letter-spacing: 0.3px; }
+.source a { color: var(--gray-400); text-decoration: none; border-bottom: 1px solid var(--gray-600); transition: all 0.2s; }
+.source a:hover { color: var(--lime); border-color: var(--lime); }
+
+.col-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); }
+.col { padding: 40px 0; }
+.col:not(:last-child) { padding-right: 36px; margin-right: 36px; border-right: 1px solid var(--gray-600); }
+.col-header { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--gray-500); padding-bottom: 14px; margin-bottom: 28px; border-bottom: 1px solid var(--gray-600); }
+.col:nth-child(1) .col-header { color: var(--cn); border-bottom-color: var(--cn); }
+.col:nth-child(2) .col-header { color: var(--jp); border-bottom-color: var(--jp); }
+.col:nth-child(3) .col-header { color: var(--global); border-bottom-color: var(--global); }
+.col-article { margin-bottom: 32px; }
+.col-article:last-child { margin-bottom: 0; }
+.col-article .article-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; color: var(--white); }
+.col-article .article-body { font-size: 13px; }
+
+.analysis { padding: 48px 0; }
+.analysis-header { font-family: var(--font-heading); font-size: 18px; font-weight: 700; letter-spacing: 3px; color: var(--lime); padding-bottom: 14px; margin-bottom: 36px; border-bottom: 1px solid var(--gray-600); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+.analysis-num { font-family: var(--font-display); font-size: 56px; font-style: italic; color: var(--gray-600); line-height: 1; margin-bottom: 12px; }
+.analysis-item h3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.25; margin-bottom: 14px; color: var(--white); }
+.analysis-item p { font-size: 13.5px; line-height: 1.7; color: var(--gray-300); font-weight: 300; }
+.analysis-tier { margin-bottom: 16px; padding-left: 16px; border-left: 2px solid var(--gray-600); }
+.analysis-tier:last-child { margin-bottom: 0; }
+.analysis-tier-signal { border-left-color: var(--gray-400); }
+.analysis-tier-pattern { border-left-color: var(--gray-500); }
+.analysis-tier-implication { border-left-color: var(--lime); background: rgba(200,255,0,0.02); padding: 12px 16px; border-radius: 0 4px 4px 0; }
+.analysis-label { display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.analysis-label-signal { color: var(--gray-300); }
+.analysis-label-pattern { color: var(--gray-300); }
+.analysis-label-implication { color: var(--lime); }
+
+.footer { background: var(--lime); color: var(--black); padding: 32px 48px; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
+.footer-brand { font-family: var(--font-heading); font-size: 14px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; }
+.footer-legal { font-family: var(--font-mono); font-size: 10px; line-height: 1.8; opacity: 0.5; max-width: 560px; }
+.footer-tags { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; opacity: 0.4; text-align: right; }
+.footer-fx { font-family: var(--font-mono); font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+.nav-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 48px; background: var(--black); border-bottom: 1px solid var(--gray-600); }
+.nav-top a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-top a:hover { color: var(--lime); }
+.nav-vol { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); letter-spacing: 0.5px; }
+
+.nav-bottom { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; border-top: 1px solid var(--gray-600); background: var(--black); }
+.nav-bottom a { font-family: var(--font-mono); font-size: 12px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-bottom a:hover { color: var(--lime); }
+.nav-bottom .nav-disabled { font-family: var(--font-mono); font-size: 12px; color: var(--gray-600); pointer-events: none; }
+.nav-bottom .nav-center { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.nav-bottom .nav-center a { color: var(--gray-400); }
+.nav-bottom .nav-center a:hover { color: var(--lime); }
+
+@media (max-width: 900px) {
+  .masthead { padding: 28px 20px 24px; }
+  .masthead-title { letter-spacing: -1px; }
+  .content { padding: 0 20px; }
+  .hero { grid-template-columns: 1fr; padding: 32px 0; }
+  .hero-main { padding-right: 0; border-right: none; padding-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+  .hero-sidebar { padding-left: 0; padding-top: 32px; }
+  .col-section { grid-template-columns: 1fr; }
+  .col:not(:last-child) { border-right: none; padding-right: 0; margin-right: 0; padding-bottom: 32px; margin-bottom: 0; border-bottom: 1px solid var(--gray-600); }
+  .analysis-grid { grid-template-columns: 1fr; gap: 36px; }
+  body { font-size: 16px; line-height: 1.8; }
+  .article-body { font-size: 16px; line-height: 1.85; }
+  .sidebar-card .article-body { font-size: 15px; }
+  .col-article .article-body { font-size: 15px; }
+  .hero-main .article-lead { font-size: 18px; line-height: 1.6; }
+  .analysis-item p { font-size: 15px; line-height: 1.8; }
+  .analysis-item h3 { font-size: 24px; }
+  .source { font-size: 12px; }
+  .tag { font-size: 11px; }
+  .tag-cat { font-size: 11px; }
+  .analysis-label { font-size: 11px; }
+  .pull-quote p { font-size: 17px; }
+  .pull-quote cite { font-size: 11px; }
+  .footer { padding: 24px 20px; flex-direction: column; }
+  .footer-tags { text-align: left; }
+  .footer-legal { font-size: 11px; }
+  .nav-top { padding: 12px 20px; }
+  .nav-bottom { padding: 16px 20px; }
+}
+@media print {
+  body { background: #fff; color: #000; }
+  .masthead, .footer { background: #f0f0f0; color: #000; }
+  .amount { color: #000; font-weight: 700; }
+  .pull-quote { background: #f0f0f0; color: #000; }
+  .article-title { color: #000 !important; }
+  a { color: #000 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV TOP -->
+<nav class="nav-top">
+  <a href="index.html">&larr; Archive</a>
+  <span class="nav-vol">Vol. 06</span>
+</nav>
+
+<header class="masthead">
+  <div class="masthead-date">2026년 4월 19일 토요일 (4.13&ndash;4.19)</div>
+  <h1 class="masthead-title">엔터문화연구소<br>글로벌 주간 브리핑</h1>
+  <div class="masthead-sub">Weekly Business Briefing: US &middot; China &middot; Japan</div>
+</header>
+
+<div class="content">
+
+<!-- HERO -->
+<section class="hero">
+  <article class="hero-main">
+    <span class="tag tag-us">US</span><span class="tag-cat">DATA &middot; HR</span>
+    <h2 class="article-title">Netflix Q1 매출 <span class="amount">$122.5억(₩18.1조)</span> 사상 최대 &mdash; 공동창업자 해스팅스 이사회 이탈, 주가 9% 급락</h2>
+    <p class="article-lead">Netflix가 2026년 1분기 매출 <span class="amount">$122.5억(₩18.1조)</span>으로 역대 최고를 경신하며 기대치를 웃돌았지만, 공동창업자 리드 해스팅스의 6월 이사회 퇴임 발표가 겹치며 시간외 주가는 9% 폭락했다.</p>
+    <div class="article-body">
+      <p>4월 16일 발표된 실적에 따르면 Q1 매출은 전년 동기 대비 16% 증가한 <span class="amount">$122.5억(₩18.1조)</span>으로 시장 전망치 <span class="amount">$121.8억(₩18조)</span>을 상회했다. 순이익 <span class="amount">$53억(₩7.8조)</span>, 잉여현금흐름 <span class="amount">$51억(₩7.5조)</span>을 기록하며 영업이익은 전년 대비 18% 급증했다.</p>
+      <p>지역별로는 아시아·태평양이 +20%로 가장 빠른 성장세를 보였고, 라틴아메리카 +19%, EMEA(유럽·중동·아프리카) +17%, 북미 +14% 순이었다. Netflix는 구독자 수 공개를 중단했지만 1월 기준 전 세계 유료 구독자 3억 2,500만 명에 달한다고 밝혔다.</p>
+      <div class="pull-quote">
+        <p>해스팅스의 이탈은 기업 성숙화의 신호다. 창업자가 떠나도 사업은 탄탄하다&mdash;문제는 월스트리트가 그것을 믿지 않는다는 것이다.</p>
+        <cite>&mdash; Deadline (Apr 16, 2026)</cite>
+      </div>
+      <p>충격은 실적이 아니라 인사에서 왔다. 29년간 회사를 이끌어온 공동창업자 리드 해스팅스가 6월 임기 만료와 함께 이사회를 떠난다. Netflix는 WBD 인수전에서 패배한 이후 성장 서사를 재정비 중이다. 2026년 연간 광고 매출 목표 <span class="amount">$30억(₩4,428억)</span>은 전년 대비 2배를 예고하며, 연간 가이던스 <span class="amount">$507&ndash;517억(₩74.8&ndash;76.3조)</span>도 유지했다.</p>
+    </div>
+    <span class="source">출처: <a href="https://www.cnbc.com/2026/04/16/netflix-nflx-earnings-q1-2026.html" target="_blank">CNBC</a> &middot; <a href="https://deadline.com/2026/04/netflix-q1-2026-earnings-wall-street-1236863099/" target="_blank">Deadline</a> &middot; <a href="https://www.bloomberg.com/news/articles/2026-04-16/netflix-revenue-beats-estimates-as-hastings-steps-down" target="_blank">Bloomberg</a> (Apr 16)</span>
+  </article>
+
+  <div class="hero-sidebar">
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">IP &middot; DATA</span>
+      <h2 class="article-title">CinemaCon 2026 — Zelda, LOTR, Spider-Man Beyond: 극장가 &lsquo;IP 대전&rsquo;</h2>
+      <div class="article-body">
+        <p>4월 13&ndash;16일 라스베이거스 시저스팰리스에서 열린 CinemaCon 2026에서 주요 스튜디오들이 일제히 IP 프랜차이즈 중심의 라인업을 공개했다. Sony는 닌텐도 IP &lt;Legend of Zelda&gt; 실사 영화를 필두로 &lt;Spider-Man: Beyond the Spider-Verse&gt;, &lt;Social Network&gt; 속편, &lt;Jumanji&gt; 속편, &lt;Resident Evil&gt;을 제시했다. WBD/New Line은 &lt;Lord of the Rings: The Hunt for Gollum&gt;에 Jamie Dornan(아라고른)·Leo Woodall 주연을 공개했다.</p>
+        <p>Paramount는 &lt;Street Fighter&gt; 캐스팅과 Tom Cruise·Jerry Bruckheimer의 &lt;Top Gun 3&gt; 제작 확정을 발표했고, Disney는 12월 개봉 &lt;Avengers: Doomsday&gt; 독점 영상을 공개했다. 스트리밍 경쟁 속에서 극장이 &lsquo;대체 불가 IP&rsquo;에 올인하는 신호다.</p>
+      </div>
+      <span class="source">출처: <a href="https://variety.com/2026/film/news/cinemacon-2026-sony-zelda-spider-man-schedule-1236723851/" target="_blank">Variety</a> &middot; <a href="https://www.hollywoodreporter.com/dailyedition/15-04-2026/1236564883/" target="_blank">THR</a> &middot; <a href="https://editorial.rottentomatoes.com/article/cinemacon-2026-news-updates/" target="_blank">Rotten Tomatoes</a> (Apr 13&ndash;16)</span>
+    </article>
+
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">M&amp;A</span>
+      <h2 class="article-title">WBD 주주총회 D-6 — Paramount, CinemaCon서 &ldquo;인수 후에도 극장 우선&rdquo; 약속</h2>
+      <div class="article-body">
+        <p>4월 23일 WBD 주주 특별총회를 6일 앞두고, Paramount는 CinemaCon에서 공격적인 극장 라인업을 공개하며 인수 후 콘텐츠 전략을 직접 제시했다. 의결권 자문사 Glass Lewis와 ISS 모두 주당 <span class="amount">$31(₩4.6만)</span>·147% 프리미엄 조건의 찬성을 권고했다.</p>
+        <p>그러나 극장 사업자들은 &lsquo;합병 후 HBO·DC·LOTR IP가 스트리밍 우선으로 전환되지 않을까&rsquo; 우려를 표명했다. Washington Times는 4월 16일 &ldquo;worries about WBD acquisition looming, Paramount takes the stage&rdquo;라는 제목으로 전시 업계의 긴장을 보도했다. 반독점 심사는 미 법무부에 계류 중이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.washingtontimes.com/news/2026/apr/16/worries-wbd-acquisition-looming-paramount-takes-stage-cinemacon/" target="_blank">Washington Times</a> &middot; <a href="https://www.wbd.com/news/warner-bros-discovery-sets-shareholder-meeting-date-april-23-2026-approve-transaction-with-paramount-skydance" target="_blank">WBD IR</a> (Apr 16)</span>
+    </article>
+  </div>
+</section>
+
+<!-- 3-COL -->
+<section class="col-section">
+
+  <div class="col">
+    <div class="col-header">China</div>
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">AI &middot; INV</span>
+      <h3 class="article-title">아이치이, &lsquo;AI 배우 디지털 분신&rsquo; 계약 확인 &mdash; 홍콩 상장 추진·나도우 Pro 출시 &lsquo;3중 베팅&rsquo;</h3>
+      <div class="article-body">
+        <p>4월 15일 아이치이(iQIYI) CEO 공위(龚宇)는 언론 인터뷰에서 일부 인기 배우와 초상·음성·퍼포먼스 데이터를 포괄하는 AI 디지털 분신 상업화 계약을 체결 중이라고 직접 확인했다. 동작 캡처 기술과 결합해 &lsquo;디지털 아바타&rsquo;를 제작하고 AI 드라마 시리즈에 활용하는 구조다. 공위는 &ldquo;배우의 허가는 특정 작품·특정 역할에 국한되며, 무제한 활용 권한을 부여하는 것이 아니다&rdquo;라고 선을 그었다.</p>
+        <p>아이치이는 같은 날 자체 AI 영상 에이전트 &lsquo;나도우 Pro(Nadou Pro)&rsquo;의 프리커머셜 테스트도 개시했다. 3월 30일에는 홍콩증권거래소에 비공개 이중 상장 신청서를 제출하고 <span class="amount">$1억(₩1,476억)</span> 규모 자사주 매입 프로그램을 발표했다. 나스닥 상장 이후 시가총액이 최고 <span class="amount">$312.8억(₩4.6조)</span>에서 현재 <span class="amount">$13억(₩1,920억)</span> 수준으로 수직 낙하한 상황에서, 본토 투자자 접근성 확보와 AI 선도 이미지를 동시에 노리는 생존 전략이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://finance.sina.com.cn/jjxw/2026-04-15/doc-inhuqwsw3397237.shtml" target="_blank">新浪财经</a> &middot; <a href="https://www.theglobeandmail.com/investing/markets/stocks/IQ-Q/pressreleases/1077523/iqiyi-unveils-hong-kong-listing-plan-100-million-buyback-and-ai-video-agent-nadou-pro/" target="_blank">Globe and Mail</a> (Apr 15, Mar 30)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">AI &middot; REG</span>
+      <h3 class="article-title">중국 AI 단편극 시장 <span class="amount">¥300억($20.3억/₩3조)</span> 전망 &mdash; 청두, 전국 첫 AI 단편극 실험실 개소</h3>
+      <div class="article-body">
+        <p>4월 16일 청두문화관광그룹과 청두미디어그룹이 《2026 강영지로—중국 단편극 전민공생과 산업도약》 백서를 발표하며 전국 최초 AI 단편극 실험실 설립을 선언했다. 2025년 <span class="amount">¥150&ndash;200억($10.2&ndash;13.6억/₩1.5&ndash;2조)</span>이던 중국 AI 단편극 시장이 2026년 <span class="amount">¥300억($20.3억/₩3조)</span>으로 성장할 것으로 전망했다.</p>
+        <p>4월 1일부터는 국가광전총국(NRTA)의 &lsquo;AI 단편극 분류·등급 심사 시스템&rsquo;이 공식 시행돼, AI 제작 단편극의 &lsquo;선등록 후공개&rsquo;가 의무화됐다. 투자액 100만 위안 이상 작품은 성급 광전 부서의 사전 등록을 받아야 한다. AI 도입으로 편당 제작 단가는 <span class="amount">¥5만~10만</span>에서 <span class="amount">¥5천</span>으로 10분의 1 수준으로 떨어졌으며, 제작 기간도 2~4주에서 3~7일로 단축됐다.</p>
+      </div>
+      <span class="source">출처: <a href="https://finance.sina.com.cn/roll/2026-04-16/doc-inhusviy2844645.shtml" target="_blank">新浪财经</a> &middot; <a href="https://m.thepaper.cn/newsDetail_forward_32927160" target="_blank">The Paper</a> (Apr 3, Apr 16)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Japan</div>
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">IP &middot; REG</span>
+      <h3 class="article-title">일본 METI, 2033년 해외 애니 시장 <span class="amount">¥6조($407억/₩60조)</span> 목표 &mdash; 정부 지원 예산 4배 확대</h3>
+      <div class="article-body">
+        <p>4월 12일, 일본 경제산업성(METI)이 2033년 해외 애니메이션 시장 규모를 현재(2024년 <span class="amount">¥2.17조($147억/₩21.7조)</span>)의 약 3배인 <span class="amount">¥6조($407억/₩60조)</span>로 끌어올린다는 목표를 공표했다. 이는 콘텐츠 전반의 해외 수출 목표 <span class="amount">¥20조($1,356억/₩200조)</span>의 핵심 축이다.</p>
+        <p>세 가지 정책 기둥은 ①대형 블록버스터 제작 집중 지원, ②글로벌 유통 플랫폼 다변화, ③제작 인프라·인력 확충이다. METI는 정부의 콘텐츠 산업 지원 예산을 2024년도 대비 4배 가까이 증액한다고 발표했다. &ldquo;overseas market now far exceeds local revenues, and the gap will only widen&rdquo; — 일본동화협회(AJA) 편집장 하세가와 마사히코는 해외가 이미 국내를 앞질렀고 격차는 더 벌어질 것이라고 전망했다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.animenewsnetwork.com/news/2026-04-12/japan-aims-to-increase-anime-overseas-market-to-6-trillion-yen-by-2033/.236216" target="_blank">Anime News Network</a> &middot; <a href="https://soranews24.com/2026/04/14/japanese-government-wants-overseas-anime-market-to-roughly-triple-in-10-years-but-are-they-crazy/" target="_blank">SoraNEWS24</a> (Apr 12&ndash;14)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">IP &middot; INV</span>
+      <h3 class="article-title">Netflix &times; 도호, 일본 제작 거점 확대 &mdash; 대형 스테이지 2배, 오리지널 SF &lt;가스인간&gt; 공동 제작</h3>
+      <div class="article-body">
+        <p>Netflix와 도호(東宝)가 일본 제작 파트너십을 대폭 확장한다. 양사는 도호 스튜디오 내 300평급 대형 스테이지를 신설하는 신규 계약을 체결했으며, 제작 거점 규모를 기존 대비 2배로 늘린다. 첫 번째 협력 오리지널로 도호 클래식 IP 《가스인간 제1호》를 현대적으로 재해석한 SF 시리즈 &lt;가스인간(ガス人間)&gt;이 공개됐다.</p>
+        <p>도호는 2024년 이후 Netflix를 통해 &lt;앨리스 인 보더랜드 시즌 3&gt; 등 글로벌 히트 작품을 배출했으며, 이번 거점 확대는 &lsquo;일본 IP의 글로벌 대형화&rsquo; 전략의 연장선이다. METI가 정부 차원에서 블록버스터 IP 정책을 지원하는 시점에 Netflix가 인프라 투자로 화답한 형국이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://about.netflix.com/ja/news/what-next-netflix-reveals-series-films-and-games-coming-in-2026" target="_blank">About Netflix</a> &middot; <a href="https://natalie.mu/eiga/news/655344" target="_blank">映画ナタリー</a> (2026)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Global</div>
+    <article class="col-article">
+      <span class="tag tag-global">Global</span><span class="tag-cat">IP &middot; M&amp;A</span>
+      <h3 class="article-title">Sony, 피너츠 80% 인수 완료 &mdash; 찰리 브라운·스누피 IP 통합으로 <span class="amount">$9.1억(₩1.3조)</span> 베팅</h3>
+      <div class="article-body">
+        <p>Sony 그룹이 3월 3일 캐나다 WildBrain으로부터 Peanuts Holdings의 지분 41%를 C$6.3억(약 <span class="amount">$4.57억/₩6,745억)</span>에 인수해, 기존 보유분 39%와 합산 80%의 지배주주로 올라섰다. 피너츠 창업자 찰스 슐츠 가족이 잔여 20%를 보유한다.</p>
+        <p>Sony는 영화·TV 제작 및 배급(Sony Pictures), 음악과 라이브(SMEJ), 머천다이징을 하나의 생태계로 통합하는 다각화 IP 전략을 추진한다. Sony는 피너츠 구주 공정가치 재측정으로 약 <span class="amount">¥450억($3.05억/₩4,502억)</span>의 평가 이익을 2026년 3월 결산에 반영했다. WildBrain은 유럽·중동·아시아태평양의 독점 라이선스 에이전트 지위를 유지한다. 규모로 보면, 닌텐도 IP(마리오·젤다)에 이어 Sony가 스누피라는 또 하나의 영구 IP를 확보한 셈이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://variety.com/2026/film/news/sony-peanuts-brand-expansion-plans-1236653249/" target="_blank">Variety</a> &middot; <a href="https://www.hollywoodreporter.com/business/business-news/sony-buys-majority-stake-in-company-behind-charlie-brown-1236454606/" target="_blank">THR</a> &middot; <a href="https://www.wildbrain.com/trade-news/wildbrain-closes-630-million-sale-of-its-41-stake-in-peanuts-to-sony-and-repays-100-of-its-senior" target="_blank">WildBrain</a> (Mar 2026)</span>
+    </article>
+  </div>
+
+</section>
+
+<!-- ANALYSIS -->
+<section class="analysis">
+  <div class="analysis-header">인사이트</div>
+  <div class="analysis-grid">
+    <div class="analysis-item">
+      <div class="analysis-num">01</div>
+      <h3>스트리밍 &lsquo;창업자 이후&rsquo; 시대 &mdash; Netflix 해스팅스 퇴장이 시사하는 플랫폼 성숙화의 역설</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>Netflix가 역대 최대 분기 매출 <span class="amount">$122.5억</span>을 발표한 날, 공동창업자 리드 해스팅스가 이사회 이탈을 선언했다. 광고 매출은 전년 대비 2배 목표, 아시아·태평양은 +20% 성장—숫자는 탄탄하지만 주가는 9% 빠졌다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>창업자 퇴장에 대한 월스트리트의 반응은 &lsquo;비이성적 불안&rsquo;이 아니다. Amazon(베조스 이후), Disney(아이거 이후) 사례처럼, 카리스마형 창업자가 만든 문화·의사결정 구조는 후임자가 유지하기 어렵다. 동시에 Netflix는 WBD 인수전 패배 이후 &lsquo;다음 성장 스토리&rsquo;가 없다. 광고+라이브 이벤트라는 새 축은 콘텐츠 플랫폼의 정체성 전환을 요구한다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>한국 OTT(웨이브·티빙)와 글로벌 사업을 전개하는 HYBE·CJ ENM은 Netflix와의 협상에서 &lsquo;창업자 이후&rsquo; 불확실성을 지렛대로 활용할 수 있다. 플랫폼이 정체성을 재정립하는 시기는 콘텐츠 공급자 입장에서 조건 재협상의 창구다. 동시에 광고 기반 스트리밍으로의 전환 신호를 주시할 것 &mdash; 한국 브랜드 연계 콘텐츠의 Netflix 광고 인벤토리 활용 기회가 열릴 수 있다.</p>
+      </div>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">02</div>
+      <h3>AI 배우의 시대 &mdash; 중국이 먼저 실행하는 &lsquo;디지털 분신 경제&rsquo;의 권리 지형</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>아이치이가 배우의 초상·음성·퍼포먼스 데이터를 계약으로 확보해 AI 드라마에 배치하는 &lsquo;디지털 분신&rsquo; 모델을 공식화했다. 지난 호에서 미국 WGA가 &lsquo;훈련 데이터=재산권&rsquo;을 계약에 명시한 것과 같은 주, 중국은 실제 배우 라이선스 거래를 구현했다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>미국과 중국은 같은 기술을 정반대 방향에서 접근한다. 미국은 &lsquo;작가 저작물을 AI에 쓰려면 허락을 받으라&rsquo;는 보호 프레임, 중국은 &lsquo;배우를 AI화하되 역할 단위로 계약하라&rsquo;는 활용 프레임이다. 아이치이가 플랫폼 생존 위기(시가총액 -96%)에서 AI를 수익화 도구로 선택한 것은 중국 스트리밍 업계 전반에 선례를 만들고 있다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>SM·HYBE·CUBE 등 한국 대형 기획사는 지금이 &lsquo;AI 퍼포머 권리 표준&rsquo;을 선제적으로 설계할 골든타임이다. 아이치이 모델이 확산되면, 중국 플랫폼에 콘텐츠를 공급하는 한국 배우·가수의 AI 분신이 무단으로 유통될 위험이 높아진다. 미국(WGA 보호) + 중국(역할 기반 계약) 이중 기준을 반영한 계약 조항을 지금 준비해야 한다. 카카오엔터가 선도적으로 배우 AI 권리 가이드라인을 수립한다면 업계 표준 선점의 기회가 된다.</p>
+      </div>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">03</div>
+      <h3>IP 요새화의 3극 수렴 &mdash; Zelda·LOTR·스누피·애니메이션, 극장과 정부가 IP에 올인하는 이유</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>같은 주, 미국 스튜디오들은 CinemaCon에서 일본 IP(젤다)·기존 IP(LOTR·탑건) 중심 극장 라인업을 발표했고, Sony는 스누피 IP 80%를 <span class="amount">$9.1억</span>에 인수했으며, 일본 정부는 애니 IP 수출 <span class="amount">¥6조</span> 목표를 공표했다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>세 흐름의 공통 원인은 AI+스트리밍 시대의 &lsquo;콘텐츠 범용화(commoditization)&rsquo;다. AI가 제작 비용을 낮추면 콘텐츠의 수량은 폭발하지만 개별 작품의 발견 가능성(discoverability)은 하락한다. 이 환경에서 관객이 자발적으로 찾아오게 만드는 유일한 자산이 검증된 IP다. 극장과 스트리밍 플랫폼, 정부 정책 모두 같은 결론에 도달하고 있다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>한국의 웹툰·웹소설 IP는 세계에서 가장 빠르게 성장하는 원천 IP 저수지다. NAVER WEBTOON(2억 명 월간 이용자)과 카카오 웹툰은 &lsquo;젤다를 실사화한 Sony&rsquo; 모델의 한국 버전을 실행할 수 있는 위치에 있다. 문제는 Legendary Entertainment처럼 IP를 극장·스트리밍 블록버스터로 변환하는 &lsquo;할리우드 파이프라인 파트너&rsquo;가 부재하다는 것이다. HYBE·CJ ENM이 TBS×Legendary 모델을 참조해 웹툰 IP의 글로벌 극장화 전략을 지금 설계해야 할 이유다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- NAV BOTTOM -->
+<nav class="nav-bottom">
+  <a href="NEWSPAPER_0411.html">&larr; 이전 호</a>
+  <span class="nav-center"><a href="index.html">목록</a></span>
+  <span class="nav-disabled">다음 호 &rarr;</span>
+</nav>
+
+<footer class="footer">
+  <div>
+    <div class="footer-brand">엔터문화연구소 주간 브리핑</div>
+    <div class="footer-legal">
+      본 뉴스레터는 AI 기반 큐레이션으로 제작되었으며, 인용된 모든 기사의 저작권은 원 매체에 귀속됩니다.<br>
+      모든 금액은 2026년 4월 17일 기준 환율($1 = ₩1,476)을 적용했습니다. 실제 환율과 차이가 있을 수 있습니다.
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <div class="footer-fx">$1 = ₩1,476</div>
+    <div class="footer-tags">Netflix &middot; CinemaCon &middot; WBD &middot; iQIYI &middot; Chengdu &middot; METI &middot; Toho &middot; Sony &middot; Peanuts</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.tag-cat').forEach(function(el){
+  var tags=el.textContent.split('\u00B7').map(function(t){return t.trim();}).filter(Boolean);
+  el.innerHTML=tags.map(function(t){
+    return '<a href="index.html?tag='+encodeURIComponent(t)+'">'+t+'</a>';
+  }).join(' \u00B7 ');
+});
+</script>
+</body>
+</html>
