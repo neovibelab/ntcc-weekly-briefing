@@ -3,7 +3,7 @@
 ## 프로젝트 개요
 
 미국·중국·일본 엔터테인먼트 비즈니스 주간 인텔리전스 뉴스레터.
-매주 토요일 발행. HTML 단일 파일로 제작하여 Vercel(GitHub Pages)에 배포.
+매주 금요일 저녁 작성, 토요일 발행. HTML 단일 파일로 제작하여 Vercel(GitHub Pages)에 배포.
 
 - **매체명**: 엔터문화연구소
 - **리포트명**: 글로벌 주간 브리핑
@@ -17,14 +17,10 @@
 ```
 /
 ├── CLAUDE.md                          # 이 파일 (클로드 코드 지침)
+├── README.md
 ├── index.html                         # 아카이브 목록 페이지
-├── NEWSPAPER_MMDD.html                # 정규호 (매주 토요일)
-├── SPECIAL_MMDD.html                  # 스페셜 에디션 (비정기)
-├── templates/
-│   ├── newspaper-template.html        # 정규호 HTML 템플릿 (참조용)
-│   └── special-template.html          # 스페셜 에디션 HTML 템플릿 (참조용)
-└── docs/
-    └── production-guide.md            # 상세 제작 가이드
+├── NEWSPAPER_MMDD.html                # 정규호 (매주 금요일 저녁 작성, 토요일 발행)
+└── SPECIAL_MMDD.html                  # 스페셜 에디션 (비정기)
 ```
 
 ### 파일명 규칙
@@ -87,7 +83,7 @@
 - [ ] 달러 금액에 한화 병기 완료?
 - [ ] 환율이 푸터에 표기?
 - [ ] 지역별 기사 배분 균형?
-- [ ] 마스트헤드 날짜 형식: `2026년 M월 D일 토요일 (M.D–D)`
+- [ ] 마스트헤드 날짜 형식: `2026년 M월 D일 토요일 (M.D–D)` (발행일 = 토요일 기준)
 - [ ] 칼럼 헤더 영문만 (China / Japan / Global)
 - [ ] 인사이트 섹션 헤더 = "인사이트"
 - [ ] index.html 최신 호 포함
@@ -216,6 +212,38 @@ FOOTER
 
 ---
 
+## 테스트 파일 규칙
+
+### 목적
+템플릿 구조·CSS·섹션 연결을 검증하기 위한 더미 파일. 실제 뉴스 콘텐츠 없이 레이아웃 전체를 점검한다.
+
+### 파일명
+`TEST_MMDD.html` (예: `TEST_0425.html`)
+
+### 작성 규칙
+- 모든 더미 텍스트는 `[TEST]` 접두사로 시작한다
+- 상단에 라임 배경 배너(`⚠️ TEST FILE — 프로덕션 미포함`)를 추가한다
+- 실제 URL 대신 `#` 또는 `https://example.com`을 사용한다
+- 금액·수치는 임의값 사용 (예: `$100M(₩145조)`)
+- index.html에 연결하지 않는다
+- git 커밋 시 별도 브랜치 또는 `test:` 접두사 커밋 메시지 사용
+
+### 검증 항목
+- [ ] NAV-TOP 렌더링
+- [ ] MASTHEAD 레이아웃 (날짜·제목·부제)
+- [ ] HERO 2컬럼 그리드 (hero-main + hero-sidebar)
+- [ ] Pull Quote 박스
+- [ ] 지역 태그 색상 (US/CN/JP/Global)
+- [ ] 카테고리 태그 (`tag-cat`) 표기
+- [ ] COL-SECTION 3컬럼 그리드 (China/Japan/Global)
+- [ ] 금액 표기 (`<span class="amount">`)
+- [ ] 인사이트 3단 구조 (신호/맥락/전략)
+- [ ] NAV-BOTTOM (이전 호·목록·다음 호)
+- [ ] FOOTER (브랜드·환율·저작권)
+- [ ] 모바일 반응형 (max-width: 900px)
+
+---
+
 ## Git 커밋 컨벤션
 
 ```
@@ -233,7 +261,7 @@ chore: index.html 업데이트
 - Pull Quote는 Hero 기사에만 1개 허용
 - 인사이트 섹션은 아래 3단 구조를 따른다 (상세: 인사이트 섹션 가이드)
 - 검색 결과 부족 시 품질 위해 기사 수를 억지로 채우지 않는다
-- 발행일은 항상 해당 주 토요일
+- 작성은 매주 금요일 저녁, 발행일은 해당 주 토요일
 
 ---
 

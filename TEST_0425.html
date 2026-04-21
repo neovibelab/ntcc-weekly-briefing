@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[TEST] 엔터문화연구소 — 글로벌 주간 브리핑 템플릿 검증</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lime: #C8FF00;
+  --lime-dim: #a8d600;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gray-200: #e8e8e8;
+  --gray-300: #d0d0d0;
+  --gray-400: #999999;
+  --gray-500: #666666;
+  --gray-600: #444444;
+  --us: #0055FF;
+  --cn: #FF2D20;
+  --jp: #7C3AED;
+  --global: #E67700;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: 'Syne', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--white); font-family: var(--font-body); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+/* ── TEST BANNER ── */
+.test-banner { background: #FF2D20; color: #fff; text-align: center; padding: 10px 48px; font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: 2px; position: sticky; top: 0; z-index: 100; }
+
+.masthead { background: var(--lime); color: var(--black); padding: 40px 48px 36px; }
+.masthead-date { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 24px; }
+.masthead-title { font-family: var(--font-heading); font-size: clamp(42px, 6vw, 72px); font-weight: 800; line-height: 0.95; letter-spacing: -2px; margin-bottom: 20px; }
+.masthead-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; }
+
+.content { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+.tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; margin-bottom: 12px; }
+.tag-us { background: var(--us); color: #fff; }
+.tag-cn { background: var(--cn); color: #fff; }
+.tag-jp { background: var(--jp); color: #fff; }
+.tag-global { background: var(--global); color: #fff; }
+.tag-cat { font-family: var(--font-mono); font-size: 10px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-400); margin-left: 8px; }
+
+.hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); padding: 48px 0; }
+.hero-main { padding-right: 48px; border-right: 1px solid var(--gray-600); }
+.hero-main .article-title { font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px); font-weight: 400; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 20px; color: var(--white); }
+.hero-main .article-lead { font-family: var(--font-display); font-size: 17px; font-style: italic; line-height: 1.55; color: var(--gray-300); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--gray-600); }
+.article-body { font-size: 14px; line-height: 1.75; color: var(--gray-300); font-weight: 300; }
+.article-body p { margin-bottom: 12px; }
+
+.pull-quote { margin: 24px 0; padding: 20px 24px; background: var(--lime); color: var(--black); border-radius: 2px; }
+.pull-quote p { font-family: var(--font-heading); font-size: 16px; font-weight: 600; line-height: 1.45; margin-bottom: 0 !important; }
+.pull-quote cite { display: block; font-family: var(--font-mono); font-style: normal; font-size: 10px; margin-top: 10px; opacity: 0.5; letter-spacing: 0.5px; }
+
+.hero-sidebar { padding-left: 40px; display: flex; flex-direction: column; }
+.sidebar-card { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.sidebar-card:first-child { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+.sidebar-card .article-title { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.2; margin-bottom: 14px; color: var(--white); }
+.sidebar-card .article-body { font-size: 13px; }
+
+.amount { font-family: var(--font-mono); font-size: 0.88em; font-weight: 700; color: var(--lime); white-space: nowrap; }
+
+.source { display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--gray-500); letter-spacing: 0.3px; }
+.source a { color: var(--gray-400); text-decoration: none; border-bottom: 1px solid var(--gray-600); transition: all 0.2s; }
+.source a:hover { color: var(--lime); border-color: var(--lime); }
+
+.col-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); }
+.col { padding: 40px 0; }
+.col:not(:last-child) { padding-right: 36px; margin-right: 36px; border-right: 1px solid var(--gray-600); }
+.col-header { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--gray-500); padding-bottom: 14px; margin-bottom: 28px; border-bottom: 1px solid var(--gray-600); }
+.col:nth-child(1) .col-header { color: var(--cn); border-bottom-color: var(--cn); }
+.col:nth-child(2) .col-header { color: var(--jp); border-bottom-color: var(--jp); }
+.col:nth-child(3) .col-header { color: var(--global); border-bottom-color: var(--global); }
+.col-article { margin-bottom: 32px; }
+.col-article:last-child { margin-bottom: 0; }
+.col-article .article-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; color: var(--white); }
+.col-article .article-body { font-size: 13px; }
+
+.analysis { padding: 48px 0; }
+.analysis-header { font-family: var(--font-heading); font-size: 18px; font-weight: 700; letter-spacing: 3px; color: var(--lime); padding-bottom: 14px; margin-bottom: 36px; border-bottom: 1px solid var(--gray-600); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+.analysis-num { font-family: var(--font-display); font-size: 56px; font-style: italic; color: var(--gray-600); line-height: 1; margin-bottom: 12px; }
+.analysis-item h3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.25; margin-bottom: 14px; color: var(--white); }
+.analysis-item p { font-size: 13.5px; line-height: 1.7; color: var(--gray-300); font-weight: 300; }
+.analysis-tier { margin-bottom: 16px; padding-left: 16px; border-left: 2px solid var(--gray-600); }
+.analysis-tier:last-child { margin-bottom: 0; }
+.analysis-tier-signal { border-left-color: var(--gray-400); }
+.analysis-tier-pattern { border-left-color: var(--gray-500); }
+.analysis-tier-implication { border-left-color: var(--lime); background: rgba(200,255,0,0.02); padding: 12px 16px; border-radius: 0 4px 4px 0; }
+.analysis-label { display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.analysis-label-signal { color: var(--gray-300); }
+.analysis-label-pattern { color: var(--gray-300); }
+.analysis-label-implication { color: var(--lime); }
+
+.footer { background: var(--lime); color: var(--black); padding: 32px 48px; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
+.footer-brand { font-family: var(--font-heading); font-size: 14px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; }
+.footer-legal { font-family: var(--font-mono); font-size: 10px; line-height: 1.8; opacity: 0.5; max-width: 560px; }
+.footer-tags { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; opacity: 0.4; text-align: right; }
+.footer-fx { font-family: var(--font-mono); font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+.nav-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 48px; background: var(--black); border-bottom: 1px solid var(--gray-600); }
+.nav-top a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-top a:hover { color: var(--lime); }
+.nav-vol { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); letter-spacing: 0.5px; }
+
+.nav-bottom { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; border-top: 1px solid var(--gray-600); background: var(--black); }
+.nav-bottom a { font-family: var(--font-mono); font-size: 12px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-bottom a:hover { color: var(--lime); }
+.nav-bottom .nav-disabled { font-family: var(--font-mono); font-size: 12px; color: var(--gray-600); pointer-events: none; }
+.nav-bottom .nav-center { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.nav-bottom .nav-center a { color: var(--gray-400); }
+.nav-bottom .nav-center a:hover { color: var(--lime); }
+
+@media (max-width: 900px) {
+  .masthead { padding: 28px 20px 24px; }
+  .masthead-title { letter-spacing: -1px; }
+  .content { padding: 0 20px; }
+  .hero { grid-template-columns: 1fr; padding: 32px 0; }
+  .hero-main { padding-right: 0; border-right: none; padding-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+  .hero-sidebar { padding-left: 0; padding-top: 32px; }
+  .col-section { grid-template-columns: 1fr; }
+  .col:not(:last-child) { border-right: none; padding-right: 0; margin-right: 0; padding-bottom: 32px; margin-bottom: 0; border-bottom: 1px solid var(--gray-600); }
+  .analysis-grid { grid-template-columns: 1fr; gap: 36px; }
+  body { font-size: 16px; line-height: 1.8; }
+  .article-body { font-size: 16px; line-height: 1.85; }
+  .sidebar-card .article-body { font-size: 15px; }
+  .col-article .article-body { font-size: 15px; }
+  .hero-main .article-lead { font-size: 18px; line-height: 1.6; }
+  .analysis-item p { font-size: 15px; line-height: 1.8; }
+  .analysis-item h3 { font-size: 24px; }
+  .source { font-size: 12px; }
+  .tag { font-size: 11px; }
+  .tag-cat { font-size: 11px; }
+  .analysis-label { font-size: 11px; }
+  .pull-quote p { font-size: 17px; }
+  .pull-quote cite { font-size: 11px; }
+  .footer { padding: 24px 20px; flex-direction: column; }
+  .footer-tags { text-align: left; }
+  .footer-legal { font-size: 11px; }
+  .nav-top { padding: 12px 20px; }
+  .nav-bottom { padding: 16px 20px; }
+  .test-banner { padding: 10px 20px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TEST BANNER -->
+<div class="test-banner">⚠️ TEST FILE — 프로덕션 미포함 · 구조 검증 전용</div>
+
+<!-- NAV TOP ✓ -->
+<nav class="nav-top">
+  <a href="index.html">&larr; Archive</a>
+  <span class="nav-vol">Vol. TEST</span>
+</nav>
+
+<!-- MASTHEAD ✓ -->
+<header class="masthead">
+  <div class="masthead-date">2026년 4월 25일 토요일 (4.20&ndash;4.25)</div>
+  <h1 class="masthead-title">엔터문화연구소<br>글로벌 주간 브리핑</h1>
+  <div class="masthead-sub">Weekly Business Briefing: US &middot; China &middot; Japan</div>
+</header>
+
+<div class="content">
+
+<!-- HERO ✓ -->
+<section class="hero">
+  <article class="hero-main">
+    <span class="tag tag-us">US</span><span class="tag-cat">M&amp;A &middot; INV</span>
+    <h2 class="article-title">[TEST] 히어로 기사 제목 — 금액 표기 검증 <span class="amount">$1.87B(₩2.7조)</span></h2>
+    <p class="article-lead">[TEST] 히어로 리드 문장. 이탤릭 서체, 17px, Instrument Serif로 렌더링되어야 한다. 2~3문장 분량의 요약문이 들어가는 자리다.</p>
+    <div class="article-body">
+      <p>[TEST] 본문 단락 1. 폰트 14px, 줄간격 1.75, Noto Sans KR 300 weight. 팩트 중심 서술이 들어간다.</p>
+      <p>[TEST] 본문 단락 2. 수치와 맥락을 제시한다. 금액: <span class="amount">$500M(₩725억)</span>.</p>
+    </div>
+    <div class="pull-quote">
+      <p>[TEST] Pull Quote — 라임 배경, 검정 텍스트, Syne 700. 기사당 1회만 허용.</p>
+      <cite>— [TEST] 발언자 · 출처명</cite>
+    </div>
+    <div class="article-body">
+      <p>[TEST] Pull Quote 이후 추가 본문. 구조적 맥락을 더 전개한다.</p>
+    </div>
+    <span class="source">출처: <a href="https://example.com">[TEST] 매체명, 2026.04.25</a></span>
+  </article>
+
+  <aside class="hero-sidebar">
+    <!-- SIDEBAR 1 ✓ -->
+    <div class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">AI &middot; REG</span>
+      <h3 class="article-title">[TEST] 사이드바 기사 1 — 22px Instrument Serif</h3>
+      <div class="article-body">
+        <p>[TEST] 사이드바 본문. 13px. 간결하게 핵심만 서술한다.</p>
+      </div>
+      <span class="source">출처: <a href="https://example.com">[TEST] 매체명</a></span>
+    </div>
+    <!-- SIDEBAR 2 ✓ -->
+    <div class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">DATA</span>
+      <h3 class="article-title">[TEST] 사이드바 기사 2 — 두 번째 카드</h3>
+      <div class="article-body">
+        <p>[TEST] 두 번째 사이드바 본문. 사이드바 카드 간 구분선(border-bottom)이 정상 렌더링되어야 한다.</p>
+      </div>
+      <span class="source">출처: <a href="https://example.com">[TEST] 매체명</a></span>
+    </div>
+  </aside>
+</section>
+
+<!-- COL-SECTION: China / Japan / Global ✓ -->
+<section class="col-section">
+  <div class="col">
+    <div class="col-header">China</div>
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">IP &middot; DATA</span>
+      <h3 class="article-title">[TEST] 중국 기사 1 — CN 태그 레드(#FF2D20) 확인</h3>
+      <div class="article-body">
+        <p>[TEST] 중국 섹션 본문. 13px. 콘텐츠 비즈니스, IP 전략, 시장 데이터 관련 뉴스가 들어간다.</p>
+      </div>
+      <span class="source">출처: <a href="https://example.com">[TEST] 현지 매체명</a></span>
+    </article>
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">AI</span>
+      <h3 class="article-title">[TEST] 중국 기사 2 — 두 번째 기사</h3>
+      <div class="article-body">
+        <p>[TEST] 중국 AI 관련 뉴스 본문. 금액: <span class="amount">57.5억 위안($8.35억/₩1.2조)</span>.</p>
+      </div>
+      <span class="source">출처: <a href="https://example.com">[TEST] 현지 매체명</a></span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Japan</div>
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">M&amp;A</span>
+      <h3 class="article-title">[TEST] 일본 기사 1 — JP 태그 퍼플(#7C3AED) 확인</h3>
+      <div class="article-body">
+        <p>[TEST] 일본 섹션 본문. M&amp;A, IP, 미디어 비즈니스 관련 뉴스가 들어간다.</p>
+      </div>
+      <span class="source">출처: <a href="https://example.com">[TEST] 현지 매체명</a></span>
+    </article>
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">HR &middot; OUT</span>
+      <h3 class="article-title">[TEST] 일본 기사 2 — 두 번째 기사</h3>
+      <div class="article-body">
+        <p>[TEST] 일본 인사·전망 뉴스 본문.</p>
+      </div>
+      <span class="source">출처: <a href="https://example.com">[TEST] 현지 매체명</a></span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Global</div>
+    <article class="col-article">
+      <span class="tag tag-global">GLOBAL</span><span class="tag-cat">INV &middot; GZ</span>
+      <h3 class="article-title">[TEST] 글로벌 기사 1 — Global 태그 오렌지(#E67700) 확인</h3>
+      <div class="article-body">
+        <p>[TEST] 글로벌 섹션 본문. 특정 지역에 귀속되지 않는 크로스보더 뉴스가 들어간다.</p>
+      </div>
+      <span class="source">출처: <a href="https://example.com">[TEST] 매체명</a></span>
+    </article>
+  </div>
+</section>
+
+<!-- 인사이트 ✓ -->
+<section class="analysis">
+  <div class="analysis-header">인사이트</div>
+  <div class="analysis-grid">
+
+    <div class="analysis-item">
+      <div class="analysis-num">01</div>
+      <h3>[TEST] 인사이트 제목 1 — 기회(Opportunity)</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>[TEST] 이번 주 기사에서 포착된 구조적 변화 신호. 팩트 중심. 회색 좌측 보더(#999)로 렌더링.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>[TEST] 왜 지금 이 변화가 발생했는가. 3국 비교·시계열·구조적 전환. 어두운 회색 좌측 보더(#666).</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>[TEST] 독립 제작사에게는 기회다. 라임 좌측 보더 + 반투명 배경. 포지션: 독립 제작사 / 결론: 기회.</p>
+      </div>
+    </div>
+
+    <div class="analysis-item">
+      <div class="analysis-num">02</div>
+      <h3>[TEST] 인사이트 제목 2 — 경고(Warning)</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>[TEST] 두 번째 인사이트의 신호. 다른 소재에서 출발해야 한다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>[TEST] 두 번째 인사이트의 맥락. 산업 구조적 전환을 드러낸다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>[TEST] 대형 레이블에게는 경고다. 포지션: 대형 스튜디오·레이블 / 결론: 경고.</p>
+      </div>
+    </div>
+
+    <div class="analysis-item">
+      <div class="analysis-num">03</div>
+      <h3>[TEST] 인사이트 제목 3 — 관망(Watch)</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>[TEST] 세 번째 인사이트의 신호.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>[TEST] 세 번째 인사이트의 맥락.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>[TEST] 투자자는 관망해야 한다. 포지션: 투자자·자본시장 / 결론: 관망. 3개 포지션 중복 없음 확인.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</div><!-- /content -->
+
+<!-- NAV BOTTOM ✓ -->
+<nav class="nav-bottom">
+  <a href="NEWSPAPER_0418.html">&larr; 이전 호</a>
+  <div class="nav-center"><a href="index.html">목록</a></div>
+  <span class="nav-disabled">다음 호 &rarr;</span>
+</nav>
+
+<!-- FOOTER ✓ -->
+<footer class="footer">
+  <div>
+    <div class="footer-brand">엔터문화연구소 주간 브리핑</div>
+    <div class="footer-legal">
+      © 2026 엔터문화연구소. 이 리포트는 공개된 해외 언론 보도를 바탕으로 작성된 정보 분석물입니다.<br>
+      [TEST FILE — 프로덕션 미포함]
+    </div>
+  </div>
+  <div>
+    <div class="footer-fx">$1 = ₩1,450 <span style="opacity:0.4;font-size:10px;">[TEST 임의값]</span></div>
+    <div class="footer-tags">#TEST #Template #Validation</div>
+  </div>
+</footer>
+
+</body>
+</html>
