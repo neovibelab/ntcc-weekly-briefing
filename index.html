@@ -149,44 +149,37 @@ body { background: var(--black); color: var(--white); font-family: 'Noto Sans KR
       </li>
       <li class="issue-item">
         <a class="issue-link" href="NEWSPAPER_0418.html">
-          <span class="issue-title">Vol. 06 — Netflix Q1 사상 최대·해스팅스 퇴장, CinemaCon IP 대전, 아이치이 AI 배우, 일본 애니 ¥6조 목표</span>
-          <span class="issue-date">2026.04.18</span>
+          <span class="issue-title">2026.04.18 — Netflix Q1 사상 최대·해스팅스 퇴장, CinemaCon IP 대전, 아이치이 AI 배우, 일본 애니 ¥6조 목표</span>
         </a>
       </li>
       <li class="issue-item">
         <a class="issue-link" href="NEWSPAPER_0411.html">
-          <span class="issue-title">Vol. 05 — WBD-Paramount 주주투표, Disney 감원, WGA 계약, 중국 AI 규제</span>
-          <span class="issue-date">2026.04.11</span>
+          <span class="issue-title">2026.04.11 — WBD-Paramount 주주투표, Disney 감원, WGA 계약, 중국 AI 규제</span>
         </a>
       </li>
       <li class="issue-item">
         <a class="issue-link" href="NEWSPAPER_0404.html">
-          <span class="issue-title">Vol. 04 — Netflix InterPositive 인수, EA 민영화 완료 임박, Sony·TCL BRAVIA JV</span>
-          <span class="issue-date">2026.04.04</span>
+          <span class="issue-title">2026.04.04 — Netflix InterPositive 인수, EA 민영화 완료 임박, Sony·TCL BRAVIA JV</span>
         </a>
       </li>
       <li class="issue-item">
         <a class="issue-link" href="NEWSPAPER_0328.html">
-          <span class="issue-title">Vol. 03 — OpenAI Sora 셧다운, Paramount-WBD 표결, AI 숏드라마 혁명</span>
-          <span class="issue-date">2026.03.28</span>
+          <span class="issue-title">2026.03.28 — OpenAI Sora 셧다운, Paramount-WBD 표결, AI 숏드라마 혁명</span>
         </a>
       </li>
       <li class="issue-item">
         <a class="issue-link" href="NEWSPAPER_0321.html">
-          <span class="issue-title">Vol. 02 — Disney CEO 교체, Live Nation 반독점, TikTok 수수료</span>
-          <span class="issue-date">2026.03.21</span>
+          <span class="issue-title">2026.03.21 — Disney CEO 교체, Live Nation 반독점, TikTok 수수료</span>
         </a>
       </li>
       <li class="issue-item">
         <a class="issue-link" href="SPECIAL_0316.html">
-          <span class="issue-title"><span class="issue-badge">Special</span>BTS 광화문 D-5 — 앨범, Netflix, 도시 운영</span>
-          <span class="issue-date">2026.03.16</span>
+          <span class="issue-title"><span class="issue-badge">Special</span>2026.03.16 — BTS 광화문 D-5, 앨범·Netflix·도시 운영</span>
         </a>
       </li>
       <li class="issue-item">
         <a class="issue-link" href="NEWSPAPER_0314.html">
-          <span class="issue-title">Vol. 01 — Paramount-WBD 합병, 숏드라마, WGA 협상</span>
-          <span class="issue-date">2026.03.14</span>
+          <span class="issue-title">2026.03.14 — Paramount-WBD 합병, 숏드라마, WGA 협상</span>
         </a>
       </li>
     </ul>
@@ -244,13 +237,13 @@ body { background: var(--black); color: var(--white); font-family: 'Noto Sans KR
       const url = link.getAttribute('href');
       if (!url.startsWith('NEWSPAPER_')) return;
       const titleEl = link.querySelector('.issue-title');
-      const dateEl = link.querySelector('.issue-date');
       const titleText = titleEl ? titleEl.textContent.trim() : '';
-      const volMatch = titleText.match(/Vol\.\s*\d+/);
+      const dateMatch = titleText.match(/\d{4}\.\d{2}\.\d{2}/);
+      const dateStr = dateMatch ? dateMatch[0] : '';
       issues.push({
         url: url,
-        label: volMatch ? volMatch[0] : titleText.split('—')[0].trim(),
-        date: dateEl ? dateEl.textContent.trim() : ''
+        label: dateStr || titleText.split('—')[0].trim(),
+        date: dateStr
       });
     });
     return issues;
@@ -327,7 +320,7 @@ body { background: var(--black); color: var(--white); font-family: 'Noto Sans KR
                 <span class="filtered-cat">${a.catText}</span>
               </div>
               <div class="filtered-article-title">${a.title}</div>
-              <div class="filtered-article-meta">${a.issue} &middot; ${a.issueDate}</div>
+              <div class="filtered-article-meta">${a.issueDate || a.issue}</div>
             </a>
           </div>`;
       }).join('');
