@@ -28,6 +28,11 @@
 - 스페셜: `SPECIAL_MMDD.html` (예: `SPECIAL_0316.html`)
 - MMDD는 발행일 기준
 
+### 제목 표기 규칙 (index.html issue-title 및 기타 헤드라인)
+- **`Vol. NN` 대신 `YYYY.MM.DD` 날짜 prefix 사용** (예: `2026.04.25 — WBD 주총 보상안 부결, …`)
+- nav-top `nav-vol` 영역의 `Vol. NN` 표기는 아카이브 네비게이션 용도로 **유지**
+- 2026.04.25 호부터 기본값. 이후 주간 자동화는 본 규칙으로 생성
+
 ---
 
 ## 주간 제작 워크플로우
