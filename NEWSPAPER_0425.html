@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>엔터문화연구소 — 글로벌 주간 브리핑 2026.04.25</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lime: #C8FF00;
+  --lime-dim: #a8d600;
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gray-200: #e8e8e8;
+  --gray-300: #d0d0d0;
+  --gray-400: #999999;
+  --gray-500: #666666;
+  --gray-600: #444444;
+  --us: #0055FF;
+  --cn: #FF2D20;
+  --jp: #7C3AED;
+  --global: #E67700;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: 'Syne', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--white); font-family: var(--font-body); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+.masthead { background: var(--lime); color: var(--black); padding: 40px 48px 36px; }
+.masthead-date { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 24px; }
+.masthead-title { font-family: var(--font-heading); font-size: clamp(42px, 6vw, 72px); font-weight: 800; line-height: 0.95; letter-spacing: -2px; margin-bottom: 20px; }
+.masthead-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; }
+
+.content { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+
+.tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; margin-bottom: 12px; }
+.tag-us { background: var(--us); color: #fff; }
+.tag-cn { background: var(--cn); color: #fff; }
+.tag-jp { background: var(--jp); color: #fff; }
+.tag-global { background: var(--global); color: #fff; }
+.tag-cat { font-family: var(--font-mono); font-size: 10px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: var(--gray-400); margin-left: 8px; }
+.tag-cat a { color: inherit; text-decoration: none; cursor: pointer; border-bottom: 1px dotted var(--gray-600); transition: all 0.15s; }
+.tag-cat a:hover { color: var(--lime); border-color: var(--lime); }
+
+.hero { display: grid; grid-template-columns: 1.5fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); padding: 48px 0; }
+.hero-main { padding-right: 48px; border-right: 1px solid var(--gray-600); }
+.hero-main .article-title { font-family: var(--font-display); font-size: clamp(28px, 3vw, 40px); font-weight: 400; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 20px; color: var(--white); }
+.hero-main .article-lead { font-family: var(--font-display); font-size: 17px; font-style: italic; line-height: 1.55; color: var(--gray-300); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--gray-600); }
+.article-body { font-size: 14px; line-height: 1.75; color: var(--gray-300); font-weight: 300; }
+.article-body p { margin-bottom: 12px; }
+
+.pull-quote { margin: 24px 0; padding: 20px 24px; background: var(--lime); color: var(--black); border-radius: 2px; }
+.pull-quote p { font-family: var(--font-heading); font-size: 16px; font-weight: 600; line-height: 1.45; margin-bottom: 0 !important; }
+.pull-quote cite { display: block; font-family: var(--font-mono); font-style: normal; font-size: 10px; margin-top: 10px; opacity: 0.5; letter-spacing: 0.5px; }
+
+.hero-sidebar { padding-left: 40px; display: flex; flex-direction: column; }
+.sidebar-card { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.sidebar-card:first-child { padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+.sidebar-card .article-title { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.2; margin-bottom: 14px; color: var(--white); }
+.sidebar-card .article-body { font-size: 13px; }
+
+.amount { font-family: var(--font-mono); font-size: 0.88em; font-weight: 700; color: var(--lime); white-space: nowrap; }
+
+.source { display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--gray-500); letter-spacing: 0.3px; }
+.source a { color: var(--gray-400); text-decoration: none; border-bottom: 1px solid var(--gray-600); transition: all 0.2s; }
+.source a:hover { color: var(--lime); border-color: var(--lime); }
+
+.col-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-bottom: 1px solid var(--gray-600); }
+.col { padding: 40px 0; }
+.col:not(:last-child) { padding-right: 36px; margin-right: 36px; border-right: 1px solid var(--gray-600); }
+.col-header { font-family: var(--font-heading); font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--gray-500); padding-bottom: 14px; margin-bottom: 28px; border-bottom: 1px solid var(--gray-600); }
+.col:nth-child(1) .col-header { color: var(--cn); border-bottom-color: var(--cn); }
+.col:nth-child(2) .col-header { color: var(--jp); border-bottom-color: var(--jp); }
+.col:nth-child(3) .col-header { color: var(--global); border-bottom-color: var(--global); }
+.col-article { margin-bottom: 32px; }
+.col-article:last-child { margin-bottom: 0; }
+.col-article .article-title { font-family: var(--font-display); font-size: 20px; font-weight: 400; line-height: 1.2; margin-bottom: 12px; color: var(--white); }
+.col-article .article-body { font-size: 13px; }
+
+.analysis { padding: 48px 0; }
+.analysis-header { font-family: var(--font-heading); font-size: 18px; font-weight: 700; letter-spacing: 3px; color: var(--lime); padding-bottom: 14px; margin-bottom: 36px; border-bottom: 1px solid var(--gray-600); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+.analysis-num { font-family: var(--font-display); font-size: 56px; font-style: italic; color: var(--gray-600); line-height: 1; margin-bottom: 12px; }
+.analysis-item h3 { font-family: var(--font-display); font-size: 22px; font-weight: 400; line-height: 1.25; margin-bottom: 14px; color: var(--white); }
+.analysis-item p { font-size: 13.5px; line-height: 1.7; color: var(--gray-300); font-weight: 300; }
+.analysis-tier { margin-bottom: 16px; padding-left: 16px; border-left: 2px solid var(--gray-600); }
+.analysis-tier:last-child { margin-bottom: 0; }
+.analysis-tier-signal { border-left-color: var(--gray-400); }
+.analysis-tier-pattern { border-left-color: var(--gray-500); }
+.analysis-tier-implication { border-left-color: var(--lime); background: rgba(200,255,0,0.02); padding: 12px 16px; border-radius: 0 4px 4px 0; }
+.analysis-label { display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.analysis-label-signal { color: var(--gray-300); }
+.analysis-label-pattern { color: var(--gray-300); }
+.analysis-label-implication { color: var(--lime); }
+
+.footer { background: var(--lime); color: var(--black); padding: 32px 48px; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
+.footer-brand { font-family: var(--font-heading); font-size: 14px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; }
+.footer-legal { font-family: var(--font-mono); font-size: 10px; line-height: 1.8; opacity: 0.5; max-width: 560px; }
+.footer-tags { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; opacity: 0.4; text-align: right; }
+.footer-fx { font-family: var(--font-mono); font-size: 13px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+.nav-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 48px; background: var(--black); border-bottom: 1px solid var(--gray-600); }
+.nav-top a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-top a:hover { color: var(--lime); }
+.nav-vol { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); letter-spacing: 0.5px; }
+
+.nav-bottom { display: flex; justify-content: space-between; align-items: center; padding: 20px 48px; border-top: 1px solid var(--gray-600); background: var(--black); }
+.nav-bottom a { font-family: var(--font-mono); font-size: 12px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.nav-bottom a:hover { color: var(--lime); }
+.nav-bottom .nav-disabled { font-family: var(--font-mono); font-size: 12px; color: var(--gray-600); pointer-events: none; }
+.nav-bottom .nav-center { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.nav-bottom .nav-center a { color: var(--gray-400); }
+.nav-bottom .nav-center a:hover { color: var(--lime); }
+
+@media (max-width: 900px) {
+  .masthead { padding: 28px 20px 24px; }
+  .masthead-title { letter-spacing: -1px; }
+  .content { padding: 0 20px; }
+  .hero { grid-template-columns: 1fr; padding: 32px 0; }
+  .hero-main { padding-right: 0; border-right: none; padding-bottom: 32px; border-bottom: 1px solid var(--gray-600); }
+  .hero-sidebar { padding-left: 0; padding-top: 32px; }
+  .col-section { grid-template-columns: 1fr; }
+  .col:not(:last-child) { border-right: none; padding-right: 0; margin-right: 0; padding-bottom: 32px; margin-bottom: 0; border-bottom: 1px solid var(--gray-600); }
+  .analysis-grid { grid-template-columns: 1fr; gap: 36px; }
+  body { font-size: 16px; line-height: 1.8; }
+  .article-body { font-size: 16px; line-height: 1.85; }
+  .sidebar-card .article-body { font-size: 15px; }
+  .col-article .article-body { font-size: 15px; }
+  .hero-main .article-lead { font-size: 18px; line-height: 1.6; }
+  .analysis-item p { font-size: 15px; line-height: 1.8; }
+  .analysis-item h3 { font-size: 24px; }
+  .source { font-size: 12px; }
+  .tag { font-size: 11px; }
+  .tag-cat { font-size: 11px; }
+  .analysis-label { font-size: 11px; }
+  .pull-quote p { font-size: 17px; }
+  .pull-quote cite { font-size: 11px; }
+  .footer { padding: 24px 20px; flex-direction: column; }
+  .footer-tags { text-align: left; }
+  .footer-legal { font-size: 11px; }
+  .nav-top { padding: 12px 20px; }
+  .nav-bottom { padding: 16px 20px; }
+}
+@media print {
+  body { background: #fff; color: #000; }
+  .masthead, .footer { background: #f0f0f0; color: #000; }
+  .amount { color: #000; font-weight: 700; }
+  .pull-quote { background: #f0f0f0; color: #000; }
+  .article-title { color: #000 !important; }
+  a { color: #000 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV TOP -->
+<nav class="nav-top">
+  <a href="index.html">&larr; Archive</a>
+  <span class="nav-vol">Vol. 07</span>
+</nav>
+
+<header class="masthead">
+  <div class="masthead-date">2026년 4월 25일 토요일 (4.19&ndash;4.25)</div>
+  <h1 class="masthead-title">엔터문화연구소<br>글로벌 주간 브리핑</h1>
+  <div class="masthead-sub">Weekly Business Briefing: US &middot; China &middot; Japan</div>
+</header>
+
+<div class="content">
+
+<!-- HERO -->
+<section class="hero">
+  <article class="hero-main">
+    <span class="tag tag-us">US</span><span class="tag-cat">M&amp;A &middot; INV</span>
+    <h2 class="article-title">WBD 주주, Paramount의 <span class="amount">$1,110억(₩165조)</span> 인수 압도적 가결 &mdash; 걸프 SWF <span class="amount">$240억(₩35.7조)</span>이 딜의 재무 기반</h2>
+    <p class="article-lead">4월 23일 Warner Bros. Discovery 주주 특별총회에서 Paramount Skydance의 인수안이 찬성 17억 4,300만 주 대 반대 1,630만 주로 압도적으로 가결됐다. 부채 포함 <span class="amount">$1,110억(₩165조)</span> 규모로, 할리우드 역사상 최대 M&amp;A가 최대 고비를 넘었다.</p>
+    <div class="article-body">
+      <p>주당 <span class="amount">$31(₩4.6만)</span>, 147% 프리미엄 조건의 이번 거래가 확정되면 HBO Max와 Paramount+, Warner Bros. 영화 스튜디오와 Paramount 영화 스튜디오, CNN과 CBS가 단일 지붕 아래 결합된다. David Ellison(Skydance 창업자)이 합병 법인 CEO를 맡는다.</p>
+      <div class="pull-quote">
+        <p>주주 승인은 이 역사적 거래를 완성하는 또 하나의 핵심 이정표다.</p>
+        <cite>&mdash; David Zaslav, WBD CEO (Apr 23, 2026)</cite>
+      </div>
+      <p>이번 딜의 숨은 주역은 걸프 국부펀드다. 사우디 공공투자펀드(PIF) <span class="amount">$100억(₩14.9조)</span>을 포함해 아부다비 L'imad Holding, 카타르 투자청(QIA)이 합산 <span class="amount">$240억(₩35.7조)</span>의 지분 투자를 결정했다. 세 SWF 모두 의결권을 포기해 미국 CFIUS·유럽 반독점 심사 부담을 최소화하는 구조다. 중국 자본이 할리우드에서 후퇴한 빈자리를 걸프 자본이 조용히 채우는 패턴의 첫 대형 사례다.</p>
+      <p>다만 미국 법무부와 EU 경쟁당국의 반독점 심사가 남아 있다. 반대 진영에서는 &ldquo;이 거래는 이미 과도하게 집중된 미디어 생태계를 더욱 굳힌다&rdquo;며 주 차원 소송 가능성을 열어뒀다. Zaslav의 퇴직금 패키지는 주주 자문 투표에서 부결됐지만 비구속적 의견이라 이사회 결정에 달렸다. Paramount는 Q3 2026 클로징을 목표로 하고 있다.</p>
+    </div>
+    <span class="source">출처: <a href="https://www.bloomberg.com/news/articles/2026-04-23/warner-bros-investors-approve-110-billion-paramount-merger" target="_blank">Bloomberg</a> &middot; <a href="https://variety.com/2026/film/news/warner-bros-discovery-paramount-shareholder-approval-zaslav-pay-package-1236727798/" target="_blank">Variety</a> &middot; <a href="https://deadline.com/2026/04/warner-bros-shareholders-back-sale-to-paramount-key-vote-1236868751/" target="_blank">Deadline</a> (Apr 23)</span>
+  </article>
+
+  <div class="hero-sidebar">
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">M&amp;A &middot; INV</span>
+      <h2 class="article-title">Netflix, LA 역사적 Radford 스튜디오 <span class="amount">$3.3억(₩4,904억)</span>에 인수 &ldquo;사실상 타결&rdquo;</h2>
+      <div class="article-body">
+        <p>Goldman Sachs가 압류 보유 중인 Radford Studio Center(LA Studio City)를 Netflix가 약 <span class="amount">$3.3억(₩4,904억)</span>에 인수하는 협상이 &ldquo;all but done(사실상 타결)&rdquo; 됐다고 THR이 4월 21일 보도했다. 22개 사운드스테이지, 3개 야외 세트, 18동 오피스 빌딩을 갖춘 약 100년 역사의 스튜디오로, &lt;Seinfeld&gt;·&lt;That &apos;70s Show&gt; 등이 제작된 곳이다.</p>
+        <p>Radford는 2021년 ViacomCBS가 Hackman Capital에 <span class="amount">$18.5억(₩2.7조)</span>에 매각했으나 금리 인상 직격탄에 Goldman Sachs로 넘어갔다. Netflix는 올 연말 만료되는 Sunset Bronson Studios 임대 계약 갱신을 포기하고 &lsquo;임차에서 소유&rsquo;로 전략 전환하는 셈이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.hollywoodreporter.com/business/business-news/netflix-los-angeles-radford-1236571301/" target="_blank">THR</a> &middot; <a href="https://deadline.com/2026/04/netflix-radford-studios-1236867662/" target="_blank">Deadline</a> &middot; <a href="https://www.bloomberg.com/news/articles/2026-04-21/netflix-said-to-be-in-talks-for-la-studio-lot-seized-by-goldman" target="_blank">Bloomberg</a> (Apr 21&ndash;23)</span>
+    </article>
+
+    <article class="sidebar-card">
+      <span class="tag tag-us">US</span><span class="tag-cat">AI &middot; REG</span>
+      <h2 class="article-title">YouTube, AI 딥페이크 탐지 연예계 전면 개방 — CAA·UTA·WME 협력, NO FAKES Act 지지</h2>
+      <div class="article-body">
+        <p>4월 21일 YouTube가 AI 생성 유명인 합성 영상을 탐지·삭제 요청할 수 있는 &lsquo;초상 탐지(Likeness Detection)&rsquo; 기능을 연예 업계 전반으로 확장했다. CAA·UTA·WME·Untitled Management 4대 에이전시가 협력해, 배우 본인이 자체 채널이 없어도 AI 딥페이크를 신고할 수 있다.</p>
+        <p>Content ID 방식을 응용해 AI 얼굴 합성 영상을 자동 감지하고 삭제 청구 또는 저작권 신청을 유도하는 구조다. YouTube는 미 의회에서 심사 중인 &lsquo;NO FAKES Act&rsquo;(동의 없는 AI 초상·목소리 복제 금지) 지지 로비도 병행하고 있다.</p>
+      </div>
+      <span class="source">출처: <a href="https://techcrunch.com/2026/04/21/youtube-expands-its-ai-likeness-detection-technology-to-celebrities/" target="_blank">TechCrunch</a> &middot; <a href="https://www.hollywoodreporter.com/business/digital/youtube-ai-deepfake-detection-tool-1236569593/" target="_blank">THR</a> &middot; <a href="https://blog.youtube/news-and-events/youtube-likeness-detection-ai-protection/" target="_blank">YouTube Blog</a> (Apr 21)</span>
+    </article>
+  </div>
+</section>
+
+<!-- 3-COL -->
+<section class="col-section">
+
+  <div class="col">
+    <div class="col-header">China</div>
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">AI &middot; HR</span>
+      <h3 class="article-title">아이치이 &lsquo;AI 배우 데이터베이스&rsquo; 100인 공개하자 연예인 집단 부인 &mdash; &ldquo;동의한 적 없다&rdquo; 소셜 미디어 성명 봇물</h3>
+      <div class="article-body">
+        <p>4월 21일 아이치이(iQIYI)가 베이징 컨퍼런스에서 100여 명 이상의 배우·연예인이 등록된 AI 배우 데이터베이스를 공개하자, 중국 소셜미디어에서 즉각 반발이 쏟아졌다. 임원이 &ldquo;AI 드라마 제작자들이 배우 초상을 합법적으로 활용할 수 있다&rdquo;고 설명하자 등록됐다는 연예인들이 줄지어 &ldquo;나는 서명한 적 없다&rdquo;는 성명을 냈다.</p>
+        <p>배경에는 5일 전 인기 배우 易烊千玺(이양천희) 소속사가 아이치이가 동의 없이 배우의 AI 드라마를 유포했다며 법적 경고를 발송한 사건도 있었다. 아이치이는 지난주 자체 AI 영상 에이전트 &lsquo;나도우 Pro(Nadou Pro)&rsquo; 전상업 테스트를 개시했다. 시가총액이 한때 <span class="amount">$312.8억(₩4.6조)</span>에서 현재 <span class="amount">$13억(₩1,932억)</span>으로 급락한 플랫폼이 AI를 생존 수단으로 활용하는 과정에서, 배우의 노동권과 초상권이 정면 충돌하는 양상이다.</p>
+      </div>
+      <span class="source">출처: <a href="https://hongkongfp.com/2026/04/21/outrage-in-china-after-streaming-site-iqiyi-debuts-ai-actor-database/" target="_blank">Hong Kong Free Press</a> &middot; <a href="https://www.yicaiglobal.com/news/first-chinese-premium-ai-generated-long-drama-may-debut-in-third-quarter-tencent-video-ceo-says" target="_blank">Yicai Global</a> (Apr 21)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-cn">CN</span><span class="tag-cat">REG &middot; AI</span>
+      <h3 class="article-title">중국 CAC, AI &lsquo;디지털 인간&rsquo; 규제 초안 공개 &mdash; 상시 표시 의무·딥페이크 동의 금지·미성년자 보호</h3>
+      <div class="article-body">
+        <p>중국 사이버공간관리국(CAC)이 4월 3일 &lsquo;인간형 대화 AI 서비스 관리 잠정 조치 초안&rsquo;을 발표하고 5월 6일까지 의견 수렴 중이다. AI·디지털 모델링·그래픽 기술로 만든 가상 인간이 공개 서비스에 등장할 경우 소비자에게 보이는 위치에 &ldquo;디지털 인간&rdquo; 표시를 상시 노출해야 한다. 당사자 동의 없는 딥페이크 클론 생성 금지, 미성년자에게 가상 친밀 관계 서비스 제공 금지도 포함됐다.</p>
+        <p>엔터·인플루언서·라이브커머스·고객서비스 등 광범위한 분야가 적용 대상이다. 위반 시 벌금은 <span class="amount">¥1만~20만 위안($1,400~$2.8만/₩208만~4,161만)</span>으로 제재 수위는 낮지만, 표시 의무 자체가 AI 생성 인플루언서·버추얼 아이돌 산업에 직접 타격을 줄 수 있다는 분석이 나온다.</p>
+      </div>
+      <span class="source">출처: <a href="https://techxplore.com/news/2026-04-china-rein-ai-digital-humans.html" target="_blank">TechXplore</a> &middot; <a href="https://www.chinalawvision.com/2026/04/data-protection-privacy/analysis-of-chinas-draft-administrative-measures-for-digital-virtual-human-information-services/" target="_blank">China Law Vision</a> &middot; <a href="https://news.cgtn.com/news/2026-04-10/China-drafts-new-rules-for-AI-humans-and-children-s-addictive-tech-1Md4bQ5iLpS/p.html" target="_blank">CGTN</a> (Apr 3, Apr 19&ndash;20)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Japan</div>
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">IP &middot; OUT</span>
+      <h3 class="article-title">도에이, 창립 75주년에 게임 브랜드 &lsquo;Toei Games&rsquo; 공식 출범 &mdash; 기존 IP 아닌 오리지널 IP 창출에 집중</h3>
+      <div class="article-body">
+        <p>4월 21일, &lt;원피스&gt;·&lt;드래곤볼&gt; 제작사 도에이(東映)가 자체 게임 퍼블리싱 브랜드 Toei Games를 공식 출범했다. 창립 75주년 기념 사업으로, PC(Steam) 선출시 후 Nintendo Switch·PlayStation·Xbox 확장을 목표로 한다. Kairosoft가 디자인한 로고도 공개됐으며, 첫 타이틀은 4월 24일 발표 예정이다.</p>
+        <p>핵심은 &ldquo;기존 도에이 IP의 게임화가 아닌 완전 오리지널 IP 창출&rdquo;이라는 방침이다. 세계 시장을 겨냥해 일본 안팎 크리에이터를 기용한다고 밝혔다. 일본 정부가 게임 수출 253% 성장 목표를 내건 시점에, 콘텐츠 대기업이 배급 내재화로 응하는 구조다.</p>
+      </div>
+      <span class="source">출처: <a href="https://www.animenewsnetwork.com/news/2026-04-21/toei-entertainment-studio-launches-game-brand/.236627" target="_blank">Anime News Network</a> &middot; <a href="https://www.gematsu.com/2026/04/toei-company-establishes-toei-games" target="_blank">Gematsu</a> &middot; <a href="https://www.nintendolife.com/news/2026/04/toei-company-establishes-new-gaming-publishing-brand" target="_blank">Nintendo Life</a> (Apr 21)</span>
+    </article>
+
+    <article class="col-article">
+      <span class="tag tag-jp">JP</span><span class="tag-cat">DATA &middot; OUT</span>
+      <h3 class="article-title">Nintendo Switch 2, 일본 콘솔 점유율 ~90% &mdash; 〈토모다치 라이프〉 주간 56.5만 장으로 시장 독식</h3>
+      <div class="article-body">
+        <p>4월 23일 주간 차트 기준 Nintendo Switch 2는 주간 4만 4,280대로 일본 콘솔 판매 1위를 유지했다. 레거시 Switch 패밀리 합산 3만 1,496대보다 40% 이상 높으며, 닌텐도가 일본 콘솔 시장에서 약 90%에 가까운 점유율을 기록하는 것은 Famicom 시대 이후 처음이다. 누적 판매는 515만 대를 돌파했다.</p>
+        <p>소프트웨어 1위는 〈Tomodachi Life: Living the Dream〉으로 주간 56만 5,405장(패키지)을 기록했다. 콘솔 전용 하드웨어와 대형 타이틀의 조합이 모바일·PC 공세 속에서도 일본 게임 시장을 이끄는 지표다. Nintendo는 2026년 3월 결산 기준 Switch 2 판매 호조를 실적 견인 요인으로 공식 언급한 바 있다.</p>
+      </div>
+      <span class="source">출처: <a href="https://mynintendonews.com/2026/04/16/japan-nintendo-switch-2-reigns-supreme-and-pokemon-pokopia-remains-no-1/" target="_blank">My Nintendo News</a> &middot; <a href="https://www.nintendolife.com/news/2026/04/japanese-charts-switch-2-hits-another-milestone-as-pokemon-pokopias-reign-continues" target="_blank">Nintendo Life</a> &middot; <a href="https://www.vgchartz.com/article/467502/2026-japan-sales-comparison-charts-through-march-switch-2-vs-ps5-vs-xbox-series-vs-switch/" target="_blank">VGChartz</a> (week ending Apr 23)</span>
+    </article>
+  </div>
+
+  <div class="col">
+    <div class="col-header">Global</div>
+    <article class="col-article">
+      <span class="tag tag-global">Global</span><span class="tag-cat">DATA &middot; OUT</span>
+      <h3 class="article-title">칸 2026 경쟁 부문 16편 추가 &mdash; 박찬욱 심사위원장·피터 잭슨·바브라 스트라이샌드 명예 황금종려상</h3>
+      <div class="article-body">
+        <p>4월 22일 제79회 칸 영화제가 경쟁 부문 추가 작품 16편을 발표했다. Zachary Wigon 감독의 공포 영화 〈Victorian Psycho〉(마이카 먼로 주연), Judith Godrèche 감독 데뷔작 〈A Girl&rsquo;s Story〉, Diego Luna 주연의 〈Ashes〉 등이 이름을 올렸다. 올해 경쟁 부문은 21편, 3개 대륙, 여성 감독 5명이 포함됐다.</p>
+        <p>박찬욱 감독이 주경쟁 부문 심사위원장을 맡는다. Peter Jackson과 Barbra Streisand에게는 명예 황금종려상이 수여된다. 개막작은 Pierre Salvadori 감독의 프랑스 시대 코미디 〈The Electric Kiss〉며, 영화제는 5월 12&ndash;23일 칸에서 열린다. 한국 감독이 칸 심사위원장을 맡는 것은 이번이 두 번째다.</p>
+      </div>
+      <span class="source">출처: <a href="https://variety.com/2026/film/festivals/cannes-victorian-psycho-maika-monroe-1236727917/" target="_blank">Variety</a> &middot; <a href="https://www.festival-cannes.com/en/press/press-releases/additions-to-the-selection-of-the-79th-festival-de-cannes/" target="_blank">Festival de Cannes</a> (Apr 22)</span>
+    </article>
+  </div>
+
+</section>
+
+<!-- ANALYSIS -->
+<section class="analysis">
+  <div class="analysis-header">인사이트</div>
+  <div class="analysis-grid">
+    <div class="analysis-item">
+      <div class="analysis-num">01</div>
+      <h3>걸프 SWF의 할리우드 진입 &mdash; 중동 자본이 조용히 쓰는 엔터테인먼트 지정학의 새 장</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>Paramount-WBD <span class="amount">$1,110억</span> 딜의 재무 기반 <span class="amount">$240억(₩35.7조)</span>을 사우디 PIF, 아부다비 L'imad, 카타르 QIA가 제공했다. 세 SWF 모두 의결권을 포기했다. 중동 국부펀드가 할리우드 최대 M&amp;A의 침묵의 재무 투자자로 등장한 첫 사례다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>걸프 SWF의 엔터테인먼트 투자는 스포츠(LIV 골프, PIF의 잉글리시 프리미어리그 구단)에서 콘텐츠·스튜디오로 확장 중이다. 미국은 의결권 포기 구조를 통해 CFIUS 심사를 회피하는 방식에 암묵적으로 동의하고 있다. 중국 자본이 미국 엔터에서 후퇴한 2018년 이후, 대규모 외부 자본의 공백은 아시아 자본이 아닌 걸프 자본이 채우고 있다. 이 패턴이 스튜디오 수준으로 올라선 것은 이번이 처음이다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>투자자·자본시장 참여자에게는 기회다. 걸프 SWF가 의결권 없이 순수 자본 포지션으로 할리우드 대형 딜에 들어온다는 것은, 동일한 구조로 한국 엔터테인먼트 자산에 접근할 가능성도 열려 있음을 뜻한다. 사우디 PIF는 이미 e스포츠·게임 분야에서 복수의 한국 기업과 접촉한 바 있다. HYBE·카카오엔터·CJ ENM 같은 중대형 한국 엔터 기업에 걸프 SWF발 전략적 투자 논의가 현실적 가능성으로 올라설 수 있다. 이 대화가 열린다면 어떤 조건에 동의할 수 있고, 어떤 조건은 거절해야 하는지 지금부터 정리해두는 것이 손해는 아닐 것이다.</p>
+      </div>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">02</div>
+      <h3>AI 초상권 전쟁의 두 경로 &mdash; 중국은 플랫폼이 먼저, 미국은 플랫폼+입법 병행</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>같은 날(4월 21일), 아이치이는 AI 배우 데이터베이스를 공개했고 YouTube는 AI 딥페이크 탐지를 에이전시 수준으로 확장했다. 양쪽 모두 &lsquo;배우의 얼굴·목소리를 AI가 활용하는 문제&rsquo;를 다루지만, 방향은 정반대다. 아이치이는 활용을 위한 플랫폼, YouTube는 보호를 위한 플랫폼이다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>미국(YouTube + NO FAKES Act 로비)은 플랫폼 자율 규제와 연방 입법을 병행하며 배우 보호 체계를 구축 중이다. 중국(아이치이 데이터베이스)은 플랫폼이 먼저 시장을 만들고 규제는 후행하는 구조다. CAC의 AI 디지털 인간 규제 초안은 그 후행 규제의 예고편이다. 한국은 아직 어느 쪽도 아니다 — 자율 규제 플랫폼도 없고, 연방 입법 논의도 없다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>배우·탤런트 매니지먼트에게는 경고다. 한국 배우가 지금 서명하는 드라마·광고·OTT 계약서 대부분에는 &lsquo;AI 초상 활용 조항&rsquo;이 없다 — 그리고 조항 부재는 법원 해석에 따라 &lsquo;포괄 허용&rsquo;이 될 수 있다. BH엔터·킹콩by스타쉽 같은 매니지먼트사들이 지금 계약서 표준안에 &lsquo;AI 활용 범위·기간·플랫폼 제한&rsquo; 조항을 신설하지 않으면, 3년 후에는 아이치이 사태가 한국판으로 재현될 가능성이 있다. 지금 협상 테이블에서 &lsquo;AI 조항&rsquo;을 꺼내는 것이 불편해 보일 수 있지만, 꺼내지 않는 것이 더 위험하다.</p>
+      </div>
+    </div>
+    <div class="analysis-item">
+      <div class="analysis-num">03</div>
+      <h3>스트리밍에서 &lsquo;소유&rsquo;로 &mdash; Netflix Radford 매입이 시사하는 콘텐츠 인프라 경쟁의 다음 전선</h3>
+      <div class="analysis-tier analysis-tier-signal">
+        <div class="analysis-label analysis-label-signal">신호</div>
+        <p>Netflix가 <span class="amount">$3.3억(₩4,904억)</span>에 물리적 스튜디오 부동산을 직접 매입하려 한다. 동시에 Paramount-WBD 합병으로 LA 내 스튜디오 공간을 소유한 메이저는 더 줄어든다. 스트리밍이 극장을 위협하던 시대에서, 이제 스트리밍이 스튜디오 부동산을 두고 경쟁하는 시대로 바뀌고 있다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-pattern">
+        <div class="analysis-label analysis-label-pattern">맥락</div>
+        <p>2015~2022년의 화두가 &lsquo;스트리밍 vs 극장&rsquo;이었다면, 2026년의 화두는 &lsquo;임차 vs 소유&rsquo;다. LA 스튜디오 임대료 급등, 합병으로 인한 공급 축소, AI 생성 콘텐츠 증가에 따른 물리적 제작 공간 수요 변화가 맞물린다. 도에이가 게임 배급 브랜드를 내재화하는 것도 같은 맥락 — IP 보유 기업이 배급·플랫폼까지 수직계열화하는 흐름이다.</p>
+      </div>
+      <div class="analysis-tier analysis-tier-implication">
+        <div class="analysis-label analysis-label-implication">전략</div>
+        <p>플랫폼·유통사에게는 지금이 관망해야 할 국면이 아닐까? 한국 OTT(웨이브·티빙·왓챠)와 스튜디오(스튜디오드래곤·래몽래인 등)는 자체 제작 공간을 거의 보유하지 않는다. Netflix Radford 매입이 &lsquo;규모의 경제를 갖춘 플랫폼만이 인프라를 소유할 수 있다&rsquo;는 신호라면, 중소 제작사에는 공간 임차 협상력 약화로 이어질 수 있다. 반면 국내 대형 스튜디오 부지(예: CJ ENM 스튜디오 센터)를 보유한 기업에는 반사 이익의 여지가 있다. 이 방향이 한국 시장에서 유의미한 변수로 작용할 조건이 무엇인지 — 그 조건이 충족되기 전까지는 대기가 현명하다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- NAV BOTTOM -->
+<nav class="nav-bottom">
+  <a href="NEWSPAPER_0418.html">&larr; 이전 호</a>
+  <span class="nav-center"><a href="index.html">목록</a></span>
+  <span class="nav-disabled">다음 호 &rarr;</span>
+</nav>
+
+<footer class="footer">
+  <div>
+    <div class="footer-brand">엔터문화연구소 주간 브리핑</div>
+    <div class="footer-legal">
+      본 뉴스레터는 AI 기반 큐레이션으로 제작되었으며, 인용된 모든 기사의 저작권은 원 매체에 귀속됩니다.<br>
+      모든 금액은 2026년 4월 24일 기준 환율($1 = ₩1,486)을 적용했습니다. 실제 환율과 차이가 있을 수 있습니다.
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <div class="footer-fx">$1 = ₩1,486</div>
+    <div class="footer-tags">WBD &middot; Paramount &middot; Netflix &middot; Radford &middot; YouTube &middot; iQIYI &middot; CAC &middot; Toei Games &middot; Nintendo &middot; Cannes</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.tag-cat').forEach(function(el){
+  var tags=el.textContent.split('·').map(function(t){return t.trim();}).filter(Boolean);
+  el.innerHTML=tags.map(function(t){
+    return '<a href="index.html?tag='+encodeURIComponent(t)+'">'+t+'</a>';
+  }).join(' · ');
+});
+</script>
+</body>
+</html>
