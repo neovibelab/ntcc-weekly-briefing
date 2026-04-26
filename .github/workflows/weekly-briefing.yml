@@ -65,6 +65,7 @@ jobs:
           # 발행일(토요일) 기준 MMDD/YYYY.MM.DD 산출. cron은 금 11:00 UTC = 금 20:00 KST,
           # 발행 날짜는 다음날 토요일이므로 +1일.
           PUB_DATE_KST=$(TZ=Asia/Seoul date -d 'tomorrow' +'%Y-%m-%d')
+          PUB_DATE_DOT=$(TZ=Asia/Seoul date -d 'tomorrow' +'%Y.%m.%d')
           PUB_MMDD=$(TZ=Asia/Seoul date -d 'tomorrow' +'%m%d')
           PUB_YYMMDD=$(TZ=Asia/Seoul date -d 'tomorrow' +'%y.%m.%d')
           # 마스트헤드는 '2026년 M월 D일 토요일 (M.D–D)' 형식. 주간 범위는 직전 일~토.
@@ -74,6 +75,7 @@ jobs:
           WK_END_D=$(TZ=Asia/Seoul date -d 'tomorrow' +'%-d')
           PUB_KOR="${PUB_KOR_BASE} (${WK_START_M}.${WK_START_D}–${WK_END_D})"
           echo "pub_date=$PUB_DATE_KST"   >> "$GITHUB_OUTPUT"
+          echo "pub_date_dot=$PUB_DATE_DOT" >> "$GITHUB_OUTPUT"
           echo "pub_mmdd=$PUB_MMDD"       >> "$GITHUB_OUTPUT"
           echo "pub_yymmdd=$PUB_YYMMDD"   >> "$GITHUB_OUTPUT"
           echo "pub_kor=$PUB_KOR"         >> "$GITHUB_OUTPUT"
@@ -207,6 +209,7 @@ jobs:
           PREV_MMDD: ${{ steps.prep.outputs.prev_mmdd }}
           PUB_MMDD: ${{ steps.prep.outputs.pub_mmdd }}
           PUB_DATE: ${{ steps.prep.outputs.pub_date }}
+          PUB_DATE_DOT: ${{ steps.prep.outputs.pub_date_dot }}
           PUB_KOR: ${{ steps.prep.outputs.pub_kor }}
         run: |
           # 1) 이전 호 복제로 시작
@@ -215,7 +218,7 @@ jobs:
           claude -p "CLAUDE.md STEP 5 HTML 제작 규칙 적용. 작업 대상 파일: NEWSPAPER_${PUB_MMDD}.html (이전 호 복제본).
           ${STAGING_DIR}/research-*.md, ${STAGING_DIR}/insights.html, ${STAGING_DIR}/tldr.html, ${STAGING_DIR}/headline.txt를 입력으로.
           치환할 영역(다른 곳 건드리지 말 것):
-            - <title> → '엔터문화연구소 — 글로벌 주간 브리핑 ${PUB_DATE}'
+            - <title> → '엔터문화연구소 — 글로벌 주간 브리핑 ${PUB_DATE_DOT}' (날짜는 점 구분 YYYY.MM.DD)
             - 마스트헤드 날짜 → '${PUB_KOR}' 형식
             - issue-title 본문 → headline.txt 내용
             - TL;DR(이번 주 이슈 요약) section 내부 ul → tldr.html
@@ -282,6 +285,7 @@ jobs:
         env:
           PUB_MMDD: ${{ steps.prep.outputs.pub_mmdd }}
           PUB_DATE: ${{ steps.prep.outputs.pub_date }}
+          PUB_DATE_DOT: ${{ steps.prep.outputs.pub_date_dot }}
           PUB_KOR: ${{ steps.prep.outputs.pub_kor }}
           PREV_MMDD: ${{ steps.prep.outputs.prev_mmdd }}
         run: |
@@ -291,7 +295,7 @@ jobs:
           check() { if eval "$2"; then echo "OK   $1"; else echo "FAIL $1"; fail=1; fi; }
 
           check "새 호 파일 존재"          "[ -f '$F' ]"
-          check "<title> 형식 통일"         "grep -q '<title>엔터문화연구소 — 글로벌 주간 브리핑 ${PUB_DATE}</title>' '$F'"
+          check "<title> 형식 통일"         "grep -q '<title>엔터문화연구소 — 글로벌 주간 브리핑 ${PUB_DATE_DOT}</title>' '$F'"
           check "마스트헤드 날짜 (한글)"    "grep -qF \"${PUB_KOR}\" '$F'"
           check "TL;DR 라벨 한글"           "grep -q '이번 주 이슈 요약' '$F'"
           check "TL;DR 라벨 영문 미사용"    "! grep -qE '>TL;DR<' '$F'"
