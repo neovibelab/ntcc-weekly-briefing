@@ -3,15 +3,43 @@ name: 주간 브리핑 자동 발행
 on:
   schedule:
     - cron: '0 11 * * 5'  # 금요일 20:00 KST (11:00 UTC)
-  workflow_dispatch:       # GitHub UI에서 수동 실행 가능
+  workflow_dispatch:
+    inputs:
+      from_step:
+        description: '재시작 step (A/B/C/D/E/F/G). 기본 A=처음부터'
+        required: false
+        default: 'A'
+        type: choice
+        options: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+      dry_run:
+        description: 'true면 commit/push 생략하고 staging artifact만 업로드'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 permissions:
   contents: write
 
+# 한 번에 한 워크플로만 — 동시 실행으로 인한 토큰 한도 충돌 방지
+concurrency:
+  group: weekly-briefing
+  cancel-in-progress: false
+
+env:
+  STAGING_DIR: .briefing-staging
+  # 모델 분리:
+  #  - 형식적/패턴 작업(리서치 요약, HTML 조립, nav 갱신) → haiku
+  #  - 판단·서술 작업(인사이트, TL;DR, 헤드라인 선정) → sonnet
+  MODEL_FAST: claude-haiku-4-5
+  MODEL_THINK: claude-sonnet-4-6
+  # step 간 토큰 윈도우 회복용 sleep (초). 30k tpm 한도 안전 마진.
+  STEP_SLEEP: '90'
+
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
 
     steps:
       - name: Checkout
@@ -30,20 +58,300 @@ jobs:
           git config user.name "neovibelab"
           git config user.email "tmifmdj@gmail.com"
 
-      - name: Generate weekly briefing
+      - name: Prepare staging
+        id: prep
+        run: |
+          mkdir -p "$STAGING_DIR"
+          # 발행일(토요일) 기준 MMDD/YYYY.MM.DD 산출. cron은 금 11:00 UTC = 금 20:00 KST,
+          # 발행 날짜는 다음날 토요일이므로 +1일.
+          PUB_DATE_KST=$(TZ=Asia/Seoul date -d 'tomorrow' +'%Y-%m-%d')
+          PUB_MMDD=$(TZ=Asia/Seoul date -d 'tomorrow' +'%m%d')
+          PUB_YYMMDD=$(TZ=Asia/Seoul date -d 'tomorrow' +'%y.%m.%d')
+          # 마스트헤드는 '2026년 M월 D일 토요일 (M.D–D)' 형식. 주간 범위는 직전 일~토.
+          PUB_KOR_BASE=$(TZ=Asia/Seoul date -d 'tomorrow' +'%Y년 %-m월 %-d일 토요일')
+          WK_START_M=$(TZ=Asia/Seoul date -d 'tomorrow -6 days' +'%-m')
+          WK_START_D=$(TZ=Asia/Seoul date -d 'tomorrow -6 days' +'%-d')
+          WK_END_D=$(TZ=Asia/Seoul date -d 'tomorrow' +'%-d')
+          PUB_KOR="${PUB_KOR_BASE} (${WK_START_M}.${WK_START_D}–${WK_END_D})"
+          echo "pub_date=$PUB_DATE_KST"   >> "$GITHUB_OUTPUT"
+          echo "pub_mmdd=$PUB_MMDD"       >> "$GITHUB_OUTPUT"
+          echo "pub_yymmdd=$PUB_YYMMDD"   >> "$GITHUB_OUTPUT"
+          echo "pub_kor=$PUB_KOR"         >> "$GITHUB_OUTPUT"
+          echo "from_step=${{ inputs.from_step || 'A' }}" >> "$GITHUB_OUTPUT"
+          echo "dry_run=${{ inputs.dry_run || 'false' }}" >> "$GITHUB_OUTPUT"
+          # 직전 호 MMDD 추출 (NEWSPAPER_MMDD.html 중 가장 최근)
+          PREV=$(ls NEWSPAPER_*.html 2>/dev/null | sort | tail -n1 | sed -E 's/NEWSPAPER_([0-9]+)\.html/\1/')
+          echo "prev_mmdd=$PREV" >> "$GITHUB_OUTPUT"
+          echo "[info] 발행일=$PUB_DATE_KST / 새 호=NEWSPAPER_${PUB_MMDD}.html / 직전호=NEWSPAPER_${PREV}.html"
+
+      # ─────────────────────────────────────────────────────────────
+      # STEP A: 지역별 리서치 (4개 sub-step, 각 호출 사이 sleep)
+      # CLAUDE.md STEP 1~4를 분할. 각 호출은 단일 지역만 다뤄 input 토큰 ↓
+      # ─────────────────────────────────────────────────────────────
+      - name: Step A1 — 환율 + Global 리서치
+        if: ${{ contains('A', steps.prep.outputs.from_step) }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          claude -p "CLAUDE.md의 주간 제작 워크플로우 STEP 1~7을 지금 실행해줘. \
-            git commit과 push(STEP 8~9)는 생략할 것 — GitHub Actions가 처리한다." \
+          claude -p "CLAUDE.md STEP 1·2·3 일부를 수행한다. 출력은 ${STAGING_DIR}/research-global.md 파일로 저장.
+          1) USD/KRW 환율 조회 → 정수 반올림. 첫 줄에 'EXCHANGE_RATE: 1USD=KRW{값}' 한 줄 기록.
+          2) https://weeklybriefing.vercel.app/ fetch → 직전 4개 호 제목·핵심 소재 요약 (중복 회피용).
+          3) Global 카테고리(미·중·일 어느 하나로 귀속되지 않는 국제 이슈) 후보 기사 2~3건 검색. 영어·중국어·일본어 소스 우선, 한국 언론 제외, 최근 5일.
+          각 후보당: URL, 매체, 발행일, 한 줄 요약, 표준 태그(M&A/AI/IP/INV/REG/DATA/HR/GZ/OUT 중 1~2개).
+          웹 검색 횟수는 최대 4회로 제한한다." \
+            --model "$MODEL_FAST" \
             --dangerously-skip-permissions
 
-      - name: Commit and push
+      - name: Sleep (token window recovery)
+        if: ${{ contains('A', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      - name: Step A2 — US 리서치
+        if: ${{ contains('A', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          git add NEWSPAPER_*.html SPECIAL_*.html index.html
+          claude -p "CLAUDE.md STEP 3·3-1·4 부분 수행. 출력은 ${STAGING_DIR}/research-us.md.
+          US 카테고리 기사 3~4건 검색. 최근 5일, 영어 소스, 한국 언론 제외.
+          분야: M&A·테크/AI·투자·IP·시장데이터·인사·규제 중 다양성 확보.
+          STEP 3-1 한국 매체 사각지대 필터 적용 — 한국 매체가 이미 다룬 소재는 우선순위 낮춤.
+          각 후보당: URL, 매체, 발행일, 한 줄 요약, 표준 태그 1~2.
+          웹 검색 최대 4회." \
+            --model "$MODEL_FAST" \
+            --dangerously-skip-permissions
+
+      - name: Sleep
+        if: ${{ contains('A', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      - name: Step A3 — China 리서치 (현지어)
+        if: ${{ contains('A', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "CLAUDE.md STEP 3 현지어 검색 규칙 적용. 출력 ${STAGING_DIR}/research-cn.md.
+          China 카테고리 기사 2~3건. 중국어(中文) 키워드 검색 2회 이상. 최근 5일. 한국 언론 제외.
+          각 후보당: URL, 매체, 발행일, 한 줄 요약, 표준 태그 1~2.
+          웹 검색 최대 3회." \
+            --model "$MODEL_FAST" \
+            --dangerously-skip-permissions
+
+      - name: Sleep
+        if: ${{ contains('A', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      - name: Step A4 — Japan 리서치 (현지어)
+        if: ${{ contains('A', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "CLAUDE.md STEP 3 현지어 검색. 출력 ${STAGING_DIR}/research-jp.md.
+          Japan 카테고리 기사 2~3건. 일본어(日本語) 키워드 검색 2회 이상. 최근 5일. 한국 언론 제외.
+          각 후보당: URL, 매체, 발행일, 한 줄 요약, 표준 태그 1~2.
+          웹 검색 최대 3회." \
+            --model "$MODEL_FAST" \
+            --dangerously-skip-permissions
+
+      - name: Sleep
+        if: ${{ contains('AB', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      # ─────────────────────────────────────────────────────────────
+      # STEP B: 인사이트 3종 — 판단 영역, sonnet
+      # ─────────────────────────────────────────────────────────────
+      - name: Step B — 인사이트 3종 작성
+        if: ${{ contains('AB', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "CLAUDE.md '인사이트 섹션 가이드' 전체 적용. 입력은 ${STAGING_DIR}/research-*.md 4개 파일을 읽어서 처리.
+          출력은 ${STAGING_DIR}/insights.html — analysis-item ×3 HTML 조각만(외곽 section 미포함).
+          각 인사이트는 신호/맥락/전략 3단 구조. 전략은 축A(독자 포지션 3개 중복 금지) × 축B(기회·경고·관망 각 1회) 교차.
+          마지막 문장 톤은 단정/여지/의문/평서 혼합.
+          새 웹 검색 금지 — staging 파일만 참조." \
+            --model "$MODEL_THINK" \
+            --dangerously-skip-permissions
+
+      - name: Sleep
+        if: ${{ contains('ABC', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      # ─────────────────────────────────────────────────────────────
+      # STEP C: TL;DR + 헤드라인(issue-title) 선정 — 판단, sonnet
+      # ─────────────────────────────────────────────────────────────
+      - name: Step C — TL;DR + 헤드라인
+        if: ${{ contains('ABC', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "${STAGING_DIR}/research-*.md 4개와 ${STAGING_DIR}/insights.html을 읽고 두 가지 산출.
+          1) ${STAGING_DIR}/tldr.html — '이번 주 이슈 요약' 섹션의 li 항목 5~7개 HTML 조각.
+          2) ${STAGING_DIR}/headline.txt — issue-title 본문 1줄. 형식: 'YYYY.MM.DD — 핵심주제(15~25자)'.
+             날짜는 ${{ steps.prep.outputs.pub_date }} 사용. CLAUDE.md '#### issue-title 본문 규칙' 정확히 준수.
+          새 웹 검색 금지." \
+            --model "$MODEL_THINK" \
+            --dangerously-skip-permissions
+
+      - name: Sleep
+        if: ${{ contains('ABCD', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      # ─────────────────────────────────────────────────────────────
+      # STEP D: HTML 조립 — 이전 호 복제 + 섹션 치환. 형식 작업, haiku
+      # 핵심: 이전 호 전체 컨텍스트 적재 대신 sed/python로 섹션 단위 치환
+      # ─────────────────────────────────────────────────────────────
+      - name: Step D — HTML 조립 (이전 호 복제 + 섹션 치환)
+        if: ${{ contains('ABCD', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PREV_MMDD: ${{ steps.prep.outputs.prev_mmdd }}
+          PUB_MMDD: ${{ steps.prep.outputs.pub_mmdd }}
+          PUB_DATE: ${{ steps.prep.outputs.pub_date }}
+          PUB_KOR: ${{ steps.prep.outputs.pub_kor }}
+        run: |
+          # 1) 이전 호 복제로 시작
+          cp "NEWSPAPER_${PREV_MMDD}.html" "NEWSPAPER_${PUB_MMDD}.html"
+          # 2) Claude에 섹션 치환 위임. 입력은 staging 파일 + 새 호 파일 한 개.
+          claude -p "CLAUDE.md STEP 5 HTML 제작 규칙 적용. 작업 대상 파일: NEWSPAPER_${PUB_MMDD}.html (이전 호 복제본).
+          ${STAGING_DIR}/research-*.md, ${STAGING_DIR}/insights.html, ${STAGING_DIR}/tldr.html, ${STAGING_DIR}/headline.txt를 입력으로.
+          치환할 영역(다른 곳 건드리지 말 것):
+            - <title> → '엔터문화연구소 — 글로벌 주간 브리핑 ${PUB_DATE}'
+            - 마스트헤드 날짜 → '${PUB_KOR}' 형식
+            - issue-title 본문 → headline.txt 내용
+            - TL;DR(이번 주 이슈 요약) section 내부 ul → tldr.html
+            - 인사이트 섹션 analysis-item 3개 → insights.html
+            - Global/US/China/Japan 각 hero·sidebar 기사 카드 → research-*.md 기반으로 갱신. 금액 표기 \$/한화 병기 규칙 준수, 환율은 staging/research-global.md 첫 줄.
+            - 푸터 환율 표기 갱신
+            - nav-vol Vol. 번호 +1
+          섹션 순서: TL;DR → 인사이트 → Global → US → China·Japan. 차주 딥다이브 섹션 추가 금지.
+          웹 검색 금지." \
+            --model "$MODEL_FAST" \
+            --dangerously-skip-permissions
+
+      - name: Sleep
+        if: ${{ contains('ABCDE', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      # ─────────────────────────────────────────────────────────────
+      # STEP E: 차주 딥다이브 후보 → internal/ (gitignored)
+      # ─────────────────────────────────────────────────────────────
+      - name: Step E — 차주 딥다이브 후보
+        if: ${{ contains('ABCDE', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PUB_YYMMDD: ${{ steps.prep.outputs.pub_yymmdd }}
+        run: |
+          mkdir -p internal
+          claude -p "CLAUDE.md STEP 5-1 적용. 출력 internal/${PUB_YYMMDD}-deepdive-candidates.md.
+          입력: ${STAGING_DIR}/research-*.md.
+          후보 3~5개. 각 후보: 제목 / 왜 딥다이브 감인지(신호·타이밍·데이터 공백 중 명시) / 포맷 힌트(OST·우진·뉴노멀·위어드·딥리서치·리포트분석 중 1~2).
+          파일 상단: 생성일 ${PUB_YYMMDD}, 커버리지 주간, '발행 HTML 비포함' 명시.
+          웹 검색 금지." \
+            --model "$MODEL_FAST" \
+            --dangerously-skip-permissions
+
+      - name: Sleep
+        if: ${{ contains('ABCDEF', steps.prep.outputs.from_step) }}
+        run: sleep ${{ env.STEP_SLEEP }}
+
+      # ─────────────────────────────────────────────────────────────
+      # STEP F: index.html + 직전 호 nav 갱신. 단순 텍스트 치환.
+      # claude 미사용 — 토큰 절약 위해 sed로 직접 처리
+      # ─────────────────────────────────────────────────────────────
+      - name: Step F — index.html 및 직전 호 nav 업데이트
+        if: ${{ contains('ABCDEF', steps.prep.outputs.from_step) }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PREV_MMDD: ${{ steps.prep.outputs.prev_mmdd }}
+          PUB_MMDD: ${{ steps.prep.outputs.pub_mmdd }}
+          PUB_DATE: ${{ steps.prep.outputs.pub_date }}
+        run: |
+          # 패턴화하기 어려운 부분만 claude에 위임. 작은 컨텍스트로.
+          claude -p "두 가지 작업.
+          1) NEWSPAPER_${PREV_MMDD}.html의 nav-bottom '다음 호 →' 링크를 NEWSPAPER_${PUB_MMDD}.html로 활성화.
+          2) index.html에 새 호(${PUB_DATE}) 엔트리 추가. headline.txt를 issue-title로. 기존 엔트리 형식·정렬 규칙 그대로.
+          ${STAGING_DIR}/headline.txt를 헤드라인 소스로 사용.
+          다른 영역 수정 금지." \
+            --model "$MODEL_FAST" \
+            --dangerously-skip-permissions
+
+      # ─────────────────────────────────────────────────────────────
+      # 검증 (STEP 7 자동 체크) — claude 미사용
+      # ─────────────────────────────────────────────────────────────
+      - name: Verify — STEP 7 체크리스트 자동 검증
+        env:
+          PUB_MMDD: ${{ steps.prep.outputs.pub_mmdd }}
+          PUB_DATE: ${{ steps.prep.outputs.pub_date }}
+          PUB_KOR: ${{ steps.prep.outputs.pub_kor }}
+          PREV_MMDD: ${{ steps.prep.outputs.prev_mmdd }}
+        run: |
+          set -e
+          F="NEWSPAPER_${PUB_MMDD}.html"
+          fail=0
+          check() { if eval "$2"; then echo "OK   $1"; else echo "FAIL $1"; fail=1; fi; }
+
+          check "새 호 파일 존재"          "[ -f '$F' ]"
+          check "<title> 형식 통일"         "grep -q '<title>엔터문화연구소 — 글로벌 주간 브리핑 ${PUB_DATE}</title>' '$F'"
+          check "마스트헤드 날짜 (한글)"    "grep -qF \"${PUB_KOR}\" '$F'"
+          check "TL;DR 라벨 한글"           "grep -q '이번 주 이슈 요약' '$F'"
+          check "TL;DR 라벨 영문 미사용"    "! grep -qE '>TL;DR<' '$F'"
+          check "차주 딥다이브 섹션 부재"   "! grep -qE '(next-deepdive|next-dive)' '$F'"
+          check "직전 호 nav 활성화"        "grep -q 'NEWSPAPER_${PUB_MMDD}.html' 'NEWSPAPER_${PREV_MMDD}.html'"
+          check "index.html에 새 호 포함"   "grep -q 'NEWSPAPER_${PUB_MMDD}.html' index.html"
+          check ".gitignore internal/ 등록" "grep -qE '^internal/' .gitignore"
+          # internal 파일이 git에 추적되지 않아야 함
+          if git ls-files --error-unmatch internal/ >/dev/null 2>&1; then
+            echo "FAIL internal/ 파일이 git에 추적됨"; fail=1
+          else
+            echo "OK   internal/ 미추적"
+          fi
+
+          if [ "$fail" -ne 0 ]; then
+            echo "::error::검증 실패 — STEP 7 항목 누락"
+            exit 1
+          fi
+
+      # ─────────────────────────────────────────────────────────────
+      # 드라이런 시: staging artifact 업로드, 커밋·푸시 생략
+      # ─────────────────────────────────────────────────────────────
+      - name: Upload staging (always, for debugging)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: briefing-staging-${{ steps.prep.outputs.pub_mmdd }}
+          path: |
+            ${{ env.STAGING_DIR }}/
+            NEWSPAPER_${{ steps.prep.outputs.pub_mmdd }}.html
+            internal/
+          retention-days: 14
+          if-no-files-found: warn
+
+      # ─────────────────────────────────────────────────────────────
+      # STEP G: 커밋·푸시 (드라이런 아닐 때만)
+      # ─────────────────────────────────────────────────────────────
+      - name: Step G — Commit and push
+        if: ${{ steps.prep.outputs.dry_run != 'true' && contains('ABCDEFG', steps.prep.outputs.from_step) }}
+        env:
+          PUB_DATE: ${{ steps.prep.outputs.pub_date }}
+          PUB_MMDD: ${{ steps.prep.outputs.pub_mmdd }}
+          PREV_MMDD: ${{ steps.prep.outputs.prev_mmdd }}
+        run: |
+          # 명시적 파일만 add — internal/, .briefing-staging/ 누출 차단
+          git add "NEWSPAPER_${PUB_MMDD}.html" "NEWSPAPER_${PREV_MMDD}.html" index.html
           if git diff --staged --quiet; then
             echo "::error::변경된 파일 없음 — 브리핑 생성 실패 가능성"
             exit 1
           fi
-          git commit -m "feat: 주간 브리핑 자동 발행 — $(date +'%Y.%m.%d')"
+          # internal 또는 staging이 staged됐는지 이중 검사
+          if git diff --staged --name-only | grep -qE '^(internal/|\.briefing-staging/)'; then
+            echo "::error::internal/ 또는 staging이 staged됨 — 차단"
+            git reset
+            exit 1
+          fi
+          git commit -m "feat: 주간 브리핑 자동 발행 — ${PUB_DATE}"
           git push
+
+      - name: Dry-run summary
+        if: ${{ steps.prep.outputs.dry_run == 'true' }}
+        run: |
+          echo "::notice::DRY RUN 모드 — commit/push 생략. artifact 'briefing-staging-${{ steps.prep.outputs.pub_mmdd }}'에서 산출물 확인."
