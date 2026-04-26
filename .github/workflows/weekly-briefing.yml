@@ -74,11 +74,14 @@ jobs:
           WK_START_D=$(TZ=Asia/Seoul date -d 'tomorrow -6 days' +'%-d')
           WK_END_D=$(TZ=Asia/Seoul date -d 'tomorrow' +'%-d')
           PUB_KOR="${PUB_KOR_BASE} (${WK_START_M}.${WK_START_D}–${WK_END_D})"
+          # 풀포맷(주간 끝일에 월 prefix 포함). HTML 조립 단계에서 자주 등장하는 변형.
+          PUB_KOR_FULL="${PUB_KOR_BASE} (${WK_START_M}.${WK_START_D}–${WK_START_M}.${WK_END_D})"
           echo "pub_date=$PUB_DATE_KST"   >> "$GITHUB_OUTPUT"
           echo "pub_date_dot=$PUB_DATE_DOT" >> "$GITHUB_OUTPUT"
           echo "pub_mmdd=$PUB_MMDD"       >> "$GITHUB_OUTPUT"
           echo "pub_yymmdd=$PUB_YYMMDD"   >> "$GITHUB_OUTPUT"
           echo "pub_kor=$PUB_KOR"         >> "$GITHUB_OUTPUT"
+          echo "pub_kor_full=$PUB_KOR_FULL" >> "$GITHUB_OUTPUT"
           echo "from_step=${{ inputs.from_step || 'A' }}" >> "$GITHUB_OUTPUT"
           echo "dry_run=${{ inputs.dry_run || 'false' }}" >> "$GITHUB_OUTPUT"
           # 직전 호 MMDD 추출 (NEWSPAPER_MMDD.html 중 가장 최근)
@@ -287,6 +290,7 @@ jobs:
           PUB_DATE: ${{ steps.prep.outputs.pub_date }}
           PUB_DATE_DOT: ${{ steps.prep.outputs.pub_date_dot }}
           PUB_KOR: ${{ steps.prep.outputs.pub_kor }}
+          PUB_KOR_FULL: ${{ steps.prep.outputs.pub_kor_full }}
           PREV_MMDD: ${{ steps.prep.outputs.prev_mmdd }}
         run: |
           set -e
@@ -296,7 +300,20 @@ jobs:
 
           check "새 호 파일 존재"          "[ -f '$F' ]"
           check "<title> 형식 통일"         "grep -q '<title>엔터문화연구소 — 글로벌 주간 브리핑 ${PUB_DATE_DOT}</title>' '$F'"
-          check "마스트헤드 날짜 (한글)"    "grep -qF \"${PUB_KOR}\" '$F'"
+          # 마스트헤드 날짜: HTML entity(&ndash;)와 풀포맷(M.D–M.D) 변형 허용.
+          # 1) &ndash;/&#8211; → 유니코드 en-dash로 정규화
+          # 2) PUB_KOR 그대로 매칭(짧은 'M.D–D' 형식) 또는 풀포맷 'M.D–M.D' 매칭
+          MASTHEAD_NORM=$(sed -E 's/&ndash;|&#8211;/–/g' "$F")
+          if echo "$MASTHEAD_NORM" | grep -qF "$PUB_KOR"; then
+            echo "OK   마스트헤드 날짜 (한글) [짧은 포맷]"
+          elif echo "$MASTHEAD_NORM" | grep -qF "$PUB_KOR_FULL"; then
+            echo "OK   마스트헤드 날짜 (한글) [풀포맷 허용]"
+          else
+            echo "FAIL 마스트헤드 날짜 (한글) — 기대(짧은): '${PUB_KOR}' / 기대(풀): '${PUB_KOR_FULL}'"
+            echo "     실제 masthead-date 라인:"
+            grep -E 'masthead-date' "$F" | head -3
+            fail=1
+          fi
           check "TL;DR 라벨 한글"           "grep -q '이번 주 이슈 요약' '$F'"
           check "TL;DR 라벨 영문 미사용"    "! grep -qE '>TL;DR<' '$F'"
           check "차주 딥다이브 섹션 부재"   "! grep -qE '(next-deepdive|next-dive)' '$F'"
@@ -329,6 +346,8 @@ jobs:
             internal/
           retention-days: 14
           if-no-files-found: warn
+          # STAGING_DIR이 '.briefing-staging'(점 시작)이라 v4 기본값에서 제외됨 — 명시적 포함
+          include-hidden-files: true
 
       # ─────────────────────────────────────────────────────────────
       # STEP G: 커밋·푸시 (드라이런 아닐 때만)
