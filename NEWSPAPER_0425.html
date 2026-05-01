@@ -393,7 +393,7 @@ body { background: var(--black); color: var(--white); font-family: var(--font-bo
 <nav class="nav-bottom">
   <a href="NEWSPAPER_0418.html">&larr; 이전 호</a>
   <span class="nav-center"><a href="index.html">목록</a></span>
-  <span class="nav-disabled">다음 호 &rarr;</span>
+  <a href="NEWSPAPER_0502.html">다음 호 &rarr;</a>
 </nav>
 
 <footer class="footer">
@@ -412,10 +412,10 @@ body { background: var(--black); color: var(--white); font-family: var(--font-bo
 
 <script>
 document.querySelectorAll('.tag-cat').forEach(function(el){
-  var tags=el.textContent.split('\u00B7').map(function(t){return t.trim();}).filter(Boolean);
+  var tags=el.textContent.split('·').map(function(t){return t.trim();}).filter(Boolean);
   el.innerHTML=tags.map(function(t){
     return '<a href="index.html?tag='+encodeURIComponent(t)+'">'+t+'</a>';
-  }).join(' \u00B7 ');
+  }).join(' · ');
 });
 </script>
 </body>
