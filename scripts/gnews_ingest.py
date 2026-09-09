@@ -272,6 +272,9 @@ def main() -> int:
             x["factor_hint"] = factor
             # 게이트 haiku가 내용 기준으로 판정한 값으로 나중에 덮인다. 여기 값은 폴백.
             x["region_fallback"] = REGION_BY_GL.get(gl, "multinational")
+            # 룩백 컷에만 쓰고 버리던 발행일을 여기서 붙잡는다 (2026-09-10).
+            # 컷을 통과했으니 d는 항상 유효하다 - 폴백이 필요 없다.
+            x["published_at"] = d.astimezone(datetime.timezone.utc).isoformat()
             fresh.append(x)
         if args.limit:
             fresh = fresh[:args.limit]
@@ -331,6 +334,7 @@ def main() -> int:
             "category": "gnews",
             "collector": "gnews",
             "summary": "",
+            "published_date": x.get("published_at"),
             "region": reg,
             "topics": [],
             "tags": [x["factor_hint"]],
