@@ -2,11 +2,11 @@ name: 리포트 드롭 백업 감시
 
 # 정시 스케줄(discord-report-drop, 월 10:17 KST)이 GitHub의 best-effort 스케줄링
 # 특성으로 누락될 때를 대비한 백업. 월요일 늦은 오전에 발송 여부를 점검하고,
-# 미발송이면 직접 재발송 + 대표에게 메일 알림. (2026-06-15 신설 — 첫 주 정시 누락 대응)
+# 미발송이면 직접 재발송 + 대표에게 메일 알림. (2026-06-15 신설 - 첫 주 정시 누락 대응)
 
 on:
   schedule:
-    - cron: '40 1 * * 1'   # 매주 월요일 10:40 KST (01:40 UTC) — 정시 드롭(10:17) 후 점검, 지연 버퍼 23분
+    - cron: '40 1 * * 1'   # 매주 월요일 10:40 KST (01:40 UTC) - 정시 드롭(10:17) 후 점검, 지연 버퍼 23분
   workflow_dispatch:
 
 permissions:
@@ -51,7 +51,7 @@ jobs:
         if: steps.check.outputs.posted == 'no'
         run: |
           if [ "${{ steps.heal.outcome }}" != "success" ]; then
-            echo "::error::정시 누락 + 백업 재발송 실패 — 수동 조치 필요"
+            echo "::error::정시 누락 + 백업 재발송 실패 - 수동 조치 필요"
             exit 1
           fi
           echo "[info] 정시 누락 감지 → 백업이 드롭을 재발송 완료"

@@ -71,7 +71,13 @@ def _base() -> tuple[str, str]:
     return url, key
 
 
-def fetch_collector(collector: str) -> list[dict]:
+def fetch_collector(collector: str, scope: str = "live") -> list[dict]:
+    """scope="live"면 살아있는 것(pending·picked)만.
+
+    기본을 live로 두는 이유 - radar_items 대부분이 filtered_out·archived이고
+    그것들은 이미 걸러졌거나 소멸해 재판정할 값이 없다. classify_tense.py가
+    같은 이유로 같은 기본값을 쓴다. 전수가 필요하면 --scope every.
+    """
     url, key = _base()
     h = {"apikey": key, "Authorization": f"Bearer {key}"}
     out, step, off = [], 1000, 0
@@ -79,6 +85,7 @@ def fetch_collector(collector: str) -> list[dict]:
         r = requests.get(f"{url}/rest/v1/radar_items", headers=h, timeout=20, params={
             "select": "id,title,summary,region,collector", "collector": f"eq.{collector}",
             "order": "created_at.desc", "limit": step, "offset": off,
+            **({"status": "in.(pending,picked)"} if scope == "live" else {}),
         })
         r.raise_for_status()
         batch = r.json()
@@ -135,6 +142,8 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true", help="재분류만, Supabase 쓰기 없음")
     ap.add_argument("--scan-only", action="store_true", help="API 호출 없이 대상 집계만")
     ap.add_argument("--limit", type=int, default=0, help="처리 상한(0=무제한)")
+    ap.add_argument("--scope", choices=("live", "every"), default="live",
+                    help="live=살아있는 것(pending·picked)만, every=전수")
     ap.add_argument("--collectors", default=",".join(DEFAULT_COLLECTORS),
                     help="쉼표 구분 수집기 목록. 알려진 값: " + ", ".join(KNOWN_COLLECTORS))
     args = ap.parse_args()
@@ -146,7 +155,7 @@ def main() -> int:
 
     items: list[dict] = []
     for c in collectors:
-        items += fetch_collector(c)
+        items += fetch_collector(c, args.scope)
     log.info("재분류 후보 %d건 | 수집기별 %s", len(items),
              {c: sum(1 for i in items if i.get("collector") == c) for c in collectors})
 

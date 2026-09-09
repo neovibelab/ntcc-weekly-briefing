@@ -1,14 +1,14 @@
-name: 백필 — 미번역 재번역 (수동)
+name: 백필 - 미번역 재번역 (수동)
 # 크레딧 아웃 동안 미번역으로 적재된 newsroom·newsletter radar_items를 재번역+재분류.
-# scripts/backfill_translate.py — filter_verdict='classify_failed' 또는 제목·요약 무한글 항목만 대상,
+# scripts/backfill_translate.py - filter_verdict='classify_failed' 또는 제목·요약 무한글 항목만 대상,
 # 유저 큐레이션 상태(picked/rejected 등) 보존. 1회성 수동 실행(workflow_dispatch).
-# 시크릿만 사용 — 로컬 .env 키 안 만짐.
+# 시크릿만 사용 - 로컬 .env 키 안 만짐.
 
 on:
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'dry-run (재분류만 — Supabase 쓰기 없음)'
+        description: 'dry-run (재분류만 - Supabase 쓰기 없음)'
         type: boolean
         default: false
       limit:

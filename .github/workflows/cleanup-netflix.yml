@@ -1,7 +1,7 @@
 name: Netflix promo 일회성 정리
 # 과거 적재된 Netflix(newsroom) pending 중 홍보(promo)를 status=filtered_out로 정리.
 # scripts/cleanup_netflix_promo.py 실행. 기본 dry-run, apply 체크 시 실제 갱신.
-# 일회성 — 정리 완료 후 이 워크플로는 삭제해도 무방.
+# 일회성 - 정리 완료 후 이 워크플로는 삭제해도 무방.
 
 on:
   workflow_dispatch:

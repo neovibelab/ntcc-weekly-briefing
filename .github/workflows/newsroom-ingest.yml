@@ -4,7 +4,7 @@ name: 뉴스룸 수집 (매일)
 
 on:
   schedule:
-    - cron: '0 1 * * *'    # 매일 10:00 KST (01:00 UTC) — 미국 뉴스룸 전일분(美 업무시간=韓 야간) 흡수
+    - cron: '0 1 * * *'    # 매일 10:00 KST (01:00 UTC) - 미국 뉴스룸 전일분(美 업무시간=韓 야간) 흡수
   workflow_dispatch:
     inputs:
       lookback_days:
@@ -12,7 +12,7 @@ on:
         required: false
         default: '7'
       dry_run:
-        description: 'dry-run (수집·분류·토픽필터만 — Supabase·디스코드 미반영)'
+        description: 'dry-run (수집·분류·토픽필터만 - Supabase·디스코드 미반영)'
         type: boolean
         default: false
 

@@ -1,13 +1,13 @@
 name: 인터뷰 수집 (화·금)
 # allowlist 매체 RSS·유튜브 채널 RSS(sources_interviews.json)에서 최신 항목을 가져와
 # is_interview 게이트 분류 후 인터뷰만 Supabase radar_items(collector='interview')에 적재.
-# vibe_search·newsletter·newsroom과 같은 풀. Discord 미포스팅 — 대시보드 전용.
+# vibe_search·newsletter·newsroom과 같은 풀. Discord 미포스팅 - 대시보드 전용.
 # ※ GitHub 예약 워크플로는 신규 등록 후 '첫 예정 발화를 스킵'하는 알려진 지연이 있다.
 #    첫 자동 수집이 안 보이면 workflow_dispatch로 1회 수동 발화할 것.
 
 on:
   schedule:
-    - cron: '0 2 * * 2,5'   # 화·금 11:00 KST (02:00 UTC). 인터뷰는 저빈도·에버그린 — 주 2회로 충분
+    - cron: '0 2 * * 2,5'   # 화·금 11:00 KST (02:00 UTC). 인터뷰는 저빈도·에버그린 - 주 2회로 충분
   workflow_dispatch:
     inputs:
       lookback_days:
@@ -15,7 +15,7 @@ on:
         required: false
         default: '14'
       dry_run:
-        description: 'dry-run (수집·분류만 — Supabase 미반영)'
+        description: 'dry-run (수집·분류만 - Supabase 미반영)'
         type: boolean
         default: false
 

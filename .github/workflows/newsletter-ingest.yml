@@ -4,8 +4,8 @@ name: 뉴스레터 수집 (매일)
 
 on:
   schedule:
-    - cron: '30 0 * * *'    # 09:30 KST (00:30 UTC) — 아침 클러스터(빌보드 06시·롱블랙 ~09시·국내 일간 IPDaily/폴인레터 08시) 직후
-    - cron: '0 14 * * *'     # 23:00 KST (14:00 UTC) — 저녁 클러스터(SCMP 다회·Jing 2판 ~22:25·Nanjing·Marion 저녁) 직후
+    - cron: '30 0 * * *'    # 09:30 KST (00:30 UTC) - 아침 클러스터(빌보드 06시·롱블랙 ~09시·국내 일간 IPDaily/폴인레터 08시) 직후
+    - cron: '0 14 * * *'     # 23:00 KST (14:00 UTC) - 저녁 클러스터(SCMP 다회·Jing 2판 ~22:25·Nanjing·Marion 저녁) 직후
   workflow_dispatch:
     inputs:
       lookback_days:
@@ -17,7 +17,7 @@ on:
         required: false
         default: '6'
       dry_run:
-        description: 'dry-run (수집·분류만 — Supabase 미반영)'
+        description: 'dry-run (수집·분류만 - Supabase 미반영)'
         type: boolean
         default: false
 
