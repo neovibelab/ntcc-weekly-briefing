@@ -244,7 +244,10 @@ def _delete_cluster(cid) -> bool:
 # 시제 축을 수명에 쓴다 - 바이브(아직 안 온 것)는 며칠 지나도 유효하고,
 # 배경(끝났거나 한 번 있는 일)은 재료라 금방 낡는다.
 TENSE_MAX_DAYS = {"soon": 14, "now": 7, "brief": 3, "done": 3}
-TENSE_MAX_DAYS_DEFAULT = 7   # 미판정
+# 미판정은 시효를 걸지 않는다(2026-09-10 미리보기 실측).
+# 판정을 안 돌려서 지워지는 일이 생기면 안 된다.
+# 판정이 붙으면 그때부터 위 표가 적용된다. 상한이 안전판이다.
+TENSE_MAX_DAYS_DEFAULT = None
 # 인터뷰는 시제 시효에서 면제한다 - classify_tense가 인터뷰를 판정 대상에서 빼기
 # 때문에(2026-09-02 대표 결정: 릴스 소재에 「곧」을 묻는 건 축이 안 맞는다)
 # 시제가 늘 비어 있고, 기본값 7일을 걸면 203건이 통째로 날아간다.
@@ -266,6 +269,8 @@ def tense_expiry_targets(rows, now, exempt_ids=frozenset()):
         if age is None:
             continue
         limit = TENSE_MAX_DAYS.get(r.get("tense"), TENSE_MAX_DAYS_DEFAULT)
+        if limit is None:
+            continue
         if age >= limit:
             out.append((r, age, limit))
     return out
