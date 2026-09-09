@@ -37,7 +37,10 @@ MANAGED_COLLECTORS = {"newsletter", "newsroom", "vibe_search", "interview", "gne
 # gnews는 질의 31개로 유입이 가장 커서 별도 상한을 준다(실측 하루 40~180건).
 # 상한은 폭주 안전판일 뿐이다. 실제 관리는 시제 시효가 한다.
 # 100은 당일 들어온 좋은 신호를 잘랐다(2026-09-10 미리보기 실측).
-GNEWS_KEEP = 250
+# 풀 뷰는 gnews + vibe_search + feed 셋이다(나머지는 별도 탭).
+# 140 + 50 + 30이라 실측 규모는 200 안쪽이다 (2026-09-10 대표 지시).
+GNEWS_KEEP = 140
+FEED_KEEP = 30
 # interview 전용 상한 - 뉴스성 수집과 성격이 달라 같은 50을 쓰지 않는다.
 # 인터뷰는 에버그린 소재라 픽 시효도 면제받는다(picked_expiry_targets 참조).
 # 상한 관리 자체는 2026-08-26 대표 결정(pending 504건이 대시보드 노이즈).
@@ -139,6 +142,24 @@ def print_stats(rows, now):
         print(f"  {s} / {c}: {n}")
 
 
+# 상한 초과분을 자를 때의 우선순위 (2026-09-10 대표 지시).
+# created_at 최신순으로만 남기면 5일 된 바이브가 오늘 들어온 단신에 밀린다.
+# 레이더의 목적이 「곧」 포착이라 그 반대여야 한다. 숫자가 작을수록 오래 남긴다.
+TENSE_RANK = {"soon": 0, "now": 1, None: 2, "brief": 3, "done": 3}
+TENSE_RANK_DEFAULT = 2
+
+
+def _keep_rank(row):
+    """정렬 키 - (시제 우선순위, 최신순). 앞쪽이 남고 뒤쪽이 잘린다."""
+    r = TENSE_RANK.get(row.get("tense"), TENSE_RANK_DEFAULT)
+    return (r, _neg_ts(row.get("created_at") or ""))
+
+
+def _neg_ts(s: str):
+    """문자열 타임스탬프를 내림차순 정렬용으로 뒤집는다."""
+    return tuple(-ord(c) for c in s)
+
+
 def archive_targets(rows, now, exempt_ids=frozenset()):
     # 자동수집 collector의 pending을 created_at 최신순 POOL_KEEP개만 남기고
     # 초과분(오래된 것)을 archived 대상으로. manual·기타 status는 여기서 안 다룸.
@@ -148,11 +169,13 @@ def archive_targets(rows, now, exempt_ids=frozenset()):
     # 타깃을 세워뒀는데 근거가 사라지면 2 리서치가 빈손으로 시작한다.
     over = []
     for coll in sorted(MANAGED_COLLECTORS):
-        keep = {"interview": INTERVIEW_KEEP, "gnews": GNEWS_KEEP}.get(coll, POOL_KEEP)
+        keep = {"interview": INTERVIEW_KEEP, "gnews": GNEWS_KEEP,
+                "feed": FEED_KEEP}.get(coll, POOL_KEEP)
         pend = [r for r in rows
                 if r.get("status") == "pending" and r.get("collector") == coll
                 and r.get("id") not in exempt_ids]
-        pend.sort(key=lambda r: r.get("created_at") or "", reverse=True)  # 최신 먼저
+        # 시제 우선, 같은 층에서 최신순. 뒤쪽이 잘린다.
+        pend.sort(key=_keep_rank)
         over.extend(pend[keep:])  # 상한 초과분 = 오래된 것
     return [(r, _age_days(r, now)) for r in over]
 
