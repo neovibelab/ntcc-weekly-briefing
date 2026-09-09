@@ -32,7 +32,13 @@
 - **엔진**: `scripts/vibe_search.py` - Claude Sonnet `web_search` 서버사이드 도구(스트리밍 호출). 지역당 1~5건, 기준 충족 후보 없으면 그날은 생략. 단일 워크플로에서 각 step `if`가 `github.event.schedule`·수동 region input으로 분기하고, skip 지역은 outcome=skipped라 실패 경보에 걸리지 않는다. (시간대 분산·격일 전환 경위 → DR)
 - **나이컷**: 한·글·일 120h, 중·동남아 168h(`MAX_AGE_HOURS`). robots.txt로 막힌 일간지(조선·중앙·FT·Reuters 등)는 뉴스레터 구독으로 흡수한다 - 발신자만 `sources_newsletters.json`에 추가.
 - **적재**: `scripts/supabase_writer.py` - REST API upsert → `radar_items`. env `SUPABASE_URL`·`SUPABASE_KEY`(GitHub Secrets). nvl-vibe-radar 자체 수집기는 폐기됐다. 풀을 채우는 수집기는 vibe_search(웹)·newsletter_ingest(§1-1)·newsroom_ingest(§1-2)·interview_ingest(§1-3)·gnews_ingest(구글 뉴스 RSS) 다섯이고, radar는 조회·큐레이션 대시보드(collector/region 필터)다.
-- **풀 유지보수**: `scripts/pool_maintenance.py`. 자동수집 pending은 최신순 `POOL_KEEP`(50)개만 남기고 초과분 archived. 픽은 20일 시효(`picked_expiry_targets`, interview 픽 면제). 시의성 묶음은 10일 방치 시 삭제, 에버그린·to_draft/drafted 묶음 멤버만 시효 면제(v12 `clusters.evergreen` 미적용이면 생략·전 묶음 보호. 묶음 자체는 2026-09-02 폐기 - 루트 §5). Supabase 전 행 조회는 반드시 `_fetch_paged`(Range 헤더 + id 정렬 순회) - PostgREST는 `limit`과 무관하게 1,000행에서 자른다. (경위 → DR)
+- **풀 유지보수**: `scripts/pool_maintenance.py`. 매일 실행, `--apply` 없으면 미리보기만.
+  - **상한** - collector별 pending 상한(gnews 140 · feed 30 · interview 200 · 그 외 50). 자르는 순서는 **시제 우선**(바이브 > 시그널 > 미판정 > 배경), 같은 층에서 최신순. created_at만 보면 5일 된 바이브가 오늘 들어온 단신에 밀린다.
+  - **시제 시효** - 바이브 14일 · 시그널 7일 · 뉴스 3일. **미판정은 시효 없음**, 인터뷰는 collector 통째로 면제.
+  - **픽 시효** - 20일(`picked_expiry_targets`, 인터뷰 픽 면제). 픽 버튼은 2026-09-10에 없앴고 남은 2건을 이 규칙이 정리한다.
+  - **면제** - 살아있는 타깃(`aims` open·drafting)의 근거 신호는 상한·시제 시효에서 뺀다. 타깃을 세워뒀는데 근거가 사라지면 2 리서치가 빈손으로 시작한다.
+  - **묶음 로직은 2026-09-10 제거** - 정리 ③(묶음 시의성 시효)·픽 시효의 보호 묶음 면제·상한 면제의 묶음 멤버. 묶음이 09-02 폐기라 셋 다 매 런 `clusters`·`cluster_items`를 조회하고 빈 목록을 받아 왔다.
+  - Supabase 전 행 조회는 반드시 `_fetch_paged`(Range 헤더 + id 정렬 순회) - PostgREST는 `limit`과 무관하게 1,000행에서 자른다. (경위 → DR)
 - **중복 제거**: `seen-titles.txt` + Supabase URL 중복 체크.
 - **태깅**: 7렌즈 멀티태깅(`fan-behavior` `consumer-behavior` `ent-deals` `ip-business` `artist-ownership` `tech-issues` `taste-values`, `topics` 배열). **`cross-industry` 태그는 만들지 않는다**(대표 결정) - 레퍼런스는 일부 신호의 속성이 아니라 전 콘텐츠의 해석 렌즈다. 타 업종 이전 원리 판정은 대시보드 보조·추천 프롬프트(nvl-vibe-radar `REF_FRAME`)가 한다. `taste-values` = 세대를 가로지르는 취향·가치 신호(지속가능·로컬·디깅·리바이벌·취향 공동체, 엔터 밖 패션·뷰티·F&B·여행·리테일 포함). 구 `gen-z-lifestyle`(Z세대 인구통계 축)의 재정의. **키 동기화 필수** - 같은 풀(`radar_items.topics`)을 쓰는 `newsletter_ingest.py`·`newsroom_ingest.py`의 `TOPIC_KEYS`, `nvl-vibe-radar`(`app.py` VALID_TOPICS·`dashboard.html` 필터/TOPICS/CROSS_CUL)도 함께 바꾼다. 대시보드는 과거 `gen-z-lifestyle`을 alias로 호환(마이그레이션 불필요). (경위 → DR)
 - **출력 언어**: 모든 외국어 기사 제목은 한국어 번역. **LLM 응답 JSON 파싱은 `scripts/llm_json.py` 하나로 모았다**(2026-09-10) - `parse_obj`(코드펜스 제거 → 첫 균형 블록 → 키별 정규식 3층, 실패 시 예외) · `parse_list`(원본 → 수리 → 개별 객체 추출 3단, 구 `_parse_json_robust`). **`nvl-vibe-radar/llm_json.py`와 쌍둥이다** - 두 저장소는 서로 import할 수 없으니 한쪽을 고치면 반드시 다른 쪽도 고친다.
