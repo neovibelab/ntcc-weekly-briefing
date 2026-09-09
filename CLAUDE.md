@@ -85,6 +85,23 @@ vibe_search와 같은 풀(`radar_items`)을 공유하는 두 번째 수집기. �
 - **gnews는 gl 매핑을 버렸다.** 구글 뉴스 에디션은 독자의 위치지 기사의 시장이 아니다. 지금은 엔터 게이트 haiku가 `region`을 함께 판정하고(**호출 수 불변**), 판정이 없을 때만 gl 표로 떨어진다.
 - 라벨은 `supabase_writer.py` `REGION_LABELS` = `send_report_drop.py` `_REGION_LABELS` 두 곳이 같은 문자열을 쓴다.
 
+## 1-5. 판정이 막혔을 때 (2026-09-10 신설)
+
+Anthropic 계정의 지출 한도에 걸리면 게이트 haiku가 전건 400으로 죽는다.
+수집은 RSS라 공짜인데 룩백이 2~3일뿐이라 그냥 멈추면 그 사이 기사를 영영 못 줍는다.
+
+- **수집은 계속한다.** `gnews_ingest.py --no-gate`(워크플로 `no_gate` 입력)는 판정을
+  건너뛰고 원문 제목 그대로 적재한다. 한도 오류는 자동 감지해 같은 자리로 떨어뜨리므로
+  사람이 안 봐도 데이터는 남는다.
+- **보류와 실패를 가른다.** `filter_verdict='gate_deferred'`는 「판정을 미뤘다」이고
+  `classify_failed`는 「판정하려다 실패」다. 둘 다 `filtered_out`이라 풀에 안 뜬다.
+- **한도가 풀리면 `scripts/regate.py`.** 두 verdict를 찾아 게이트에 다시 태운다.
+  게이트 로직은 `gnews_ingest`에서 import한다 - 두 벌이 되면 반드시 어긋난다.
+  `status`가 `pending`·`filtered_out`인 것만 건드리고 사람이 손댄 상태는 그대로 둔다.
+- **표기만 고칠 때는 `scripts/fix_title_notation.py`.** `backfill_translate.py`는
+  뉴스룸·뉴스레터 전용이고 `summary`를 덮어쓴다. 구글 뉴스 카드의 `summary`에는
+  시제 판정의 `why`가 들어 있어 덮으면 카드 한 줄이 사라진다.
+
 ## 2. 품질 게이트
 
 Anthropic `web_search` 도구에 날짜 필터 파라미터가 없어 코드 레벨로 강제한다.
@@ -130,6 +147,8 @@ weekly-vibe/
 │   ├── newsroom_ingest.py       ← 뉴스룸 RSS 수집기 (§1-2)
 │   ├── interview_ingest.py      ← 인터뷰 RSS·유튜브 수집기 (§1-3)
 │   ├── gnews_ingest.py          ← 구글 뉴스 RSS 수집기 (collector='gnews')
+│   ├── regate.py                ← 보류·실패한 gnews 수집분 일괄 재판정 (§1-5)
+│   ├── fix_title_notation.py    ← 적재된 제목의 표기만 정규화 (§1-5)
 │   ├── pool_maintenance.py      ← 풀 유지보수(상한 archive + 픽 시효 + 묶음 시의성 시효)
 │   ├── probe_domains.py         ← allowed_domains 후보 사전 검증
 │   └── test_quality_gate.py     ← 품질 게이트 단위 테스트
