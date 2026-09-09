@@ -120,7 +120,11 @@ title_ko: 제목을 자연스러운 한국어로(고유명사는 유지, 한국�
 
 def classify(client, title: str, source: str) -> dict:
     msg = client.messages.create(
-        model="claude-haiku-4-5-20251001", max_tokens=200, temperature=0,
+        model="claude-haiku-4-5-20251001", max_tokens=200,
+        # temperature는 2026-09-10에 뺐다. 최신 SDK(anthropic 1.x)가 이 인자를
+        # 받지 않아 2026-09-02 신설 이후 수집분 530건이 전건 classify_failed로
+        # 떨어졌다. 같은 사고를 09-06에 app.py·classify_tense.py에서 고쳤는데
+        # 이 파일만 다른 저장소라 빠져 있었다.
         messages=[{"role": "user", "content": GATE.format(title=title, source=source)}],
     )
     raw = msg.content[0].text.strip()
@@ -238,7 +242,11 @@ def main() -> int:
             "total_score": 0,
         })
 
-    print("게이트 통과 %d / %d건" % (kept, len(rows)))
+    failed = sum(1 for r in rows if r["filter_verdict"] == "classify_failed")
+    print("게이트 통과 %d / %d건 (분류 실패 %d)" % (kept, len(rows), failed))
+    # 게이트가 통째로 죽으면 실패로 끝낸다 (2026-09-10 신설). 전건 실패인데도
+    # exit 0이라 워크플로가 매일 success로 찍혔고, 530건이 쌓이는 동안 아무도 몰랐다.
+    gate_dead = client is not None and rows and failed == len(rows)
     if args.dry_run:
         for r in rows[:20]:
             print("  [%s] %s" % ("O" if r["is_entertainment"] else "-", r["title"][:66]))
@@ -259,6 +267,9 @@ def main() -> int:
         wrote += len(chunk)
     print("%d건 적재 (pending %d · filtered_out %d)"
           % (wrote, kept, wrote - kept))
+    if gate_dead:
+        log.error("엔터 게이트 전건 실패 - 분류가 죽었다. 적재는 했으나 전부 filtered_out이다.")
+        return 1
     return 0
 
 
