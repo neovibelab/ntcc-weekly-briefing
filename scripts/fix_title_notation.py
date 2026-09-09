@@ -103,6 +103,37 @@ def patch_title(item_id: str, title: str) -> int:
     return r.status_code
 
 
+def _first_json(raw: str) -> str:
+    """첫 균형 잡힌 {...} 블록만 떼어낸다.
+
+    모델이 JSON 뒤에 설명을 붙이면 json.loads가 「Extra data」로 깨진다
+    (2026-09-10 실측 - 586건 중 84건째에서 연속 3회로 중단됐다).
+    """
+    start = raw.find("{")
+    if start < 0:
+        return raw
+    depth, in_str, esc = 0, False, False
+    for i in range(start, len(raw)):
+        c = raw[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+            continue
+        if c == '"':
+            in_str = True
+        elif c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return raw[start:i + 1]
+    return raw[start:]
+
+
 def fix(client, title: str) -> str | None:
     m = client.messages.create(
         model="claude-haiku-4-5-20251001", max_tokens=300,
@@ -113,7 +144,7 @@ def fix(client, title: str) -> str | None:
         raw = raw.split("```")[1]
         if raw.startswith("json"):
             raw = raw[4:]
-    d = json.loads(raw)
+    d = json.loads(_first_json(raw))
     if not isinstance(d, dict) or not d.get("changed"):
         return None
     new = (d.get("title") or "").strip()
