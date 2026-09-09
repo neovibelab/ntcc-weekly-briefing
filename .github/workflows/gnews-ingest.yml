@@ -19,6 +19,10 @@ on:
         description: 'dry-run (수집·게이트만 - Supabase 미반영)'
         type: boolean
         default: false
+      no_gate:
+        description: '게이트 없이 수집만 (API 한도 소진 시. 나중에 regate.py로 일괄 판정)'
+        type: boolean
+        default: false
 
 jobs:
   ingest:
@@ -36,4 +40,4 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY_WEEKLY_BRIEFING }}
           GNEWS_LOOKBACK_DAYS: ${{ github.event.inputs.lookback_days || '3' }}
-        run: python scripts/gnews_ingest.py ${{ inputs.dry_run && '--dry-run' || '' }}
+        run: python scripts/gnews_ingest.py ${{ inputs.dry_run && '--dry-run' || '' }} ${{ inputs.no_gate && '--no-gate' || '' }}

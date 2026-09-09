@@ -186,6 +186,17 @@ title_ko: 제목을 자연스러운 한국어로(한국어면 그대로). 제품
 {{"is_entertainment": true, "title_ko": "...", "region": "..."}}"""
 
 
+# 판정 보류 표식 (2026-09-10). classify_failed(판정하려다 실패)와 다르다.
+# 이쪽은 「판정을 미뤘다」이고, scripts/regate.py가 나중에 이 값을 찾아 처리한다.
+GATE_DEFERRED = "gate_deferred"
+
+
+def _is_usage_limit(exc) -> bool:
+    """Anthropic 지출 한도 오류인가. 한도면 재시도해도 소용없으니 즉시 보류로 돌린다."""
+    s = str(exc)
+    return "usage limit" in s.lower() or "regain access" in s.lower()
+
+
 def classify(client, title: str, source: str) -> dict:
     msg = client.messages.create(
         model="claude-haiku-4-5-20251001", max_tokens=300,
@@ -227,6 +238,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=0, help="질의당 상한(시험용)")
+    ap.add_argument("--no-gate", action="store_true",
+                    help="판정을 건너뛰고 수집만 한다(한도 소진 시)")
     args = ap.parse_args()
 
     sb_url = os.environ.get("SUPABASE_URL", "")
@@ -276,13 +289,16 @@ def main() -> int:
 
     key = os.environ.get("ANTHROPIC_API_KEY", "")
     client = None
-    if key:
+    if args.no_gate:
+        log.warning("--no-gate - 판정을 건너뛰고 수집만 한다")
+    elif key:
         import anthropic
         client = anthropic.Anthropic(api_key=key)
     else:
         log.warning("ANTHROPIC_API_KEY 없음 - 게이트 없이 filtered_out으로 적재")
 
     rows, kept, gl_fallback = [], 0, 0
+    deferred = bool(args.no_gate)
     for x in picked:
         ie, tko, reg = None, "", ""
         if client:
@@ -292,7 +308,14 @@ def main() -> int:
                 tko = (d.get("title_ko") or "").strip()
                 reg = (d.get("region") or "").strip()
             except Exception as e:
-                log.warning("분류 실패: %s", str(e)[:70])
+                if _is_usage_limit(e):
+                    # 한도는 재시도해도 안 풀린다. 보류로 돌리고 수집은 계속한다.
+                    if not deferred:
+                        log.warning("지출 한도 도달 - 이후 전건 판정 보류로 적재한다")
+                    deferred = True
+                    client = None
+                else:
+                    log.warning("분류 실패: %s", str(e)[:70])
         if reg not in VALID_REGIONS:
             reg = x["region_fallback"]
             gl_fallback += 1
@@ -312,7 +335,7 @@ def main() -> int:
             "tags": [x["factor_hint"]],
             "is_entertainment": is_ent,
             "status": "pending" if is_ent else "filtered_out",
-            "filter_verdict": "pass" if is_ent else ("non_ent" if ie is not None else "classify_failed"),
+            "filter_verdict": ("pass" if is_ent else (GATE_DEFERRED if (deferred and ie is None) else ("non_ent" if ie is not None else "classify_failed"))),
             "total_score": 0,
         })
 
@@ -321,7 +344,8 @@ def main() -> int:
           % (kept, len(rows), failed, gl_fallback))
     # 게이트가 통째로 죽으면 실패로 끝낸다 (2026-09-10 신설). 전건 실패인데도
     # exit 0이라 워크플로가 매일 success로 찍혔고, 530건이 쌓이는 동안 아무도 몰랐다.
-    gate_dead = client is not None and rows and failed == len(rows)
+    # 보류(--no-gate·한도)는 의도된 상태라 실패로 치지 않는다.
+    gate_dead = (not deferred) and client is not None and rows and failed == len(rows)
     if args.dry_run:
         for r in rows[:20]:
             print("  [%s] %-14s %s" % ("O" if r["is_entertainment"] else "-",
