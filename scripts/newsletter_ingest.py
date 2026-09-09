@@ -48,15 +48,20 @@ REGIONS = [
 ]
 # 프롬프트 공통 문구 - newsroom_ingest·interview_ingest·backfill_region·gnews_ingest와 같은 문장을 쓴다.
 REGION_GUIDE = (
-    "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 고른다.\n"
+    "region: 이 기사가 주로 다루는 시장·지역을 하나만 고른다.\n"
     "  korea 한국 / japan 일본 / china 중국 / southeast-asia 동남아\n"
     "  north-america 북미(미국·캐나다) / europe 유럽(영국·독일·프랑스·북유럽·동유럽 등)\n"
     "  latin 라틴아메리카(스페인어권·브라질) / mena 중동·북아프리카\n"
     "  africa-ssa 사하라이남 아프리카 / india-sa 인도·남아시아 / oceania 호주·뉴질랜드\n"
-    "  multinational 특정 국가 귀속 없는 다국적 발표·업계 일반론·글로벌 통계\n"
-    "  기준 - 매체 국적이나 기업 본사가 아니라 기사 내용의 시장이다. "
-    "한 기사에 여러 시장이면 비중이 큰 쪽 하나만 고른다. "
-    "모르겠다고 multinational에 넣지 않는다. 이 칸이 잔여 범주가 되면 지역 축이 무의미해진다.\n"
+    "  multinational 여러 시장에 동시에 걸리는 발표이거나 전 세계 집계·업계 일반론\n"
+    "  판정 순서 - (1) 기사에 시장이 드러나면(발매국·규제·행사 장소·소비자) 그 시장. "
+    "(2) 안 드러나고 한 기업·인물·작품의 소식이면 그 주체의 본거지를 쓴다. "
+    "OpenAI·엔비디아·넷플릭스·워너뮤직의 자체 소식은 north-america, "
+    "빌리빌리는 china, 스포티파이는 europe이다. "
+    "(3) (1)(2)로 못 정할 때만 multinational.\n"
+    "  매체 국적은 근거가 아니다. 한국 뉴스레터가 쓴 일본 기사는 japan이다. "
+    "multinational을 모르겠다는 뜻으로 쓰지 않는다. 이 칸이 잔여 범주가 되면 "
+    "지역 축이 무의미해진다.\n"
 )
 # 분류가 실패했을 때만 남는 미판정 표식. 12종 중 하나를 찍는 대신 레거시 값을 그대로 둬
 # backfill_region.py가 나중에 내용 기준으로 다시 판정하게 한다. multinational로 밀어넣으면
