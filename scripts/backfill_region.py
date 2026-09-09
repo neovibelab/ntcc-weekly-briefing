@@ -189,6 +189,14 @@ def main() -> int:
             continue
         consec_fail = 0
         cur = it.get("region")
+        # 하향 가드 - 구체 지역이 multinational로 내려가는 것만 막는다.
+        # 가로 교정(korea -> japan)은 백필의 원래 목적이라 그대로 둔다.
+        # 2026-09-10 실측 - 「K콘텐츠 해외 저작권 지원」이 korea에서,
+        # 빌리빌리 전환사채 기사가 china에서 multinational로 내려갔다.
+        if new_reg == "multinational" and cur and cur not in ("global-en", "multinational"):
+            log.info("[유지 %d/%d] %s: %s (다국적 하향 거부)", i, len(items), title[:40], cur)
+            same += 1
+            continue
         if not new_reg or new_reg == cur:
             same += 1
             continue
