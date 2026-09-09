@@ -197,7 +197,7 @@ def classify(title: str, text: str, media: str) -> dict:
     key = os.environ.get("ANTHROPIC_API_KEY")
     # _failed: 하드 실패(키 없음·API 예외). main이 이걸 보고 미분류 원문을 인터뷰로 오적재하지 않고
     # filtered_out + classify_failed로 적재한다(is_interview 판정 불가 → 풀 노출 안 함).
-    fallback = {"is_interview": False, "is_music_ent": False, "person_ko": "", "summary_ko": "",
+    fallback = {"is_interview": False, "is_music_ent": False, "is_industry": False, "person_ko": "", "summary_ko": "",
                 "title_ko": "", "region": None, "_failed": True}
     if not key:
         return fallback
@@ -217,6 +217,12 @@ def classify(title: str, text: str, media: str) -> dict:
             "**말하는 사람이 아티스트여도 주제가 음악·엔터가 아니면 false다.** "
             "실제로 걸러야 했던 예 - 배우가 팟캐스트에서 임신 이야기를 한다, "
             "창작자가 TED에서 우주론을 강연한다, 뮤지션이 예능에서 매운 음식을 먹는다.\n"
+            "is_industry(관점): 발화가 **산업·구조·비즈니스를 말하면** true. "
+            "레이블·계약·유통·수익 배분·플랫폼 정책·팬덤 경제·기술 도입·시장 변화·제작 시스템 등 "
+            "**그 사람 한 명을 넘어 업계에 적용되는 이야기**가 있으면 true다.\n"
+            "false=자기 신보·투어 홍보, 창작 소회, 영향받은 음악 회고, 개인사·근황."
+            " 아티스트 인터뷰여도 무방하다. 아티스트가 스트리밍 정산이나 레이블 계약을 말하면 true다.\n"
+            "**주제 축(is_music_ent)과 다르다.** 주제는 무엇을 말하나이고 관점은 어느 높이에서 말하나다.\n"
             "person_ko: 인터뷰 주 인물(아티스트/창작자)의 이름을 한국어 표기로. 여럿이면 대표 1인, "
             "불명확하거나 인물 중심이 아니면 빈 문자열.\n"
             "title_ko: 제목을 자연스러운 한국어로 번역(고유명사·작품명·아티스트명은 적절히 유지, 한국어면 그대로).\n"
@@ -227,7 +233,7 @@ def classify(title: str, text: str, media: str) -> dict:
             "  예 - 미국 매체가 실은 나이지리아 아프로비츠 뮤지션 인터뷰는 africa-ssa. "
             "영국 밴드의 신보 인터뷰는 europe. "
             "여러 나라 출신이 섞인 업계 좌담은 multinational.\n\n"
-            '{"is_interview": true, "is_music_ent": true, "person_ko": "...", "title_ko": "...", "summary_ko": "...", "region": "..."}'
+            '{"is_interview": true, "is_music_ent": true, "is_industry": true, "person_ko": "...", "title_ko": "...", "summary_ko": "...", "region": "..."}'
         )
         msg = client.messages.create(
             model="claude-haiku-4-5-20251001", max_tokens=400,
@@ -250,10 +256,14 @@ def classify(title: str, text: str, media: str) -> dict:
         # 주제 축은 신설(2026-09-02)이라 모델이 키를 빠뜨리면 통과시킨다.
         # 형태 축까지 같이 죽으면 수집이 통째로 멈춘다.
         me = _b(data.get("is_music_ent")) if "is_music_ent" in data else True
+        # 관점 축 신설(2026-09-10). 키가 없으면 통과시킨다 - 형태·주제
+        # 축이 이미 좁혀 놨고, 새 축까지 죽으면 수집이 통째로 멈춘다.
+        ind_ = _b(data.get("is_industry")) if "is_industry" in data else True
         reg = (data.get("region") or "").strip()
         return {
             "is_interview": ii,
             "is_music_ent": me,
+            "is_industry": ind_,
             "person_ko": (data.get("person_ko") or "").strip(),
             "summary_ko": (data.get("summary_ko") or "").strip(),
             "title_ko": (data.get("title_ko") or "").strip(),
@@ -344,7 +354,8 @@ def main() -> int:
             cls = classify(title, summary_raw, media)
             failed = cls.get("_failed", False)
             # 형태와 주제 둘 다 통과해야 적재한다 (2026-09-02 주제 축 신설).
-            is_int = cls.get("is_interview", False) and cls.get("is_music_ent", True)
+            is_int = cls.get("is_interview", False) and cls.get("is_music_ent", True) \
+                and cls.get("is_industry", True)
             person = cls.get("person_ko", "")
             # summary 관례: "인물 - 요지" (인물 있으면 접두)
             base_sum = cls.get("summary_ko") or summary_raw[:200]
