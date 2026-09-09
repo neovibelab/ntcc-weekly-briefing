@@ -35,7 +35,9 @@ POOL_KEEP = 50
 MANAGED_COLLECTORS = {"newsletter", "newsroom", "vibe_search", "interview", "gnews", "feed"}
 # gnews·feed는 2026-09-10까지 이 집합에 없어 상한도 시효도 없이 쌓였다.
 # gnews는 질의 31개로 유입이 가장 커서 별도 상한을 준다(실측 하루 40~180건).
-GNEWS_KEEP = 100
+# 상한은 폭주 안전판일 뿐이다. 실제 관리는 시제 시효가 한다.
+# 100은 당일 들어온 좋은 신호를 잘랐다(2026-09-10 미리보기 실측).
+GNEWS_KEEP = 250
 # interview 전용 상한 - 뉴스성 수집과 성격이 달라 같은 50을 쓰지 않는다.
 # 인터뷰는 에버그린 소재라 픽 시효도 면제받는다(picked_expiry_targets 참조).
 # 상한 관리 자체는 2026-08-26 대표 결정(pending 504건이 대시보드 노이즈).
@@ -243,6 +245,11 @@ def _delete_cluster(cid) -> bool:
 # 배경(끝났거나 한 번 있는 일)은 재료라 금방 낡는다.
 TENSE_MAX_DAYS = {"soon": 14, "now": 7, "brief": 3, "done": 3}
 TENSE_MAX_DAYS_DEFAULT = 7   # 미판정
+# 인터뷰는 시제 시효에서 면제한다 - classify_tense가 인터뷰를 판정 대상에서 빼기
+# 때문에(2026-09-02 대표 결정: 릴스 소재에 「곧」을 묻는 건 축이 안 맞는다)
+# 시제가 늘 비어 있고, 기본값 7일을 걸면 203건이 통째로 날아간다.
+# 인터뷰 관리는 INTERVIEW_KEEP 상한이 맡는다.
+TENSE_EXEMPT_COLLECTORS = {"interview"}
 
 
 def tense_expiry_targets(rows, now, exempt_ids=frozenset()):
@@ -251,7 +258,7 @@ def tense_expiry_targets(rows, now, exempt_ids=frozenset()):
     for r in rows:
         if r.get("status") != "pending":
             continue
-        if r.get("collector") not in MANAGED_COLLECTORS:
+        if (r.get("collector") not in MANAGED_COLLECTORS or r.get("collector") in TENSE_EXEMPT_COLLECTORS):
             continue
         if r.get("id") in exempt_ids:
             continue
