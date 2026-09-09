@@ -38,7 +38,30 @@ TOPIC_KEYS = [  # 키 동기화: newsroom_ingest·vibe_search·reclassify + nvl-
     "fan-behavior", "consumer-behavior", "ent-deals", "ip-business",
     "artist-ownership", "tech-issues", "taste-values",  # 구 gen-z-lifestyle (2026-06-17 재정의)
 ]
-REGIONS = ["korea", "global-en", "china", "japan", "southeast-asia"]
+# 지역 12종 (2026-09-10 개편). 구 global-en이 살아있는 풀의 80%를 삼키는 잔여
+# 범주였다. 표본 66건 재분류 - 북미 62% · 유럽 17% · 다국적 9% · 아시아 오분류 6%.
+# 이름이 아니라 기준을 쪼갠다. global-en은 신규 저장하지 않는다(레거시 값으로만 남는다).
+REGIONS = [
+    "korea", "japan", "china", "southeast-asia",
+    "north-america", "europe", "latin", "mena",
+    "africa-ssa", "india-sa", "oceania", "multinational",
+]
+# 프롬프트 공통 문구 - newsroom_ingest·interview_ingest·backfill_region·gnews_ingest와 같은 문장을 쓴다.
+REGION_GUIDE = (
+    "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 고른다.\n"
+    "  korea 한국 / japan 일본 / china 중국 / southeast-asia 동남아\n"
+    "  north-america 북미(미국·캐나다) / europe 유럽(영국·독일·프랑스·북유럽·동유럽 등)\n"
+    "  latin 라틴아메리카(스페인어권·브라질) / mena 중동·북아프리카\n"
+    "  africa-ssa 사하라이남 아프리카 / india-sa 인도·남아시아 / oceania 호주·뉴질랜드\n"
+    "  multinational 특정 국가 귀속 없는 다국적 발표·업계 일반론·글로벌 통계\n"
+    "  기준 - 매체 국적이나 기업 본사가 아니라 기사 내용의 시장이다. "
+    "한 기사에 여러 시장이면 비중이 큰 쪽 하나만 고른다. "
+    "모르겠다고 multinational에 넣지 않는다. 이 칸이 잔여 범주가 되면 지역 축이 무의미해진다.\n"
+)
+# 분류가 실패했을 때만 남는 미판정 표식. 12종 중 하나를 찍는 대신 레거시 값을 그대로 둬
+# backfill_region.py가 나중에 내용 기준으로 다시 판정하게 한다. multinational로 밀어넣으면
+# 그 칸이 다시 잔여 범주가 된다. 소스 힌트(sources_newsletters.json)의 global-en도 같은 취급.
+LEGACY_UNJUDGED = "global-en"
 LOOKBACK_DAYS = int(os.environ.get("NL_LOOKBACK_DAYS", "2"))
 FETCH_CAP = int(os.environ.get("NL_FETCH_CAP", "6"))  # 발신자당 최대 처리 건수(env로 일시 상향 가능)
 # 캐치올(제목 게이트) - allowlist 밖 발신자라도 제목이 엔터·콘텐츠·미디어 신호면 수집 (2026-07-16 대표 지시).
@@ -309,9 +332,10 @@ def classify(subject: str, text: str, region_hint: str, broad: bool = False) -> 
             "title_ko: 제목을 자연스러운 한국어로 번역(고유명사·작품명·아티스트명은 적절히 유지, 한국어면 그대로).\n"
             "**title_ko·summary_ko에 가운데 줄표(—)를 쓰지 않는다.** 쉼표나 하이픈(-)으로 바꾸거나 문장을 끊는다.\n"
             "summary_ko: 한국어 150자 이내 핵심 요약 (무엇을 다뤘는지)\n"
-            "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 - "
-            "korea/china/japan/southeast-asia/global-en. 발신 매체의 국적이 아니라 기사 내용 기준 "
-            "(예: 한국 뉴스레터의 일본 기업 기사는 japan, 글로벌 브랜드 기사는 global-en, 특정 아시아국 아니면 global-en).\n\n"
+            + REGION_GUIDE +
+            "  예 - 한국 뉴스레터가 전한 소니뮤직 도쿄 소식은 japan. "
+            "빌보드의 스웨덴 레이블 인수 기사는 europe. "
+            "IFPI 세계 음반시장 연간 집계는 multinational.\n\n"
             '{"is_entertainment": true, "is_gossip": false, "is_promo": false, "topics": [...], "title_ko": "...", "summary_ko": "...", "region": "..."}'
         )
         msg = client.messages.create(
@@ -416,7 +440,8 @@ def build_row(msg, name: str, region_hint: str, broad: bool, seen: set[str], num
         "tags": cls["topics"],
         "is_entertainment": is_ent,
         # region: classify가 내용 기준으로 판정한 값 우선, 없으면 발신자 고정 힌트로 폴백
-        # (발신 매체 국적 ≠ 기사 내용 지역 문제 해결 - 예: Longblack의 글로벌 기사, 2026-06-23)
+        # (발신 매체 국적 != 기사 내용 지역 문제 해결 - 예: Longblack의 글로벌 기사, 2026-06-23).
+        # 힌트가 레거시 global-en이면 미판정인 채로 남고 backfill_region.py가 재판정한다.
         "region": cls.get("region") or region_hint,
         "published_date": pub,
         # 분류 하드 실패(failed, 크레딧 400 등)는 미번역 원문이라 풀에 안 섞이게 filtered_out +
@@ -510,7 +535,7 @@ def catchall_pass(M, sources: list[dict], ignore: list[str], since, seen: set[st
             continue
         if not msg:
             continue
-        row = build_row(msg, domain, "global-en", False, seen, c["num"])
+        row = build_row(msg, domain, LEGACY_UNJUDGED, False, seen, c["num"])
         if row:
             rows.append(row)
             log.info("[캐치올 %s] %s | %s", domain, "·".join(row["topics"]) or "-", c["subject"][:55])
@@ -548,7 +573,7 @@ def main() -> int:
                 continue
             if not msg:
                 continue
-            row = build_row(msg, src["name"], src.get("region", "global-en"),
+            row = build_row(msg, src["name"], src.get("region", LEGACY_UNJUDGED),
                             src.get("broad", False), seen, num)
             if row:
                 rows.append(row)

@@ -38,7 +38,7 @@ TO_ADDR = "woojin@neovibelab.com"
 # env 키 → 한국어 지역명 (워크플로 알림 스텝의 OUTCOME_* 와 일치시킬 것)
 REGIONS = [
     ("OUTCOME_KOREA", "한국"),
-    ("OUTCOME_GLOBAL", "글로벌(영어)"),
+    ("OUTCOME_GLOBAL", "영어권 검색"),  # 검색 프로파일 이름 (2026-09-10)
     ("OUTCOME_CHINA", "중국"),
     ("OUTCOME_JAPAN", "일본"),
     ("OUTCOME_SEA", "동남아"),

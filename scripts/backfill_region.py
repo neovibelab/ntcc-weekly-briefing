@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""백필 — 소스 고정 힌트로 region이 매겨진 기존 항목(collector in newsletter·newsroom·feed)의
-region을 기사 내용 기준으로 재분류한다. 발신 매체 국적 ≠ 기사 내용 지역 문제 해결
+"""백필 - 소스 고정 힌트로 region이 매겨진 기존 항목(기본 newsletter·newsroom·feed)의
+region을 기사 내용 기준으로 재분류한다. 발신 매체 국적과 기사 내용 지역이 다른 문제 해결
 (예: 한국 뉴스레터 Longblack의 글로벌·일본 기사가 전부 'korea'로 찍히던 것, 2026-06-23).
 
-vibe_search는 지역별 검색이라 이미 내용 기준 — 대상 아님. region이 바뀌는 항목만 PATCH.
-status·title·summary·topics 등 다른 필드는 안 건드림.
+2026-09-10 지역 축 개편 이후로는 레거시 global-en 값을 12종으로 옮기는 통로이기도 하다.
+vibe_search는 검색 프로파일 이름이 그대로 region으로 들어가 global-en이 남으므로,
+`--collectors vibe_search`로 따로 훑어 재판정한다. region이 바뀌는 항목만 PATCH하고
+status·title·summary·topics 등 다른 필드는 안 건드린다.
 
 견고화: 단발 분류오류는 건너뛰고, 연속 3회 실패(크레딧 소진·키 누락)면 중단.
 
@@ -13,6 +15,7 @@ status·title·summary·topics 등 다른 필드는 안 건드림.
   python scripts/backfill_region.py --scan-only          # API 호출 없이 대상 집계
   python scripts/backfill_region.py --dry-run [--limit N] # 재분류만, 쓰기 없음
   python scripts/backfill_region.py [--limit N]           # 실제 갱신
+  python scripts/backfill_region.py --collectors vibe_search,gnews --dry-run
 """
 from __future__ import annotations
 
@@ -31,8 +34,31 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
 
-COLLECTORS = ["newsletter", "newsroom", "feed"]  # 소스 힌트 기반 — vibe_search·manual 제외
-VALID = {"korea", "global-en", "china", "japan", "southeast-asia"}
+# 기본 대상은 소스 힌트 기반 수집기다. vibe_search·gnews는 자기 시점에 지역을 정하지만
+# 그 판정이 지역 축 개편(2026-09-10) 이전 값이거나 검색 프로파일 이름(global-en)에
+# 묶여 있을 수 있어 --collectors로 명시 지정해 함께 훑을 수 있다.
+DEFAULT_COLLECTORS = ["newsletter", "newsroom", "feed"]
+KNOWN_COLLECTORS = ["newsletter", "newsroom", "feed", "interview", "vibe_search", "gnews"]
+# 지역 12종 (2026-09-10 개편). 구 global-en이 살아있는 풀의 80%를 삼키는 잔여 범주였다.
+# 표본 66건 재분류 - 북미 62% · 유럽 17% · 다국적 9% · 아시아 오분류 6%.
+# global-en은 신규 저장하지 않는다. 재판정 결과로도 쓰지 않는다.
+VALID = {
+    "korea", "japan", "china", "southeast-asia",
+    "north-america", "europe", "latin", "mena",
+    "africa-ssa", "india-sa", "oceania", "multinational",
+}
+# 프롬프트 공통 문구 - newsletter_ingest·newsroom_ingest·interview_ingest·gnews_ingest와 같은 문장.
+REGION_GUIDE = (
+    "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 고른다.\n"
+    "  korea 한국 / japan 일본 / china 중국 / southeast-asia 동남아\n"
+    "  north-america 북미(미국·캐나다) / europe 유럽(영국·독일·프랑스·북유럽·동유럽 등)\n"
+    "  latin 라틴아메리카(스페인어권·브라질) / mena 중동·북아프리카\n"
+    "  africa-ssa 사하라이남 아프리카 / india-sa 인도·남아시아 / oceania 호주·뉴질랜드\n"
+    "  multinational 특정 국가 귀속 없는 다국적 발표·업계 일반론·글로벌 통계\n"
+    "  기준 - 매체 국적이나 기업 본사가 아니라 기사 내용의 시장이다. "
+    "한 기사에 여러 시장이면 비중이 큰 쪽 하나만 고른다. "
+    "모르겠다고 multinational에 넣지 않는다. 이 칸이 잔여 범주가 되면 지역 축이 무의미해진다.\n"
+)
 MODEL = "claude-haiku-4-5-20251001"
 
 
@@ -72,11 +98,11 @@ def classify_region(title: str, summary: str) -> tuple[str | None, bool]:
         import anthropic
         client = anthropic.Anthropic(api_key=key)
         prompt = (
-            "다음 기사가 주로 다루는 시장·지역을 기사 내용 기준으로 하나만 골라 JSON으로만 응답.\n"
-            "값: korea / china / japan / southeast-asia / global-en.\n"
-            "발신 매체나 기업의 국적이 아니라 기사 내용 기준 — 한국 매체의 일본 기업 기사는 japan, "
-            "글로벌 브랜드는 global-en, 인니·태국·베트남·필리핀은 southeast-asia, "
-            "특정 아시아국이 아니면 global-en.\n\n"
+            "다음 기사가 주로 다루는 시장·지역을 하나만 골라 JSON으로만 응답.\n\n"
+            + REGION_GUIDE +
+            "  예 - 한국 매체가 전한 소니뮤직 도쿄 소식은 japan. "
+            "빌보드의 스웨덴 레이블 인수 기사는 europe. "
+            "IFPI 세계 음반시장 연간 집계는 multinational.\n\n"
             f"제목: {title}\n요약: {summary[:600]}\n\n"
             '{"region": "..."}'
         )
@@ -109,13 +135,20 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true", help="재분류만, Supabase 쓰기 없음")
     ap.add_argument("--scan-only", action="store_true", help="API 호출 없이 대상 집계만")
     ap.add_argument("--limit", type=int, default=0, help="처리 상한(0=무제한)")
+    ap.add_argument("--collectors", default=",".join(DEFAULT_COLLECTORS),
+                    help="쉼표 구분 수집기 목록. 알려진 값: " + ", ".join(KNOWN_COLLECTORS))
     args = ap.parse_args()
 
+    collectors = [c.strip() for c in args.collectors.split(",") if c.strip()]
+    unknown = [c for c in collectors if c not in KNOWN_COLLECTORS]
+    if unknown:
+        log.warning("모르는 수집기 %s - 그대로 조회한다", unknown)
+
     items: list[dict] = []
-    for c in COLLECTORS:
+    for c in collectors:
         items += fetch_collector(c)
-    log.info("재분류 후보(소스 힌트 기반) %d건 | 수집기별 %s", len(items),
-             {c: sum(1 for i in items if i.get("collector") == c) for c in COLLECTORS})
+    log.info("재분류 후보 %d건 | 수집기별 %s", len(items),
+             {c: sum(1 for i in items if i.get("collector") == c) for c in collectors})
 
     if args.scan_only:
         return 0
@@ -136,7 +169,7 @@ def main() -> int:
             skipped += 1
             log.warning("분류 실패 건너뜀 (%d/%d · 연속 %d): %s", i, len(items), consec_fail, title[:42])
             if consec_fail >= 3:
-                log.error("연속 %d회 실패 — 크레딧 소진/키 문제로 보고 중단. 변경 %d · 동일 %d",
+                log.error("연속 %d회 실패 - 크레딧 소진/키 문제로 보고 중단. 변경 %d · 동일 %d",
                           consec_fail, changed, same)
                 return 2
             continue
@@ -157,7 +190,7 @@ def main() -> int:
             patch_fail += 1
             log.warning("갱신 실패 HTTP %d: %s", code, title[:42])
 
-    log.info("region 백필 완료 — 변경 %d · 동일 %d · 분류건너뜀 %d · 적재실패 %d%s",
+    log.info("region 백필 완료 - 변경 %d · 동일 %d · 분류건너뜀 %d · 적재실패 %d%s",
              changed, same, skipped, patch_fail, " (dry-run)" if args.dry_run else "")
     return 0
 

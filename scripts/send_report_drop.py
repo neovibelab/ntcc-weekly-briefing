@@ -76,8 +76,14 @@ def drop_age_days(path):
 # (🥇 추천 + 🆕 신규, 🔁 다시보기=기보유는 제외)를 파싱해 Supabase radar_items에
 # collector='newsroom'으로 적재 → 대시보드 뉴스룸 탭에 노출. URL 중복은 merge-duplicates 스킵.
 
-_REGION_LABELS = {"korea": "한국", "global-en": "글로벌(영어)", "china": "중국",
-                  "japan": "일본", "southeast-asia": "동남아"}
+# 지역 12종 + 레거시 (2026-09-10 개편). supabase_writer.py의 REGION_LABELS와 같은 문자열.
+_REGION_LABELS = {
+    "korea": "한국", "japan": "일본", "china": "중국", "southeast-asia": "동남아",
+    "north-america": "북미", "europe": "유럽", "latin": "라틴아메리카",
+    "mena": "중동·북아프리카", "africa-ssa": "아프리카", "india-sa": "인도·남아시아",
+    "oceania": "오세아니아", "multinational": "다국적",
+    "global-en": "글로벌(구)",  # 레거시
+}
 
 
 def parse_drop_items(text):
@@ -105,6 +111,10 @@ def parse_drop_items(text):
 
 
 def _region_from_text(s):
+    """드롭 제목·요약의 키워드로 지역 추정. LLM을 부르지 않는 거친 휴리스틱이라
+    잡히지 않으면 레거시 global-en으로 남긴다. 이 행들은 collector='newsroom'이라
+    backfill_region.py 기본 대상에 들어가고 거기서 내용 기준으로 다시 판정된다.
+    12종 중 하나를 여기서 억지로 찍지 않는다."""
     sl = s.lower()
     if "중국" in s or "china" in sl:
         return "china"
@@ -112,6 +122,10 @@ def _region_from_text(s):
         return "japan"
     if "한국" in s or "korea" in sl:
         return "korea"
+    if "북미" in s or "미국" in s or "u.s." in sl or "united states" in sl:
+        return "north-america"
+    if "유럽" in s or "europe" in sl or "eu " in sl:
+        return "europe"
     return "global-en"
 
 

@@ -3,7 +3,8 @@
 """구글 뉴스 RSS 수집기 (collector='gnews', 2026-09-02 신설).
 
 대표가 브라우저 첫 화면으로 쓰던 구글 뉴스 커스텀 검색을 자동 수집으로 옮긴다.
-질의 정본 = nvl-vibe-radar/google-news-queries.md (18질의, 실측 확정).
+질의 정본 = nvl-vibe-radar/google-news-queries.md (18질의 실측 확정
++ 2026-09-10 신흥시장 5질의 = 23).
 
 **vibe_search와 다른 것** - vibe_search는 Anthropic web_search 도구로 검색+분석을
 한 번에 하고, 이쪽은 RSS를 그대로 받는다. 키가 필요 없고 쿼터가 없다.
@@ -48,6 +49,9 @@ LOOKBACK = int(os.environ.get("GNEWS_LOOKBACK_DAYS", "3"))
 UA = "Mozilla/5.0 (compatible; NVLVibeRadar/1.0)"
 
 # (요인, 이름, 질의, hl, gl, ceid) - 정본은 nvl-vibe-radar/google-news-queries.md
+# 요인 힌트는 radar의 GRID_FACTORS(IP·포맷·테크·자본·정책·교차산업·교차정체성) + 넓은 산업
+# 스캔용 "기존"뿐이다. 2026-09-10에 붙인 신흥시장 5질의도 요인 없는 넓은 산업 스캔이라
+# "기존"을 쓴다. 새 요인 어휘를 만들면 radar 격자와 어긋난다.
 QUERIES = [
     ("기존",       "미국·음악산업", "music industry",                   "en-US", "US", "US:en"),
     ("기존",       "일본·IP",       "音楽 IP",                          "ja",    "JP", "JP:ja"),
@@ -67,9 +71,44 @@ QUERIES = [
     ("교차정체성", "정체성·중국1",  "虚拟偶像",                         "zh-CN", "CN", "CN:zh-Hans"),
     ("교차정체성", "정체성·영어",   "music fandom",                     "en-US", "US", "US:en"),
     ("교차정체성", "정체성·중국2",  "谷子经济",                         "zh-CN", "CN", "CN:zh-Hans"),
+    # 신흥시장 5질의 (2026-09-10 추가). 전부 현지어다. 영어 `music industry`를 지역
+    # 에디션에 넣으면 같은 국제 기사가 복제되는 것을 실측으로 확인해 넣지 않았다.
+    # 괄호는 2026-09-10 실측 최근 2개월 건수.
+    ("기존",       "신흥·중동아랍어", "صناعة الموسيقى",                 "ar",    "AE", "AE:ar"),        # 63
+    ("기존",       "신흥·나이지리아", "Afrobeats",                       "en-NG", "NG", "NG:en"),       # 66
+    ("기존",       "신흥·멕시코",     "industria musical",               "es-419", "MX", "MX:es-419"),  # 49
+    ("기존",       "신흥·인도",       "music label India",               "en-IN", "IN", "IN:en"),       # 37
+    ("기존",       "신흥·브라질",     "indústria musical",               "pt-BR", "BR", "BR:pt-419"),   # 34
 ]
 
-REGION_BY_GL = {"US": "global-en", "KR": "korea", "JP": "japan", "CN": "china"}
+# 폴백 전용 (2026-09-10). 원래는 이 표가 region을 정했는데, 구글 뉴스 에디션(gl)은
+# 독자의 위치지 기사 내용의 시장이 아니다. 미국판 결과에 유럽·다국적 기사가 섞여 있어
+# 틀렸다. 지금은 엔터 게이트 haiku가 내용 기준으로 판정하고(호출 수 불변),
+# 그 판정이 없거나 값이 이상할 때만 이 표로 떨어진다.
+REGION_BY_GL = {
+    "US": "north-america", "KR": "korea", "JP": "japan", "CN": "china",
+    "AE": "mena", "NG": "africa-ssa", "MX": "latin", "IN": "india-sa", "BR": "latin",
+}
+
+# 지역 12종 (2026-09-10 개편). 구 global-en이 살아있는 풀의 80%를 삼키는 잔여 범주였다.
+# global-en은 신규 저장하지 않는다.
+VALID_REGIONS = {
+    "korea", "japan", "china", "southeast-asia",
+    "north-america", "europe", "latin", "mena",
+    "africa-ssa", "india-sa", "oceania", "multinational",
+}
+# 프롬프트 공통 문구 - newsletter_ingest·newsroom_ingest·interview_ingest·backfill_region과 같은 문장.
+REGION_GUIDE = (
+    "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 고른다.\n"
+    "  korea 한국 / japan 일본 / china 중국 / southeast-asia 동남아\n"
+    "  north-america 북미(미국·캐나다) / europe 유럽(영국·독일·프랑스·북유럽·동유럽 등)\n"
+    "  latin 라틴아메리카(스페인어권·브라질) / mena 중동·북아프리카\n"
+    "  africa-ssa 사하라이남 아프리카 / india-sa 인도·남아시아 / oceania 호주·뉴질랜드\n"
+    "  multinational 특정 국가 귀속 없는 다국적 발표·업계 일반론·글로벌 통계\n"
+    "  기준 - 매체 국적이나 기업 본사가 아니라 기사 내용의 시장이다. "
+    "한 기사에 여러 시장이면 비중이 큰 쪽 하나만 고른다. "
+    "모르겠다고 multinational에 넣지 않는다. 이 칸이 잔여 범주가 되면 지역 축이 무의미해진다.\n"
+)
 
 
 def strip_tags(s: str) -> str:
@@ -112,20 +151,24 @@ IP·팬덤·소비 라이프스타일)과 직접 연결되면 true. 순수 SaaS�
 title_ko: 제목을 자연스러운 한국어로(고유명사는 유지, 한국어면 그대로).
 **가운데 줄표를 쓰지 않는다** - 쉼표나 하이픈으로.
 
+{region_guide}  예 - 나이지리아 아프로비츠 레이블 계약 기사는 africa-ssa.
+  스웨덴 레이블 인수 기사는 europe. IFPI 세계 음반시장 연간 집계는 multinational.
+
 제목: {title}
 출처: {source}
 
-{{"is_entertainment": true, "title_ko": "..."}}"""
+{{"is_entertainment": true, "title_ko": "...", "region": "..."}}"""
 
 
 def classify(client, title: str, source: str) -> dict:
     msg = client.messages.create(
-        model="claude-haiku-4-5-20251001", max_tokens=200,
+        model="claude-haiku-4-5-20251001", max_tokens=300,
         # temperature는 2026-09-10에 뺐다. 최신 SDK(anthropic 1.x)가 이 인자를
         # 받지 않아 2026-09-02 신설 이후 수집분 530건이 전건 classify_failed로
         # 떨어졌다. 같은 사고를 09-06에 app.py·classify_tense.py에서 고쳤는데
         # 이 파일만 다른 저장소라 빠져 있었다.
-        messages=[{"role": "user", "content": GATE.format(title=title, source=source)}],
+        messages=[{"role": "user", "content": GATE.format(
+            title=title, source=source, region_guide=REGION_GUIDE)}],
     )
     raw = msg.content[0].text.strip()
     if "```" in raw:
@@ -187,7 +230,8 @@ def main() -> int:
                 continue
             seen.add(u)
             x["factor_hint"] = factor
-            x["region"] = REGION_BY_GL.get(gl, "global-en")
+            # 게이트 haiku가 내용 기준으로 판정한 값으로 나중에 덮인다. 여기 값은 폴백.
+            x["region_fallback"] = REGION_BY_GL.get(gl, "multinational")
             fresh.append(x)
         if args.limit:
             fresh = fresh[:args.limit]
@@ -212,16 +256,20 @@ def main() -> int:
     else:
         log.warning("ANTHROPIC_API_KEY 없음 - 게이트 없이 filtered_out으로 적재")
 
-    rows, kept = [], 0
+    rows, kept, gl_fallback = [], 0, 0
     for x in picked:
-        ie, tko = None, ""
+        ie, tko, reg = None, "", ""
         if client:
             try:
                 d = classify(client, x["title"], x.get("source") or "")
                 ie = d.get("is_entertainment")
                 tko = (d.get("title_ko") or "").strip()
+                reg = (d.get("region") or "").strip()
             except Exception as e:
                 log.warning("분류 실패: %s", str(e)[:70])
+        if reg not in VALID_REGIONS:
+            reg = x["region_fallback"]
+            gl_fallback += 1
         is_ent = bool(ie) if ie is not None else False
         if is_ent:
             kept += 1
@@ -233,7 +281,7 @@ def main() -> int:
             "category": "gnews",
             "collector": "gnews",
             "summary": "",
-            "region": x["region"],
+            "region": reg,
             "topics": [],
             "tags": [x["factor_hint"]],
             "is_entertainment": is_ent,
@@ -243,13 +291,15 @@ def main() -> int:
         })
 
     failed = sum(1 for r in rows if r["filter_verdict"] == "classify_failed")
-    print("게이트 통과 %d / %d건 (분류 실패 %d)" % (kept, len(rows), failed))
+    print("게이트 통과 %d / %d건 (분류 실패 %d · region gl 폴백 %d)"
+          % (kept, len(rows), failed, gl_fallback))
     # 게이트가 통째로 죽으면 실패로 끝낸다 (2026-09-10 신설). 전건 실패인데도
     # exit 0이라 워크플로가 매일 success로 찍혔고, 530건이 쌓이는 동안 아무도 몰랐다.
     gate_dead = client is not None and rows and failed == len(rows)
     if args.dry_run:
         for r in rows[:20]:
-            print("  [%s] %s" % ("O" if r["is_entertainment"] else "-", r["title"][:66]))
+            print("  [%s] %-14s %s" % ("O" if r["is_entertainment"] else "-",
+                                       r["region"], r["title"][:52]))
         print("\n--dry-run - 쓰지 않았다")
         return 0
 

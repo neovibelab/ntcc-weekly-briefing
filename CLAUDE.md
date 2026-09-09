@@ -1,6 +1,6 @@
 # weekly-vibe - 일일 수집 엔진 (vibe_search v3)
 
-> **역할**: 엔터·문화 산업 뉴스의 일일 자동 수집 엔진. 5개 지역을 현지 발행 리듬에 맞춰 3개 시간대(오전 한국·일본 / 오후 중국·동남아 / 저녁 글로벌)로 수집해 Discord 5개 지역 채널에 알리고 Supabase `radar_items`에 적재한다.
+> **역할**: 엔터·문화 산업 뉴스의 일일 자동 수집 엔진. 5개 검색 프로파일을 현지 발행 리듬에 맞춰 3개 시간대(오전 한국·일본 / 오후 중국·동남아 / 저녁 영어권)로 수집해 Discord 5개 채널에 알리고 Supabase `radar_items`에 적재한다. **저장되는 지역 값은 12종이고 검색 프로파일과 다른 층이다**(§1-4).
 >
 > **주간 브리핑(NEWSPAPER HTML) 발행은 폐기**(2026-06-09). 과거 발행물(`NEWSPAPER_*.html` · `SPECIAL_*.html` · `index.html` · `preview/`)은 역사 아카이브로만 보존하고 신규 생성하지 않는다. 제작 스킬(`.claude/skills/weekly-vibe/`)은 삭제됐다. 구 제작 가이드는 이 파일의 git 히스토리(2026-06-10 이전)에 있다.
 >
@@ -24,7 +24,7 @@
 | 지역 | 언어 | Discord 채널 | Secret |
 |------|------|-------------|--------|
 | 한국 | 한국어 | `#korea_vibe` | `DISCORD_KOREA_WEBHOOK` |
-| 글로벌 | 영어 | `#global_vibe` | `DISCORD_GLOBAL_EN_WEBHOOK` |
+| 영어권 검색 | 영어 | `#global_vibe` | `DISCORD_GLOBAL_EN_WEBHOOK` |
 | 중국 | 중국어 | `#vibe-china` | `DISCORD_CHINA_WEBHOOK` |
 | 일본 | 일본어 | `#vibe-japan` | `DISCORD_JAPAN_WEBHOOK` |
 | 동남아 | 영어+현지 | `#asia_vibe` | `DISCORD_SOUTHEAST_ASIA_WEBHOOK` |
@@ -36,7 +36,7 @@
 - **중복 제거**: `seen-titles.txt` + Supabase URL 중복 체크.
 - **태깅**: 7렌즈 멀티태깅(`fan-behavior` `consumer-behavior` `ent-deals` `ip-business` `artist-ownership` `tech-issues` `taste-values`, `topics` 배열). **`cross-industry` 태그는 만들지 않는다**(대표 결정) - 레퍼런스는 일부 신호의 속성이 아니라 전 콘텐츠의 해석 렌즈다. 타 업종 이전 원리 판정은 대시보드 보조·추천 프롬프트(nvl-vibe-radar `REF_FRAME`)가 한다. `taste-values` = 세대를 가로지르는 취향·가치 신호(지속가능·로컬·디깅·리바이벌·취향 공동체, 엔터 밖 패션·뷰티·F&B·여행·리테일 포함). 구 `gen-z-lifestyle`(Z세대 인구통계 축)의 재정의. **키 동기화 필수** - 같은 풀(`radar_items.topics`)을 쓰는 `newsletter_ingest.py`·`newsroom_ingest.py`의 `TOPIC_KEYS`, `nvl-vibe-radar`(`app.py` VALID_TOPICS·`dashboard.html` 필터/TOPICS/CROSS_CUL)도 함께 바꾼다. 대시보드는 과거 `gen-z-lifestyle`을 alias로 호환(마이그레이션 불필요). (경위 → DR)
 - **출력 언어**: 모든 외국어 기사 제목은 한국어 번역. JSON 파싱은 `_parse_json_robust()` 3단계 폴백(원본→수리→개별 객체 추출).
-- **개별 테스트**: `ai-news-daily.yml`의 `workflow_dispatch` region input(all/korea/global-en/china/japan/southeast-asia).
+- **개별 테스트**: `ai-news-daily.yml`의 `workflow_dispatch` region input(all/korea/global-en/china/japan/southeast-asia). 이건 **검색 프로파일**이지 저장 지역이 아니다(아래 §1-4).
 - **실패 경보**: 지역 스텝이 검색 실패(web_search API·코드 에러)로 끝나면 `scripts/notify_region_failure.py`가 woojin@에 메일. **0건(정상)과 실패를 종료코드로 구분한다** - vibe_search는 검색 실패만 `exit 1`, 워크플로가 각 지역 `outcome`을 모아 `failure`만 통지(정상 0건엔 메일 없음). 실패를 exit 0으로 가리는 `|| echo`는 쓰지 않는다. (경위 → DR)
 
 **§1-1~1-3 공통**: Discord 미포스팅·대시보드 전용, `total_score=0`(사전 큐레이션 소스), 대시보드에 출처 배지. 시크릿은 `SUPABASE_*` + ANTHROPIC `ANTHROPIC_API_KEY_WEEKLY_BRIEFING` 재사용(피드는 무인증이라 신규 시크릿 없음). 피드 URL은 **실제 fetch로 유효 XML을 검증한 뒤 등재**(죽은 피드, 헤더만 주고 본문이 빈 깡통[예: Sanrio] 주의), `_` 접두 = 비활성. 소스 추가·제거는 각 JSON만 편집.
@@ -73,6 +73,17 @@ vibe_search와 같은 풀(`radar_items`)을 공유하는 두 번째 수집기. �
 - **스케줄**: `.github/workflows/interview-ingest.yml` **화·금 11:00 KST**(02:00 UTC) + `workflow_dispatch`(lookback_days). 주 2회, **룩백 14일·나이컷 없음**. 대시보드 인터뷰 탭 노출. GitHub 신규 예약 워크플로는 첫 예정 발화를 스킵한다 - 첫 자동 수집이 안 보이면 `workflow_dispatch` 1회 수동.
 - **중복 제거**: 최근 **60일** interview URL 집합 + URL upsert(merge-duplicates).
 - **픽 시효 면제**: `pool_maintenance.py`의 픽 20일 시효(`picked_expiry_targets`)에서 `collector='interview'` 픽은 면제(소스 뱅크 이관 전까지 보존). 뉴스성 픽에만 20일 적용.
+
+## 1-4. 지역 축 (2026-09-10 개편)
+
+**검색 프로파일 5종과 저장 지역 12종은 다른 층이다.** 프로파일은 「어느 언어로 검색해 어느 디스코드 채널에 알리나」이고, 저장 지역은 「그 기사가 다루는 시장이 어디인가」다.
+
+- **저장 값 12종** (`radar_items.region`): `korea` `japan` `china` `southeast-asia` `north-america`(미국·캐나다) `europe`(영국·독일·프랑스·북유럽·동유럽) `latin`(스페인어권·브라질) `mena`(중동·북아프리카) `africa-ssa`(사하라이남) `india-sa`(인도·남아시아) `oceania`(호주·뉴질랜드) `multinational`(특정 국가 귀속 없는 다국적 발표·업계 일반론·글로벌 통계).
+- **`global-en`은 신규 저장하지 않는다.** 과거 archived 행이 수천 건이라 라벨 맵에만 「글로벌(구)」로 남는다. 분류가 실패했을 때 소스 힌트로 남는 값도 이 레거시이고, **12종 중 하나를 억지로 찍지 않는다** - `backfill_region.py`가 나중에 내용 기준으로 다시 판정한다.
+- **분류 기준(모든 프롬프트 공통 문구)**: 매체 국적이나 기업 본사가 아니라 **기사 내용의 시장**. 여러 시장이면 비중이 큰 쪽 하나. 어느 나라에도 귀속되지 않는 다국적 발표·업계 일반론만 `multinational`이고, **모르겠다고 여기 넣지 않는다.** 각 수집기의 `REGION_GUIDE` 상수가 같은 문장을 쓴다 - 하나를 고치면 다섯을 같이 고친다(`newsletter_ingest`·`newsroom_ingest`·`interview_ingest`·`backfill_region`·`gnews_ingest`).
+- **검색 프로파일 5종**은 그대로다(`vibe_search.py` REGIONS 키 = cron 슬롯·webhook·allowed_domains). `global-en` 프로파일 이름만 「영어권 검색」으로 바꿨다. 그 결과의 region은 저장 시점엔 미판정이고 `backfill_region.py --collectors vibe_search`가 재판정한다.
+- **gnews는 gl 매핑을 버렸다.** 구글 뉴스 에디션은 독자의 위치지 기사의 시장이 아니다. 지금은 엔터 게이트 haiku가 `region`을 함께 판정하고(**호출 수 불변**), 판정이 없을 때만 gl 표로 떨어진다.
+- 라벨은 `supabase_writer.py` `REGION_LABELS` = `send_report_drop.py` `_REGION_LABELS` 두 곳이 같은 문자열을 쓴다.
 
 ## 2. 품질 게이트
 

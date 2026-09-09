@@ -72,6 +72,13 @@ TOPIC_LABELS: dict[str, str] = {
 TOPIC_KEYS = list(TOPIC_LABELS.keys())
 
 # ── 지역 설정 ────────────────────────────────────────────
+#
+# 여기 키는 **검색 프로파일**이지 저장할 지역 값이 아니다. cron 슬롯·webhook_env·
+# allowed_domains가 이 키에 묶여 있어 2026-09-10 지역 축 개편(12종)에서 건드리지 않았다.
+# 특히 `global-en`은 「영어권으로 검색한다」는 뜻이고, 그 결과에는 북미·유럽·다국적이
+# 섞여 있다. 저장 시점에 이 키가 그대로 region으로 들어가지만 그것은 **미판정 표식**이고,
+# `multinational`로 옮기지 않는다(그 칸이 다시 잔여 범주가 된다).
+# 실제 재판정은 `backfill_region.py --collectors vibe_search`가 내용 기준으로 한다.
 
 REGIONS: dict[str, dict] = {
     "korea": {
@@ -112,7 +119,8 @@ REGIONS: dict[str, dict] = {
         },
     },
     "global-en": {
-        "name": "글로벌(영어)",
+        # 검색 언어를 가리키는 이름이다. 지역 이름이 아니다 (2026-09-10).
+        "name": "영어권 검색",
         "emoji": "🌐",
         "webhook_env": "DISCORD_GLOBAL_EN_WEBHOOK",
         "language": "English",

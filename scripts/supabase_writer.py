@@ -20,12 +20,23 @@ import requests
 
 log = logging.getLogger(__name__)
 
+# 지역 12종 + 레거시 (2026-09-10 개편). send_report_drop.py의 _REGION_LABELS와
+# 같은 문자열을 쓴다. global-en은 신규 저장하지 않지만 과거 archived 행이 수천 건이라
+# 라벨은 살려 둔다.
 REGION_LABELS = {
     "korea": "한국",
-    "global-en": "글로벌(영어)",
-    "china": "중국",
     "japan": "일본",
+    "china": "중국",
     "southeast-asia": "동남아",
+    "north-america": "북미",
+    "europe": "유럽",
+    "latin": "라틴아메리카",
+    "mena": "중동·북아프리카",
+    "africa-ssa": "아프리카",
+    "india-sa": "인도·남아시아",
+    "oceania": "오세아니아",
+    "multinational": "다국적",
+    "global-en": "글로벌(구)",  # 레거시
 }
 
 

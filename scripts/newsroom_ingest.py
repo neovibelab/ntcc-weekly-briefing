@@ -33,7 +33,28 @@ TOPIC_KEYS = [
     "fan-behavior", "consumer-behavior", "ent-deals", "ip-business",
     "artist-ownership", "tech-issues", "taste-values",  # 구 gen-z-lifestyle (2026-06-17 재정의)
 ]
-VALID_REGIONS = {"korea", "global-en", "china", "japan", "southeast-asia"}
+# 지역 12종 (2026-09-10 개편). 구 global-en이 살아있는 풀의 80%를 삼키는 잔여
+# 범주였다. 이름이 아니라 기준을 쪼갠다. global-en은 신규 저장하지 않는다.
+VALID_REGIONS = {
+    "korea", "japan", "china", "southeast-asia",
+    "north-america", "europe", "latin", "mena",
+    "africa-ssa", "india-sa", "oceania", "multinational",
+}
+# 프롬프트 공통 문구 - newsletter_ingest·interview_ingest·backfill_region·gnews_ingest와 같은 문장.
+REGION_GUIDE = (
+    "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 고른다.\n"
+    "  korea 한국 / japan 일본 / china 중국 / southeast-asia 동남아\n"
+    "  north-america 북미(미국·캐나다) / europe 유럽(영국·독일·프랑스·북유럽·동유럽 등)\n"
+    "  latin 라틴아메리카(스페인어권·브라질) / mena 중동·북아프리카\n"
+    "  africa-ssa 사하라이남 아프리카 / india-sa 인도·남아시아 / oceania 호주·뉴질랜드\n"
+    "  multinational 특정 국가 귀속 없는 다국적 발표·업계 일반론·글로벌 통계\n"
+    "  기준 - 매체 국적이나 기업 본사가 아니라 기사 내용의 시장이다. "
+    "한 기사에 여러 시장이면 비중이 큰 쪽 하나만 고른다. "
+    "모르겠다고 multinational에 넣지 않는다. 이 칸이 잔여 범주가 되면 지역 축이 무의미해진다.\n"
+)
+# 분류가 실패했을 때만 남는 미판정 표식. 12종 중 하나를 억지로 찍는 대신 레거시 값을 그대로 둬
+# backfill_region.py가 나중에 내용 기준으로 다시 판정하게 한다.
+LEGACY_UNJUDGED = "global-en"
 LOOKBACK_DAYS = int(os.environ.get("NEWSROOM_LOOKBACK_DAYS", "7"))
 FETCH_CAP = 8  # 피드당 최대 처리 건수
 DISCORD_CAP = 8  # discord 전송 webhook당 최대 (도배 방지)
@@ -146,9 +167,10 @@ def classify(title: str, text: str, region_hint: str) -> dict:
             "애매하면 false(보존 우선).\n"
             "title_ko: 제목을 자연스러운 한국어로 번역(고유명사·작품명·아티스트명은 적절히 유지, 한국어면 그대로).\n"
             "summary_ko: 한국어 150자 이내 핵심 요약 (무엇을 다뤘는지)\n"
-            "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 — "
-            "korea/china/japan/southeast-asia/global-en. 기업 본사 국적이 아니라 기사 내용 기준 "
-            "(예: 디즈니의 일본 전개 기사는 japan, 글로벌 발표는 global-en).\n\n"
+            + REGION_GUIDE +
+            "  예 - 디즈니 뉴스룸의 일본 전개 발표는 japan. "
+            "스포티파이의 브라질 요금제 발표는 latin. "
+            "전 세계에 동시 적용되는 정책 변경 발표는 multinational.\n\n"
             '{"is_entertainment": true, "is_gossip": false, "topics": [...], "is_promo": false, "title_ko": "...", "summary_ko": "...", "region": "..."}'
         )
         msg = client.messages.create(
@@ -255,7 +277,7 @@ def main() -> int:
                 pub = datetime.datetime.now(datetime.timezone.utc).isoformat()
             title = it["title"][:500]
             summary_raw = html_to_text(it.get("summary", ""))[:2000]
-            cls = classify(title, summary_raw, src.get("region", "global-en"))
+            cls = classify(title, summary_raw, src.get("region", LEGACY_UNJUDGED))
             failed = cls.get("_failed", False)
             is_ent = cls.get("is_entertainment", True)
             is_gos = cls.get("is_gossip", False)
@@ -271,8 +293,9 @@ def main() -> int:
                 "topics": cls["topics"],
                 "tags": cls["topics"],
                 "is_entertainment": is_ent,
-                # region: classify 내용 기준 값 우선, 없으면 소스 고정 힌트 폴백 (2026-06-23)
-                "region": cls.get("region") or src.get("region", "global-en"),
+                # region: classify 내용 기준 값 우선, 없으면 소스 고정 힌트 폴백 (2026-06-23).
+                # 힌트가 레거시 global-en이면 미판정인 채로 남고 backfill_region.py가 재판정한다.
+                "region": cls.get("region") or src.get("region", LEGACY_UNJUDGED),
                 "published_date": pub,
                 # 분류 하드 실패(failed, 크레딧 400 등)는 미번역 원문이라 풀에 안 섞이게 filtered_out +
                 # classify_failed 표시 → backfill_translate.py가 정확히 찾아 재번역. promo·비엔터·가십도

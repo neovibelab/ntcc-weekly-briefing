@@ -39,7 +39,28 @@ log = logging.getLogger(__name__)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ALLOWLIST_PATH = os.path.join(os.path.dirname(HERE), "sources_interviews.json")
-VALID_REGIONS = {"korea", "global-en", "china", "japan", "southeast-asia"}
+# 지역 12종 (2026-09-10 개편). 구 global-en이 살아있는 풀의 80%를 삼키는 잔여
+# 범주였다. 이름이 아니라 기준을 쪼갠다. global-en은 신규 저장하지 않는다.
+VALID_REGIONS = {
+    "korea", "japan", "china", "southeast-asia",
+    "north-america", "europe", "latin", "mena",
+    "africa-ssa", "india-sa", "oceania", "multinational",
+}
+# 프롬프트 공통 문구 - newsletter_ingest·newsroom_ingest·backfill_region·gnews_ingest와 같은 문장.
+REGION_GUIDE = (
+    "region: 이 기사가 주로 다루는 시장·지역을 내용 기준으로 하나만 고른다.\n"
+    "  korea 한국 / japan 일본 / china 중국 / southeast-asia 동남아\n"
+    "  north-america 북미(미국·캐나다) / europe 유럽(영국·독일·프랑스·북유럽·동유럽 등)\n"
+    "  latin 라틴아메리카(스페인어권·브라질) / mena 중동·북아프리카\n"
+    "  africa-ssa 사하라이남 아프리카 / india-sa 인도·남아시아 / oceania 호주·뉴질랜드\n"
+    "  multinational 특정 국가 귀속 없는 다국적 발표·업계 일반론·글로벌 통계\n"
+    "  기준 - 매체 국적이나 기업 본사가 아니라 기사 내용의 시장이다. "
+    "한 기사에 여러 시장이면 비중이 큰 쪽 하나만 고른다. "
+    "모르겠다고 multinational에 넣지 않는다. 이 칸이 잔여 범주가 되면 지역 축이 무의미해진다.\n"
+)
+# 분류가 실패했을 때만 남는 미판정 표식. 12종 중 하나를 억지로 찍는 대신 레거시 값을 그대로 둬
+# backfill_region.py가 나중에 내용 기준으로 다시 판정하게 한다.
+LEGACY_UNJUDGED = "global-en"
 LOOKBACK_DAYS = int(os.environ.get("INTERVIEW_LOOKBACK_DAYS", "14"))
 FETCH_CAP = 8  # 피드당 최대 처리 건수
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -196,7 +217,11 @@ def classify(title: str, text: str, media: str) -> dict:
             "title_ko: 제목을 자연스러운 한국어로 번역(고유명사·작품명·아티스트명은 적절히 유지, 한국어면 그대로).\n"
             "**title_ko·summary_ko에 가운데 줄표(—)를 쓰지 않는다.** 쉼표나 하이픈(-)으로 바꾸거나 문장을 끊는다.\n"
             "summary_ko: 한국어 120자 이내 핵심 요약(누가 무엇을 말했는지).\n"
-            "region: 인물·매체 기준 시장 하나만. korea/china/japan/southeast-asia/global-en.\n\n"
+            + REGION_GUIDE +
+            "  인터뷰는 '기사 내용의 시장' = 인물이 주로 활동하는 시장으로 읽는다.\n"
+            "  예 - 미국 매체가 실은 나이지리아 아프로비츠 뮤지션 인터뷰는 africa-ssa. "
+            "영국 밴드의 신보 인터뷰는 europe. "
+            "여러 나라 출신이 섞인 업계 좌담은 multinational.\n\n"
             '{"is_interview": true, "is_music_ent": true, "person_ko": "...", "title_ko": "...", "summary_ko": "...", "region": "..."}'
         )
         msg = client.messages.create(
@@ -330,7 +355,9 @@ def main() -> int:
                 "topics": [],
                 "tags": [media],  # text|video - 대시보드에서 형태 구분용
                 "is_entertainment": True,  # 인터뷰 소스는 엔터 직결
-                "region": cls.get("region") or src.get("region", "global-en"),
+                # 분류 값 우선, 없으면 소스 고정 힌트. 힌트가 레거시 global-en이면
+                # 미판정인 채로 남고 backfill_region.py가 재판정한다.
+                "region": cls.get("region") or src.get("region", LEGACY_UNJUDGED),
                 "published_date": pub,
                 # 인터뷰 아님(not_interview) · 분류 실패(classify_failed)는 filtered_out으로
                 # 풀·인터뷰탭에서 숨김(대시보드 기본 뷰 status!=filtered_out / inPool).

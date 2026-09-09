@@ -15,8 +15,12 @@ on:
     - cron: '0 12 */2 * *'   # 21:00 KST — 글로벌(영어)
   workflow_dispatch:
     inputs:
+      # 이 목록은 vibe_search.py의 **검색 프로파일** 키다. 저장되는 지역 값(radar_items.region)은
+      # 2026-09-10에 12종으로 쪼갰지만, 프로파일은 cron 슬롯·webhook·allowed_domains에 묶여 있어
+      # 그대로 둔다. global-en = 「영어권으로 검색한다」이고, 그 결과의 실제 지역은
+      # backfill_region.py가 나중에 내용 기준으로 다시 판정한다.
       region:
-        description: '테스트할 지역 (비우면 전체 실행)'
+        description: '테스트할 검색 프로파일 (비우면 전체 실행)'
         required: false
         type: choice
         options:
@@ -27,7 +31,7 @@ on:
           - japan
           - southeast-asia
       dry_run:
-        description: 'dry-run (검색·검증만 — 디스코드·Supabase 미반영, 기준 테스트용)'
+        description: 'dry-run (검색·검증만 - 디스코드·Supabase 미반영, 기준 테스트용)'
         type: boolean
         default: false
 
