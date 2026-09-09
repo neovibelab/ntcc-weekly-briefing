@@ -25,6 +25,8 @@ import requests
 from anthropic import Anthropic
 from dateutil import parser as dateparser
 
+from llm_json import parse_list
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
 
@@ -173,11 +175,9 @@ def score_vibe(client: Anthropic, articles: list[dict]) -> list[dict]:
                 max_tokens=1024,
                 messages=[{"role": "user", "content": prompt}],
             )
-            raw = response.content[0].text.strip()
-            if raw.startswith("```"):
-                raw = re.sub(r"^```\w*\n?", "", raw)
-                raw = re.sub(r"\n?```$", "", raw)
-            results = json.loads(raw)
+            # 3층 방어 = scripts/llm_json.py (레이더 llm_json.py와 쌍둥이).
+            # 코드펜스 제거도 모듈이 한다.
+            results = parse_list(response.content[0].text.strip())
             for item in results:
                 idx = item["id"]
                 if idx < len(batch_items):

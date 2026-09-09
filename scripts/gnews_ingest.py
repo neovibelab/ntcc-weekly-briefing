@@ -29,7 +29,6 @@ import argparse
 import datetime
 import html
 import io
-import json
 import logging
 import os
 import re
@@ -39,6 +38,8 @@ import urllib.request
 import uuid
 
 import requests
+
+from llm_json import parse_obj
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace",
                               line_buffering=True)
@@ -197,26 +198,10 @@ def _is_usage_limit(exc) -> bool:
     return "usage limit" in s.lower() or "regain access" in s.lower()
 
 
-def _salvage(raw: str) -> dict:
-    """JSON이 깨졌을 때 필드만 건진다.
-
-    제목에 따옴표가 들어가면 모델이 이스케이프를 빠뜨려 통짜 파싱이 무효가 된다
-    (2026-09-10 실측 8%). 쓰는 필드가 셋뿐이라 개별로 건지면 판정이 산다.
-    """
-    out = {}
-    m = re.search(r'"is_entertainment"\s*:\s*(true|false)', raw, re.I)
-    if m:
-        out["is_entertainment"] = m.group(1).lower() == "true"
-    m = re.search(r'"region"\s*:\s*"([a-z\-]+)"', raw)
-    if m:
-        out["region"] = m.group(1)
-    # title_ko는 값 안에 따옴표가 있을 수 있어 마지막 따옴표까지 넉넉히 잡는다
-    m = re.search(r'"title_ko"\s*:\s*"(.+?)"\s*[,}]\s*(?:"region"|$)', raw, re.S)
-    if not m:
-        m = re.search(r'"title_ko"\s*:\s*"(.+)"', raw)
-    if m:
-        out["title_ko"] = m.group(1).replace('\\"', '"').strip()
-    return out
+# 통짜 파싱이 깨졌을 때 키별로 건질 필드. 제목에 따옴표가 들어가면 모델이 이스케이프를
+# 빠뜨려 통짜 파싱이 무효가 된다(2026-09-10 실측 8%). 쓰는 필드가 셋뿐이라 개별로
+# 건지면 판정이 산다. 3층 방어 본체 = scripts/llm_json.py.
+GATE_KEYS = {"is_entertainment": "bool", "title_ko": "str", "region": "enum"}
 
 
 def classify(client, title: str, source: str) -> dict:
@@ -229,19 +214,7 @@ def classify(client, title: str, source: str) -> dict:
         messages=[{"role": "user", "content": GATE.format(
             title=title, source=source, region_guide=REGION_GUIDE)}],
     )
-    raw = msg.content[0].text.strip()
-    if "```" in raw:
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-    try:
-        d = json.loads(raw)
-    except Exception:
-        # 통짜 파싱이 깨지면 필드만 건진다(2026-09-10).
-        d = _salvage(raw)
-        if not d:
-            raise
-    return d if isinstance(d, dict) else {}
+    return parse_obj(msg.content[0].text.strip(), GATE_KEYS)
 
 
 def existing_urls(sb_url: str, key: str) -> set:

@@ -21,12 +21,13 @@ from __future__ import annotations
 
 import argparse
 import io
-import json
 import logging
 import os
 import sys
 
 import requests
+
+from llm_json import parse_obj
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
@@ -120,12 +121,8 @@ def classify_region(title: str, summary: str) -> tuple[str | None, bool]:
         )
         msg = client.messages.create(model=MODEL, max_tokens=60,
                                      messages=[{"role": "user", "content": prompt}])
-        raw = msg.content[0].text.strip()
-        if "```" in raw:
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        data = json.loads(raw)
+        # 3층 방어 = scripts/llm_json.py (레이더 llm_json.py와 쌍둥이)
+        data = parse_obj(msg.content[0].text.strip(), {"region": "enum"})
         reg = (data.get("region") or "").strip()
         return (reg if reg in VALID else None), False
     except Exception as e:

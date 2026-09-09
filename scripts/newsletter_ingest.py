@@ -29,6 +29,8 @@ from urllib.parse import quote, urlparse, urlunparse
 
 import requests
 
+from llm_json import parse_obj
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
 
@@ -348,14 +350,12 @@ def classify(subject: str, text: str, region_hint: str, broad: bool = False) -> 
             model="claude-haiku-4-5-20251001", max_tokens=400,
             messages=[{"role": "user", "content": prompt}],
         )
-        raw = msg.content[0].text.strip()
-        if "```" in raw:
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        data = json.loads(raw)
-        if isinstance(data, list):  # 모델이 배열로 응답하는 엣지
-            data = next((x for x in data if isinstance(x, dict)), {})
+        # 3층 방어 = scripts/llm_json.py (레이더 llm_json.py와 쌍둥이).
+        # topics는 배열이라 3층에서 못 건진다 - 그때는 빈 배열로 떨어진다.
+        data = parse_obj(msg.content[0].text.strip(), {
+            "is_entertainment": "bool", "is_gossip": "bool", "is_promo": "bool",
+            "title_ko": "str", "summary_ko": "str", "region": "enum",
+        })
         topics = [t for t in (data.get("topics") or []) if t in TOPIC_KEYS]
         ie = data.get("is_entertainment")
         if isinstance(ie, str):
@@ -491,12 +491,8 @@ def subject_gate(cands: list[dict]) -> list[int]:
         client = anthropic.Anthropic(api_key=key)
         msg = client.messages.create(model="claude-haiku-4-5-20251001", max_tokens=300,
                                      messages=[{"role": "user", "content": prompt}])
-        raw = msg.content[0].text.strip()
-        if "```" in raw:
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        picks = json.loads(raw).get("picks", [])
+        # 3층 방어 = scripts/llm_json.py. picks는 정수 배열이라 키별로 건질 게 없다.
+        picks = parse_obj(msg.content[0].text.strip()).get("picks", [])
         return [p - 1 for p in picks if isinstance(p, int) and 1 <= p <= len(cands)]
     except Exception as e:
         log.warning("캐치올 제목 게이트 실패(생략): %s", e)

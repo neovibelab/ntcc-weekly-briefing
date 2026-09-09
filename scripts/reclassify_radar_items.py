@@ -25,7 +25,6 @@ from __future__ import annotations
 import argparse
 import datetime
 import io
-import json
 import logging
 import os
 import sys
@@ -33,6 +32,8 @@ import time
 from pathlib import Path
 
 import requests
+
+from llm_json import parse_obj
 
 
 def _load_local_env() -> None:
@@ -132,16 +133,9 @@ def classify(title: str, summary: str, client) -> dict | None:
             model="claude-haiku-4-5-20251001", max_tokens=300,
             messages=[{"role": "user", "content": prompt}],
         )
-        raw = msg.content[0].text.strip()
-        if "```" in raw:
-            raw = raw.split("```")[1]
-            if raw.startswith("json"):
-                raw = raw[4:]
-        data = json.loads(raw)
-        if isinstance(data, list):
-            data = next((x for x in data if isinstance(x, dict)), {})
-        if not isinstance(data, dict):
-            return None
+        # 3층 방어 = scripts/llm_json.py (레이더 llm_json.py와 쌍둥이).
+        # topics는 배열이라 3층에서 못 건진다 - 그때는 빈 배열로 떨어진다.
+        data = parse_obj(msg.content[0].text.strip(), {"is_entertainment": "bool"})
         topics = [t for t in (data.get("topics") or []) if t in TOPIC_KEYS]
         ie = data.get("is_entertainment")
         if isinstance(ie, str):

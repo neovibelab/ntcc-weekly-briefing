@@ -36,6 +36,8 @@ from urllib.parse import urlparse
 import requests
 from anthropic import Anthropic
 
+from llm_json import parse_list
+
 try:
     from supabase_writer import save_items as supabase_save, fetch_recent_titles
 except ImportError:
@@ -417,56 +419,9 @@ def build_search_prompt(region: dict, today: datetime.date, cutoff: datetime.dat
 
 
 # ── JSON 파싱 (견고) ──────────────────────────────────────
-
-
-def _parse_json_robust(raw: str) -> list[dict]:
-    """JSON 배열 파싱. 실패 시 수리 → 개별 객체 추출 폴백."""
-    # 1차: 원본 그대로
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError as exc:
-        log.warning("JSON 디코드 실패 (1차): %s", exc)
-
-    # 2차: 간단한 수리
-    repaired = re.sub(r",\s*([}\]])", r"\1", raw)       # trailing comma
-    repaired = re.sub(r"[\x00-\x1f]", " ", repaired)    # control chars
-    repaired = repaired.replace("\\'", "'")
-    try:
-        return json.loads(repaired)
-    except json.JSONDecodeError:
-        log.warning("JSON 수리 실패 (2차)")
-
-    # 3차: 개별 JSON 객체를 하나씩 추출
-    results = []
-    depth = 0
-    start = None
-    for i, ch in enumerate(raw):
-        if ch == "{":
-            if depth == 0:
-                start = i
-            depth += 1
-        elif ch == "}":
-            depth -= 1
-            if depth == 0 and start is not None:
-                fragment = raw[start : i + 1]
-                try:
-                    obj = json.loads(fragment)
-                    results.append(obj)
-                except json.JSONDecodeError:
-                    # 개별 객체도 수리 시도
-                    frag2 = re.sub(r",\s*}", "}", fragment)
-                    frag2 = re.sub(r"[\x00-\x1f]", " ", frag2)
-                    try:
-                        obj = json.loads(frag2)
-                        results.append(obj)
-                    except json.JSONDecodeError:
-                        log.warning("개별 객체 파싱 실패: %s", fragment[:120])
-                start = None
-    if results:
-        log.info("개별 객체 추출 성공: %d건", len(results))
-    else:
-        log.warning("모든 파싱 실패, 원문 500자: %s", raw[:500])
-    return results
+# 3층 방어는 scripts/llm_json.py로 옮겼다(2026-09-10). 여기 있던
+# `_parse_json_robust`가 그 모듈 `parse_list`의 원본이고, 레이더 저장소의
+# llm_json.py가 쌍둥이다 - 한쪽을 고치면 반드시 다른 쪽도 고친다.
 
 
 # ── 검색 ──────────────────────────────────────────────────
@@ -566,7 +521,7 @@ def search_and_analyze(
         return []
 
     raw_json = match.group()
-    candidates = _parse_json_robust(raw_json)
+    candidates = parse_list(raw_json)
 
     for c in candidates:
         if isinstance(c, dict):
