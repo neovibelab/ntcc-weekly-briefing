@@ -32,7 +32,10 @@ import requests
 # 자동수집 pending 풀에서 created_at 최신순 POOL_KEEP개만 유지, 초과분(오래된 것) → archived.
 # MANAGED_COLLECTORS 밖(manual)은 정리 대상 아님(영구 보존).
 POOL_KEEP = 50
-MANAGED_COLLECTORS = {"newsletter", "newsroom", "vibe_search", "interview"}
+MANAGED_COLLECTORS = {"newsletter", "newsroom", "vibe_search", "interview", "gnews", "feed"}
+# gnews·feed는 2026-09-10까지 이 집합에 없어 상한도 시효도 없이 쌓였다.
+# gnews는 질의 31개로 유입이 가장 커서 별도 상한을 준다(실측 하루 40~180건).
+GNEWS_KEEP = 100
 # interview 전용 상한 - 뉴스성 수집과 성격이 달라 같은 50을 쓰지 않는다.
 # 인터뷰는 에버그린 소재라 픽 시효도 면제받는다(picked_expiry_targets 참조).
 # 상한 관리 자체는 2026-08-26 대표 결정(pending 504건이 대시보드 노이즈).
@@ -143,7 +146,7 @@ def archive_targets(rows, now, exempt_ids=frozenset()):
     # 타깃을 세워뒀는데 근거가 사라지면 2 리서치가 빈손으로 시작한다.
     over = []
     for coll in sorted(MANAGED_COLLECTORS):
-        keep = INTERVIEW_KEEP if coll == "interview" else POOL_KEEP
+        keep = {"interview": INTERVIEW_KEEP, "gnews": GNEWS_KEEP}.get(coll, POOL_KEEP)
         pend = [r for r in rows
                 if r.get("status") == "pending" and r.get("collector") == coll
                 and r.get("id") not in exempt_ids]
@@ -231,6 +234,35 @@ def _delete_cluster(cid) -> bool:
     return r1.status_code in (200, 204) and r2.status_code in (200, 204)
 
 
+
+
+# 시제별 나이 시효 (2026-09-10 신설, 대표 판단).
+# 구 CLUSTER_MAX_IDLE_DAYS(10일)는 묶음에 걸리는데 묶음이 2026-09-02 폐기라
+# 실질 무효였다. pending에는 나이 규칙이 아예 없었다.
+# 시제 축을 수명에 쓴다 - 바이브(아직 안 온 것)는 며칠 지나도 유효하고,
+# 배경(끝났거나 한 번 있는 일)은 재료라 금방 낡는다.
+TENSE_MAX_DAYS = {"soon": 14, "now": 7, "brief": 3, "done": 3}
+TENSE_MAX_DAYS_DEFAULT = 7   # 미판정
+
+
+def tense_expiry_targets(rows, now, exempt_ids=frozenset()):
+    """시제별 나이를 넘긴 pending을 archived 대상으로."""
+    out = []
+    for r in rows:
+        if r.get("status") != "pending":
+            continue
+        if r.get("collector") not in MANAGED_COLLECTORS:
+            continue
+        if r.get("id") in exempt_ids:
+            continue
+        age = _age_days(r, now)
+        if age is None:
+            continue
+        limit = TENSE_MAX_DAYS.get(r.get("tense"), TENSE_MAX_DAYS_DEFAULT)
+        if age >= limit:
+            out.append((r, age, limit))
+    return out
+
 def picked_expiry_targets(rows, now, cluster_member_ids):
     # 픽 시효: PICKED_MAX_DAYS 초과 + 묶음 미소속 → archived. 나이 미상은 보존(안전 우선).
     # collector='interview'는 면제 — 인터뷰는 에버그린 소재라 소스 뱅크 이관 전까지 픽 보존
@@ -275,6 +307,10 @@ def main() -> int:
         print(f"  (묶음 면제 생략: {str(e)[:70]})")
 
     targets = archive_targets(rows, now, exempt)
+    tense_targets = tense_expiry_targets(rows, now, exempt)
+    # 상한 초과분과 겹칠 수 있으니 id로 합친다
+    _seen = {r.get('id') for r, _ in targets}
+    tense_targets = [t for t in tense_targets if t[0].get('id') not in _seen]
     mc = "·".join(sorted(MANAGED_COLLECTORS))
     print(f"\n[archive 대상 ① pending 상한] {len(targets)}건 (최신 {POOL_KEEP}개 유지 · {mc} pending 대상 · manual 영구 · 근거 면제 {len(exempt)}건)")
     for r, age in targets[:30]:
@@ -309,6 +345,13 @@ def main() -> int:
             print(f"  {age}일 | {(r.get('title') or '')[:50]}")
         if len(picked_targets) > 30:
             print(f"  … 외 {len(picked_targets) - 30}건")
+
+    print(f"\n[archive 대상 ② 시제 시효] {len(tense_targets)}건 (바이브 {TENSE_MAX_DAYS['soon']}일 · 시그널 {TENSE_MAX_DAYS['now']}일 · 배경 {TENSE_MAX_DAYS['brief']}일)")
+    for r, age, lim in tense_targets[:20]:
+        print(f"  [{r.get('tense') or '미판정'}] {age}일/{lim} | {(r.get('title') or '')[:46]}")
+    if len(tense_targets) > 20:
+        print(f"  … 외 {len(tense_targets) - 20}건")
+    targets = targets + [(r, a) for r, a, _ in tense_targets]
 
     if do_apply:
         all_targets = targets + picked_targets
